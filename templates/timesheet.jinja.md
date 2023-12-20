@@ -1,9 +1,10 @@
 ---
-geometry: a4paper,margin=2.5cm
+geometry: a4paper,margin=2.2cm
 font-size: 11pt
 header-includes:
+  - \renewcommand\familydefault\sfdefault
   - \usepackage{setspace}
-  - \doublespacing
+  - \onehalfspacing
 ---
 # Dokumentation der täglichen Arbeitszeit nach §17 MiLoG
 
@@ -27,7 +28,5 @@ aufzuzeichnen.
 |3.|Mo. 19.12.2023|Hl. Messe|11:00 - 12:00| - |1,00|
 |4.|Di. 20.12.2023|Hl. Messe|11:00 - 12:00| - |1,00|
 |5.|Mi. 21.12.2023|Hl. Messe|11:00 - 12:00| - |1,00|
-
----
 
 Generiert am 18.12.2018 10:03 von _[KeinPlan](https://keinplan.bettgen.de) v0.0.0_.
