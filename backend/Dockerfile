@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pandoc \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY templates/ templates/
+COPY src/ .
 
 EXPOSE 80
 
-CMD pandoc -o ./out.pdf ./templates/timesheet.jinja.md
+CMD python src/main.py
