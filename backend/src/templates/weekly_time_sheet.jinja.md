@@ -17,7 +17,7 @@ aufzuzeichnen.
 
 * Dienstgeber: **insert Dienstgeber here**
 * Name, Vorname des Mitarbeiters: **insert Name here**
-* Aufzeichnung für die Kalenderwoche **50/2023** vom 11.12.2023 bis 17.12.2023
+* Aufzeichnung vom 11.12.2023 bis 17.12.2023 (Kalenderwoche **50/2023**)
 
 &nbsp;
 
