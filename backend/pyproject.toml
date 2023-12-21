@@ -1,0 +1,24 @@
+[tool.black]
+line-length = 79
+
+[tool.pylint.DESIGN]
+max-args = 10
+max-attributes = 10
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+    "too-few-public-methods",
+    "cell-var-from-loop",
+    "fixme"
+]
+
+[tool.pydocstyle]
+ignore = "D105,D107,D203,D213"
+
+[tool.mypy]
+python_version = 3.8
+mypy_path = "src"
+check_untyped_defs = true
+ignore_missing_imports = true
+ignore_missing_imports_per_module = true
+warn_unused_ignores = true
