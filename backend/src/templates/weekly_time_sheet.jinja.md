@@ -15,18 +15,25 @@ aufzuzeichnen.
 
 ---
 
-* Dienstgeber: **insert Dienstgeber here**
-* Name, Vorname des Mitarbeiters: **insert Name here**
-* Aufzeichnung vom 11.12.2023 bis 17.12.2023 (Kalenderwoche **50/2023**)
+* Dienstgeber: **{{ employer }}**
+* Name, Vorname des Mitarbeiters: **{{ employee }}**
+* Aufzeichnung für die **Kalenderwoche {{ date_start.strftime("%V/%Y") }}** ({{ date_start.strftime("%d.%m.%Y") }} bis {{ date_end.strftime("%d.%m.%Y") }})
 
 &nbsp;
 
 |Nr. |Datum|Anlass|Zeitraum|Pause|Stunden|
 |:--:|:----|:-----|:------:|:---:|------:|
-|1.|Sa. 17.12.2023|Hl. Messe|11:00 - 12:00| - |1,00|
-|2.|So. 18.12.2023|Bußgottesdienst|11:00 - 12:00| - |1,00|
-|3.|Mo. 19.12.2023|Hl. Messe|11:00 - 12:00| - |1,00|
-|4.|Di. 20.12.2023|Hl. Messe|11:00 - 12:00| - |1,00|
-|5.|Mi. 21.12.2023|Hl. Messe|11:00 - 12:00| - |1,00|
-
-Generiert am 18.12.2018 10:03 von _[KeinPlan](https://keinplan.bettgen.de) v0.0.0_.
+{% for no, entry in entries -%}
+  |
+  {{- no + 1 }}.|
+  {{- entry.date.strftime("%a. %d.%m.%Y") }}|
+  {{- entry.occasion }}|
+  {{- entry.time_span[0].strftime("%-H:%M") }} - {{ entry.time_span[1].strftime("%-H:%M") }}|
+  {%- if entry.break_span -%}
+    {{- entry.break_span[0].strftime("%-H:%M") }} - {{ entry.break_span[1].strftime("%-H:%M") }}|
+  {%- else -%}
+    -|
+  {%- endif -%}
+  {{- "%.2f"|format_locale(entry.calc_hours()) }}|
+{% endfor %}
+Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }} von _[KeinPlan](https://keinplan.bettgen.de) v{{ version }}_.
