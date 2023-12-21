@@ -2,7 +2,7 @@
 
 from abc import abstractmethod
 from datetime import date, datetime, timedelta
-from locale import LC_ALL, setlocale, format_string
+from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
 from subprocess import CompletedProcess, run
 from typing import List, Tuple
@@ -60,9 +60,10 @@ class WeeklyTimeSheet(TimeSheet):
         rendered: str = template.render(
             employer=self.employer,
             employee=self.employee,
-            entries=enumerate(self.entries),
+            entries=self.entries,
             date_start=self.date_start,
             date_end=self.date_end,
+            total_hours=sum(e.calc_hours() for e in self.entries),
             generation_time=datetime.now(),
             version=VERSION,
         )

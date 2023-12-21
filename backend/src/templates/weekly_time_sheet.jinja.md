@@ -21,11 +21,10 @@ aufzuzeichnen.
 
 &nbsp;
 
-|Nr. |Datum|Anlass|Zeitraum|Pause|Stunden|
-|:--:|:----|:-----|:------:|:---:|------:|
-{% for no, entry in entries -%}
+|Datum|Anlass|Zeitraum|Pause|Stunden|
+|:----|:-----|:------:|:---:|------:|
+{% for entry in entries -%}
   |
-  {{- no + 1 }}.|
   {{- entry.date.strftime("%a. %d.%m.%Y") }}|
   {{- entry.occasion }}|
   {{- entry.time_span[0].strftime("%-H:%M") }} - {{ entry.time_span[1].strftime("%-H:%M") }}|
@@ -36,4 +35,7 @@ aufzuzeichnen.
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
+* Summe Dienste: **{{ entries|length }}**
+* Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**
+
 Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }} von _[KeinPlan](https://keinplan.bettgen.de) v{{ version }}_.
