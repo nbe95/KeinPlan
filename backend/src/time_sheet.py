@@ -16,9 +16,17 @@ class TimeSheet:
         self.employee: str = employee
         self.entries: List[TimeEntry] = []
 
+    def _convert_md_to_pdf(self, md_input: str, pdf_file: Path) -> bool:
+        """Convert preprocessed Markdown input to a PDF file using pandoc."""
+        cmd: Tuple[str, ...] = ("pandoc", "-o", str(pdf_file.absolute()))
+        result: CompletedProcess = run(
+            cmd, check=True, input=md_input, text=True
+        )
+        return result.returncode == 0
+
     @abstractmethod
-    def generate_pdf(self, target_file: Path) -> bool:
-        """Generate a PDF time sheet from the given data."""
+    def generate(self, target_file: Path) -> bool:
+        """Generate a time sheet as a specific file."""
 
 
 class WeeklyTimeSheet(TimeSheet):
@@ -31,16 +39,10 @@ class WeeklyTimeSheet(TimeSheet):
         self.week_no: int = week_no
         self.year: int = year
 
-    def generate_pdf(self, target_file: Path) -> bool:
+    def generate(self, target_file: Path) -> bool:
         """Generate a PDF time sheet from the given data."""
         template_file: str = "./templates/weekly_time_sheet.jinja.md"
         # TODO: Jinja magic
 
-        cmd: Tuple[str, ...] = (
-            "pandoc",
-            "-o",
-            str(target_file),
-            template_file,
-        )
-        result: CompletedProcess = run(cmd, check=True)
-        return result.returncode == 0
+        with open(template_file, "r", encoding="utf-8") as fh_template:
+            return self._convert_md_to_pdf(fh_template.read(), target_file)

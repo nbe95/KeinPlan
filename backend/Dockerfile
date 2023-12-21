@@ -12,4 +12,4 @@ COPY src/ .
 
 EXPOSE 80
 
-CMD python src/main.py
+CMD python main.py

@@ -37,12 +37,12 @@ def main():
         ),
         TimeEntry(
             date(2023, 12, 15),
-            "Hl. Messe",
+            "Bußandacht",
             (time(11, 0), time(12, 0)),
             None,
         ),
     ]
-    ts.generate_pdf(Path("out.pdf"))
+    ts.generate(Path("out/out.pdf"))
 
 
 if __name__ == "__main__":
