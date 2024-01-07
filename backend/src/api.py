@@ -50,7 +50,7 @@ class TimeSheetAPI(Resource):
                 None,
             ),
         ]
-        ts.generate(Path("out/out.pdf"))
+        ts.generate(Path("out.pdf"))
         return f"Requested: {file_format}."
 
 

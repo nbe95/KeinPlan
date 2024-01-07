@@ -9,6 +9,7 @@ from typing import List, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
 
+from os import environ
 from .constants import LOCALE_LC_ALL, TEMPLATE_DIR
 from .entry import TimeEntry
 
@@ -65,7 +66,7 @@ class WeeklyTimeSheet(TimeSheet):
             date_end=self.date_end,
             total_hours=sum(e.calc_hours() for e in self.entries),
             generation_time=datetime.now(),
-            version=VERSION,
+            version=environ.get("VERSION") or "<???>"
         )
 
         return self._convert_md_to_pdf(rendered, target_file)

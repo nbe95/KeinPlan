@@ -19,4 +19,7 @@ RUN python -m pip install -r requirements.txt
 
 EXPOSE 8080
 
+ARG VERSION
+ENV VERSION ${VERSION}
+
 CMD waitress-serve --port 8080 api:backend
