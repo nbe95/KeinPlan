@@ -29,7 +29,13 @@ class TimeSheet:
 
     def _convert_md_to_pdf(self, md_input: str, pdf_file: Path) -> bool:
         """Convert preprocessed Markdown input to a PDF file using pandoc."""
-        cmd: Tuple[str, ...] = ("pandoc", "-o", str(pdf_file.absolute()))
+        cmd: Tuple[str, ...] = (
+            "pandoc",
+            "-t",
+            "pdf",
+            "-o",
+            str(pdf_file.absolute()),
+        )
         result: CompletedProcess = run(
             cmd, check=True, input=md_input, text=True
         )

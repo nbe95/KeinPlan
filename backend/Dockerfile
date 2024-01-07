@@ -13,7 +13,8 @@ RUN sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen
 ENV LC_ALL de_DE.utf8
 
-COPY src/ .
+COPY requirements.txt .
+COPY src/ src/
 
 RUN python -m pip install -r requirements.txt
 
@@ -22,4 +23,4 @@ EXPOSE 8080
 ARG VERSION
 ENV VERSION ${VERSION}
 
-CMD waitress-serve --port 8080 api:backend
+CMD waitress-serve --port 8080 src.api:backend
