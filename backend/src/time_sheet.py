@@ -9,8 +9,8 @@ from typing import List, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from constants import LOCALE_LC_ALL, TEMPLATE_DIR, VERSION
-from time_entry import TimeEntry
+from .constants import LOCALE_LC_ALL, TEMPLATE_DIR, VERSION
+from .time_entry import TimeEntry
 
 setlocale(LC_ALL, LOCALE_LC_ALL)
 

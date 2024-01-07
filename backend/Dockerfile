@@ -17,6 +17,6 @@ COPY src/ .
 
 RUN python -m pip install -r requirements.txt
 
-EXPOSE 80
+EXPOSE 8080
 
-CMD python main.py
+CMD waitress-serve --port 8080 src.api:app
