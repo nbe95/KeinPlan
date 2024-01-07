@@ -1,20 +1,23 @@
-"""Main module for KeinPlan backend."""
+"""API definition for KeinPlan backend."""
 
 from datetime import date, time
 from pathlib import Path
 
-from .time_entry import TimeEntry
-from .time_sheet import TimeSheet, WeeklyTimeSheet
-
 from flask import Flask
 from flask_restful import Api, Resource
+
+from .time_entry import TimeEntry
+from .time_sheet import TimeSheet, WeeklyTimeSheet
 
 app: Flask = Flask(__name__)
 api: Api = Api(app)
 
-class GenerateAPI(Resource):
-    def post(self, format: str):
 
+class TimeSheetAPI(Resource):
+    """Restful API for generating time sheets."""
+
+    def post(self, file_format: str):
+        """Handle POST requests on the specified format endpoint."""
         ts: TimeSheet = WeeklyTimeSheet("Dienstgeber", "Mitarbeiter", 2023, 50)
         ts.entries = [
             TimeEntry(
@@ -49,6 +52,7 @@ class GenerateAPI(Resource):
             ),
         ]
         ts.generate(Path("out/out.pdf"))
-        return f"Requested: {format}."
+        return f"Requested: {file_format}."
 
-api.add_resource(GenerateAPI, "/generate/<string:format>", endpoint="format")
+
+api.add_resource(TimeSheetAPI, "/time-sheet/<string:file_format>")
