@@ -1,0 +1,7 @@
+version: "2"
+
+services:
+  backend:
+    image: nbe95/keinplan-backend
+    ports:
+      - 8080:80
