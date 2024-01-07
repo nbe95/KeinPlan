@@ -6,11 +6,10 @@ from pathlib import Path
 from flask import Flask
 from flask_restful import Api, Resource
 
-from .time_entry import TimeEntry
-from .time_sheet import TimeSheet, WeeklyTimeSheet
+from time_sheets import TimeEntry, TimeSheet, WeeklyTimeSheet
 
-app: Flask = Flask(__name__)
-api: Api = Api(app)
+backend: Flask = Flask(__name__)
+api: Api = Api(backend)
 
 
 class TimeSheetAPI(Resource):

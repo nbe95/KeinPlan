@@ -9,8 +9,8 @@ from typing import List, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from .constants import LOCALE_LC_ALL, TEMPLATE_DIR, VERSION
-from .time_entry import TimeEntry
+from .constants import LOCALE_LC_ALL, TEMPLATE_DIR
+from .entry import TimeEntry
 
 setlocale(LC_ALL, LOCALE_LC_ALL)
 
@@ -51,7 +51,7 @@ class WeeklyTimeSheet(TimeSheet):
 
     def generate(self, target_file: Path) -> bool:
         """Generate a PDF time sheet from the given data."""
-        template_file: str = "weekly_time_sheet.jinja.md"
+        template_file: str = "weekly.jinja.md"
         jinja_env: Environment = Environment(
             loader=FileSystemLoader(searchpath=TEMPLATE_DIR)
         )

@@ -19,4 +19,4 @@ RUN python -m pip install -r requirements.txt
 
 EXPOSE 8080
 
-CMD waitress-serve --port 8080 src.api:app
+CMD waitress-serve --port 8080 api:backend
