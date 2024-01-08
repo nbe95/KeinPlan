@@ -21,7 +21,7 @@ aufzuzeichnen.
 \
 
 |Datum|Anlass|Tätigkeit|Zeitraum|Pause|Stunden|
-|:----|:-----|:--------|:------:|:---:|------:|
+|:---|:-------|:--|:--:|:--:|-:|
 {% for entry in entries -%}
   |
   {{- entry.time_span[0].strftime("%a. %d.%m.%Y") }}|
