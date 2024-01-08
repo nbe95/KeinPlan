@@ -33,7 +33,7 @@ aufzuzeichnen.
   {%- if entry.break_span -%}
     {{- entry.break_span[0].strftime("%-H:%M") }} - {{ entry.break_span[1].strftime("%-H:%M") }}|
   {%- else -%}
-    -|
+    –|
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
