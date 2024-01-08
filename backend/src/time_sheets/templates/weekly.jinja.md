@@ -18,8 +18,7 @@ aufzuzeichnen.
 * Dienstgeber: **{{ employer }}**
 * Name, Vorname des Mitarbeiters: **{{ employee }}**
 * Aufzeichnung für die **Kalenderwoche {{ date_start.strftime("%V/%Y") }}** ({{ date_start.strftime("%d.%m.%Y") }} bis {{ date_end.strftime("%d.%m.%Y") }})
-
-&nbsp;
+\
 
 |Datum|Anlass|Zeitraum|Pause|Stunden|
 |:----|:-----|:------:|:---:|------:|
@@ -35,8 +34,8 @@ aufzuzeichnen.
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
-* Summe Dienste: **{{ entries|length }}**
-* Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**
+Summe Dienste: **{{ entries|length }}**\
+Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
 
 {% if footer -%}
     Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
