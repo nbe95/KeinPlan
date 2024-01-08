@@ -2,7 +2,7 @@
 
 from datetime import date, timedelta
 from tempfile import NamedTemporaryFile
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from dateutil.parser import isoparse
 from flask import request, send_file
@@ -52,15 +52,17 @@ class TimeSheetApi(Resource):
                 ts.entries.append(entry)
             ts.entries.sort(key=lambda x: x.time_span[0])
 
-            # Check week range
-            if any(
-                (
-                    x.time_span[0].date() - start_date >= timedelta(days=7)
-                    for x in ts.entries
-                )
-            ):
+            # Check each date
+            outside_range: List[TimeEntry] = [
+                entry
+                for entry in ts.entries
+                if entry.time_span[0].date() < start_date
+                or entry.time_span[0].date() - start_date >= timedelta(days=7)
+            ]
+            if outside_range:
                 return (
-                    "At least one entry exceeds the range of one week",
+                    f"{len(outside_range)} of {len(ts.entries)} time entries "
+                    f"are outside the calendar week's range: {outside_range}",
                     400,
                 )
 
