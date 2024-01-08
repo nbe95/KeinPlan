@@ -38,4 +38,12 @@ aufzuzeichnen.
 * Summe Dienste: **{{ entries|length }}**
 * Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**
 
-Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }} von _[KeinPlan](https://keinplan.bettgen.de) v{{ version }}_.
+{% if footer -%}
+    Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
+    {% if url -%}
+        von _[KeinPlan]({{ url }})_
+        {%- if version %}
+            _v{{ version }}_
+        {% endif-%}
+    {%- endif-%}.
+{%- endif %}

@@ -3,8 +3,10 @@ version: "2"
 services:
   backend:
     image: nbe95/keinplan-backend
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     ports:
       # Only open the backend to the outside world for debugging
       - 8080:8080
     environment:
-      - TZ=Europe/Berlin
+      - URL=https://keinplan.bettgen.de/

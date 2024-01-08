@@ -1,10 +1,9 @@
 """API definition for the time-sheet endpoint."""
 
 from datetime import date, time
-from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from flask import send_file
+from flask import request, send_file
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
 
@@ -59,7 +58,7 @@ class TimeSheetApi(Resource):
         # Create and download file
         if file_format.lower() == "pdf":
             with NamedTemporaryFile() as fh:
-                ts.generate(Path(fh.name))
+                ts.generate(fh.name, request.args.get("nofooter") is None)
                 return send_file(
                     fh.name,
                     as_attachment=True,
