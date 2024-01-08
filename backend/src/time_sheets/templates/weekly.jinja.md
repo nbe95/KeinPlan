@@ -27,12 +27,12 @@ aufzuzeichnen.
 |:---|:-------|:--|:--:|:--:|--:|
 {% for entry in entries -%}
   |
-  {{- entry.time_span[0].strftime("%a. %d.%m.%Y") }}|
+  {{- entry.time_span.begin.strftime("%a. %d.%m.%Y") }}|
   {{- entry.title }}|
   {{- entry.role }}|
-  {{- entry.time_span[0].strftime("%-H:%M") }} - {{ entry.time_span[1].strftime("%-H:%M") }}|
+  {{- entry.time_span.begin.strftime("%-H:%M") }} - {{ entry.time_span.end.strftime("%-H:%M") }}|
   {%- if entry.break_span -%}
-    {{- entry.break_span[0].strftime("%-H:%M") }} - {{ entry.break_span[1].strftime("%-H:%M") }}|
+    {{- entry.break_span.begin.strftime("%-H:%M") }} - {{ entry.break_span.end.strftime("%-H:%M") }}|
   {%- else -%}
     –|
   {%- endif -%}

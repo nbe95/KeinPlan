@@ -11,6 +11,7 @@ from flask_restful import Resource
 
 from .entry import TimeEntry
 from .sheet import TimeSheet, WeeklyTimeSheet
+from .span import TimeSpan
 
 
 class TimeSheetApi(Resource):
@@ -41,23 +42,30 @@ class TimeSheetApi(Resource):
                 entry: TimeEntry = TimeEntry(
                     datum.get("title", ""),
                     datum.get("role", ""),
-                    (
+                    TimeSpan(
                         isoparse(datum.get("begin", "")),
                         isoparse(datum.get("end", "")),
                     ),
-                    None,
+                    TimeSpan(
+                        isoparse(datum.get("break_begin", "")),
+                        isoparse(datum.get("break_end", "")),
+                    )
+                    if all(
+                        key in datum for key in ("break_begin", "break_end")
+                    )
+                    else None,
                 )
                 if not entry.is_valid():
                     return (f"Time entry is invalid: {entry}", 400)
                 ts.entries.append(entry)
-            ts.entries.sort(key=lambda x: x.time_span[0])
+            ts.entries.sort(key=lambda x: x.time_span.begin)
 
             # Check each date
             outside_range: List[TimeEntry] = [
-                entry
-                for entry in ts.entries
-                if entry.time_span[0].date() < start_date
-                or entry.time_span[0].date() - start_date >= timedelta(days=7)
+                e
+                for e in ts.entries
+                if e.time_span.begin.date() < start_date
+                or e.time_span.begin.date() - start_date >= timedelta(days=7)
             ]
             if outside_range:
                 return (
