@@ -5,6 +5,8 @@ header-includes:
   - \renewcommand\familydefault\sfdefault
   - \usepackage{setspace}
   - \onehalfspacing
+  - \usepackage{hyperref}
+  - \hypersetup{colorlinks,urlcolor=blue}
 ---
 # Dokumentation der täglichen Arbeitszeit nach §17 MiLoG
 
@@ -20,21 +22,26 @@ aufzuzeichnen.
 * Aufzeichnung für die **Kalenderwoche {{ date_start.strftime("%V/%Y") }}** ({{ date_start.strftime("%d.%m.%Y") }} bis {{ date_end.strftime("%d.%m.%Y") }})
 \
 
-|Datum|Anlass|Tätigkeit|Zeitraum|Pause|Stunden|
-|:---|:-------|:--|:--:|:--:|-:|
+{% if entries %}
+|**Datum**|**Anlass**|**Tätigkeit**|**Zeitraum**|**Pause**|**Stunden**|
+|:---|:-------|:--|:--:|:--:|--:|
 {% for entry in entries -%}
   |
-  {{- entry.time_span[0].strftime("%a. %d.%m.%Y") }}|
+  {{- entry.time_span.begin.strftime("%a. %d.%m.%Y") }}|
   {{- entry.title }}|
   {{- entry.role }}|
-  {{- entry.time_span[0].strftime("%-H:%M") }} - {{ entry.time_span[1].strftime("%-H:%M") }}|
+  {{- entry.time_span.begin.strftime("%-H:%M") }} - {{ entry.time_span.end.strftime("%-H:%M") }}|
   {%- if entry.break_span -%}
-    {{- entry.break_span[0].strftime("%-H:%M") }} - {{ entry.break_span[1].strftime("%-H:%M") }}|
+    {{- entry.break_span.begin.strftime("%-H:%M") }} - {{ entry.break_span.end.strftime("%-H:%M") }}|
   {%- else -%}
-    -|
+    –|
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
+{% else -%}
+*Keine Dienste vorhanden.*\
+
+{% endif %}
 Summe Dienste: **{{ entries|length }}**\
 Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
 
