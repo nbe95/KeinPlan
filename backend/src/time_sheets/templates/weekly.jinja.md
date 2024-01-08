@@ -5,6 +5,8 @@ header-includes:
   - \renewcommand\familydefault\sfdefault
   - \usepackage{setspace}
   - \onehalfspacing
+  - \usepackage{hyperref}
+  - \hypersetup{colorlinks,urlcolor=blue}
 ---
 # Dokumentation der täglichen Arbeitszeit nach §17 MiLoG
 
