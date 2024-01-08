@@ -50,10 +50,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          file: ./backend/Dockerfile
           context: ./backend/
           build-args: |
             VERSION=${{ needs.bump-tag-version.outputs.version }}
-          file: ./backend/Dockerfile
           push: true
           tags: |
             ${{ env.BACKEND_IMAGE_NAME }}:${{ needs.bump-tag-version.outputs.version }}
