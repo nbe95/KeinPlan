@@ -22,6 +22,7 @@ aufzuzeichnen.
 * Aufzeichnung für die **Kalenderwoche {{ date_start.strftime("%V/%Y") }}** ({{ date_start.strftime("%d.%m.%Y") }} bis {{ date_end.strftime("%d.%m.%Y") }})
 \
 
+{% if entries %}
 |**Datum**|**Anlass**|**Tätigkeit**|**Zeitraum**|**Pause**|**Stunden**|
 |:---|:-------|:--|:--:|:--:|--:|
 {% for entry in entries -%}
@@ -37,6 +38,10 @@ aufzuzeichnen.
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
+{% else -%}
+*Keine Dienste vorhanden.*\
+
+{% endif %}
 Summe Dienste: **{{ entries|length }}**\
 Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
 
