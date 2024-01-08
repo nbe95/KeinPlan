@@ -22,8 +22,8 @@ aufzuzeichnen.
 * Aufzeichnung für die **Kalenderwoche {{ date_start.strftime("%V/%Y") }}** ({{ date_start.strftime("%d.%m.%Y") }} bis {{ date_end.strftime("%d.%m.%Y") }})
 \
 
-|Datum|Anlass|Tätigkeit|Zeitraum|Pause|Stunden|
-|:---|:-------|:--|:--:|:--:|-:|
+|**Datum**|**Anlass**|**Tätigkeit**|**Zeitraum**|**Pause**|**Stunden**|
+|:---|:-------|:--|:--:|:--:|--:|
 {% for entry in entries -%}
   |
   {{- entry.time_span[0].strftime("%a. %d.%m.%Y") }}|
