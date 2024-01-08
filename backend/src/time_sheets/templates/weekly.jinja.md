@@ -18,15 +18,15 @@ aufzuzeichnen.
 * Dienstgeber: **{{ employer }}**
 * Name, Vorname des Mitarbeiters: **{{ employee }}**
 * Aufzeichnung für die **Kalenderwoche {{ date_start.strftime("%V/%Y") }}** ({{ date_start.strftime("%d.%m.%Y") }} bis {{ date_end.strftime("%d.%m.%Y") }})
+\
 
-&nbsp;
-
-|Datum|Anlass|Zeitraum|Pause|Stunden|
-|:----|:-----|:------:|:---:|------:|
+|Datum|Anlass|Tätigkeit|Zeitraum|Pause|Stunden|
+|:---|:-------|:--|:--:|:--:|-:|
 {% for entry in entries -%}
   |
-  {{- entry.date.strftime("%a. %d.%m.%Y") }}|
-  {{- entry.occasion }}|
+  {{- entry.time_span[0].strftime("%a. %d.%m.%Y") }}|
+  {{- entry.title }}|
+  {{- entry.role }}|
   {{- entry.time_span[0].strftime("%-H:%M") }} - {{ entry.time_span[1].strftime("%-H:%M") }}|
   {%- if entry.break_span -%}
     {{- entry.break_span[0].strftime("%-H:%M") }} - {{ entry.break_span[1].strftime("%-H:%M") }}|
@@ -35,7 +35,15 @@ aufzuzeichnen.
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
-* Summe Dienste: **{{ entries|length }}**
-* Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**
+Summe Dienste: **{{ entries|length }}**\
+Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
 
-Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }} von _[KeinPlan](https://keinplan.bettgen.de) v{{ version }}_.
+{% if footer -%}
+    Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
+    {% if url -%}
+        von _[KeinPlan]({{ url }})_
+        {%- if version %}
+            _v{{ version }}_
+        {% endif-%}
+    {%- endif-%}.
+{%- endif %}

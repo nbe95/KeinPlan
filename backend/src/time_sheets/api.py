@@ -1,0 +1,83 @@
+"""API definition for the time-sheet endpoint."""
+
+from datetime import date, timedelta
+from tempfile import NamedTemporaryFile
+from typing import Any, Dict
+
+from dateutil.parser import isoparse
+from flask import request, send_file
+from flask.typing import ResponseReturnValue
+from flask_restful import Resource
+
+from .entry import TimeEntry
+from .sheet import TimeSheet, WeeklyTimeSheet
+
+
+class TimeSheetApi(Resource):
+    """Restful API for generating time sheets."""
+
+    def post(self, ts_type: str, file_format: str) -> ResponseReturnValue:
+        """Handle POST requests."""
+        # Generate time sheet
+        data: Dict[str, Any] = request.json or {}
+        ts: TimeSheet
+        if ts_type.lower() == "weekly":
+            # Fetch general data
+            start_date: date = date.fromisocalendar(
+                int(data.get("year", 0)),
+                int(data.get("week", 0)),
+                1,
+            )
+            year, week, _ = start_date.isocalendar()
+            ts = WeeklyTimeSheet(
+                data.get("employer", ""),
+                data.get("employee", ""),
+                year,
+                week,
+            )
+
+            # Collect and sort all entries
+            for datum in data.get("dates", ()):
+                entry: TimeEntry = TimeEntry(
+                    datum.get("title", ""),
+                    datum.get("role", ""),
+                    (
+                        isoparse(datum.get("begin", "")),
+                        isoparse(datum.get("end", "")),
+                    ),
+                    None,
+                )
+                if not entry.is_valid():
+                    return (f"Time entry is invalid: {entry}", 400)
+                ts.entries.append(entry)
+            ts.entries.sort(key=lambda x: x.time_span[0])
+
+            # Check week range
+            if any(
+                (
+                    x.time_span[0].date() - start_date >= timedelta(days=7)
+                    for x in ts.entries
+                )
+            ):
+                return (
+                    "At least one entry exceeds the range of one week",
+                    400,
+                )
+
+        else:
+            return (f'Invalid time sheet type "{ts_type}"', 400)
+
+        # Create and download file
+        if file_format.lower() == "pdf":
+            with NamedTemporaryFile() as fh:
+                footer: bool = request.args.get("nofooter") is None
+                if not ts.generate(fh.name, footer):
+                    return ("Could not generate time sheet file.", 500)
+
+                return send_file(
+                    fh.name,
+                    as_attachment=True,
+                    download_name="time-sheet.pdf",
+                )
+        else:
+            return (f'Invalid file format "{file_format}"', 400)

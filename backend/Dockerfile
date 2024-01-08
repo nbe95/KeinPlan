@@ -1,6 +1,6 @@
 FROM python:3-slim
 
-WORKDIR /keinplan/
+WORKDIR /keinplan-backend/
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive \
@@ -13,10 +13,14 @@ RUN sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen
 ENV LC_ALL de_DE.utf8
 
-COPY src/ .
+COPY requirements.txt .
+COPY src/ src/
 
 RUN python -m pip install -r requirements.txt
 
-EXPOSE 80
+EXPOSE 8080
 
-CMD python main.py
+ARG VERSION
+ENV VERSION ${VERSION}
+
+CMD waitress-serve --port 8080 src.main:backend

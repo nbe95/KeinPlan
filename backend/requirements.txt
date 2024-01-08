@@ -1,0 +1,5 @@
+flask
+flask_restful
+jinja2
+python-dateutil
+waitress

@@ -1,25 +1,29 @@
 # KeinPlan
 
-## Was ist das?
+**:warning: Aktuell noch in der Entwicklung! :warning:**
+
+---
 
 > Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine Dienste mit Datum
-> und Uhrzeit schon offiziell in _KaPlan_ stehen? ***KeinPlan!***
+und Uhrzeit schon offiziell in _KaPlan_ stehen? \
+***KeinPlan!***
 
-Jeder, der sich diese Frage schon mal gestellt hat, ist hier goldrichtig!
+Wenn du dir diese Frage auch schon mal gestellt hat, bist du hier genau richtig!
+
+## Worum geht's?
 
 Dieses Tool erzeugt ~~Datenmüll~~ Stundenlisten, die vollautomatisch mit den in
 _KaPlan_ hinterlegten Diensten gefüttert werden.
 Nicht mehr, aber auch nicht weniger.
 
-Mit **nur 2 Klicks** können hier fertige Stundenlisten erstellt, ggf. als PDF
-heruntergeladen und dann zwecks Prozessbefriedigung direkt ans Pfarrbüro
+Das bedeutet, mit **nur 2 Klicks** können fertige Stundenlisten erstellt, ggf.
+als PDF heruntergeladen und zwecks Prozessbefriedigung direkt ans Pfarrbüro
 verschickt werden.
 
-> Spoiler: An einer Vollautomatisierung für jeden, der es möchte, wird zurzeit
-> noch gearbeitet. :)
+> Spoiler: An einer Vollautomatisierung wird zurzeit noch gearbeitet. :smiley:
 
-## Template Handling
+### Hilfreiche Befehle
 
 ```sh
-docker run --rm -v "$(pwd):/data:Z" pandoc/latex -o out.pdf templates/timesheet.jinja.md
+curl -X POST -H "Content-type: application/json" --data "@payload_manual.json" http://127.0.0.1:8080/time-sheet/weekly/pdf?nofooter > out.pdf
 ```

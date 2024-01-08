@@ -1,5 +1,10 @@
-"""Main constants for KeinPlan."""
+"""Constants for all KeinPlan modules."""
 
-TEMPLATE_DIR: str = "./templates"
+from os import environ
+from typing import Optional
+
+TEMPLATE_DIR: str = "./src/time_sheets/templates/"
 LOCALE_LC_ALL: str = "de_DE.utf8"
-VERSION: str = "0.1.0"
+
+URL: Optional[str] = environ.get("URL")
+VERSION: Optional[str] = environ.get("VERSION")
