@@ -23,4 +23,4 @@ EXPOSE 8080
 ARG VERSION
 ENV VERSION ${VERSION}
 
-CMD waitress-serve --port 8080 src.api:backend
+CMD waitress-serve --port 8080 src.main:backend

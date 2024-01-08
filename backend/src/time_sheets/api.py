@@ -1,27 +1,26 @@
-"""API definition for KeinPlan backend."""
+"""API definition for the time-sheet endpoint."""
 
 from datetime import date, time
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from flask import Flask, send_file
-from flask_restful import Api, Resource
+from flask import send_file
+from flask.typing import ResponseReturnValue
+from flask_restful import Resource
 
-from src.time_sheets import TimeEntry, TimeSheet, WeeklyTimeSheet
-
-backend: Flask = Flask(__name__)
-api: Api = Api(backend)
+from .entry import TimeEntry
+from .sheet import TimeSheet, WeeklyTimeSheet
 
 
-class TimeSheetAPI(Resource):
+class TimeSheetApi(Resource):
     """Restful API for generating time sheets."""
 
-    def post(self, file_format: str):
-        """Handle POST requests on the specified format endpoint."""
-        if file_format.lower() == "pdf":
-            ts: TimeSheet = WeeklyTimeSheet(
-                "Dienstgeber", "Mitarbeiter", 2023, 50
-            )
+    def post(self, ts_type: str, file_format: str) -> ResponseReturnValue:
+        """Handle POST requests."""
+        # Generate time sheet
+        ts: TimeSheet
+        if ts_type.lower() == "weekly":
+            ts = WeeklyTimeSheet("Dienstgeber", "Mitarbeiter", 2023, 50)
             ts.entries = [
                 TimeEntry(
                     date(2023, 12, 11),
@@ -54,6 +53,11 @@ class TimeSheetAPI(Resource):
                     None,
                 ),
             ]
+        else:
+            return (f'Invalid time sheet type "{ts_type}"', 400)
+
+        # Create and download file
+        if file_format.lower() == "pdf":
             with NamedTemporaryFile() as fh:
                 ts.generate(Path(fh.name))
                 return send_file(
@@ -62,7 +66,4 @@ class TimeSheetAPI(Resource):
                     download_name="time-sheet.pdf",
                 )
         else:
-            return ("Invalid file format", 400)
-
-
-api.add_resource(TimeSheetAPI, "/time-sheet/<string:file_format>")
+            return (f'Invalid file format "{file_format}"', 400)

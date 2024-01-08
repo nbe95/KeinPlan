@@ -4,6 +4,7 @@ services:
   backend:
     image: nbe95/keinplan-backend
     ports:
+      # Only open the backend to the outside world for debugging
       - 8080:8080
     environment:
       - TZ=Europe/Berlin
