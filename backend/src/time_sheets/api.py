@@ -1,8 +1,10 @@
 """API definition for the time-sheet endpoint."""
 
-from datetime import date, time
+from datetime import date, timedelta
 from tempfile import NamedTemporaryFile
+from typing import Any, Dict
 
+from dateutil.parser import isoparse
 from flask import request, send_file
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
@@ -17,48 +19,61 @@ class TimeSheetApi(Resource):
     def post(self, ts_type: str, file_format: str) -> ResponseReturnValue:
         """Handle POST requests."""
         # Generate time sheet
+        data: Dict[str, Any] = request.json or {}
         ts: TimeSheet
         if ts_type.lower() == "weekly":
-            ts = WeeklyTimeSheet("Dienstgeber", "Mitarbeiter", 2023, 50)
-            ts.entries = [
-                TimeEntry(
-                    date(2023, 12, 11),
-                    "Hl. Messe",
-                    (time(11, 0), time(12, 0)),
+            # Fetch general data
+            start_date: date = date.fromisocalendar(
+                int(data.get("year", 0)),
+                int(data.get("week", 0)),
+                1,
+            )
+            year, week, _ = start_date.isocalendar()
+            ts = WeeklyTimeSheet(
+                data.get("employer", ""),
+                data.get("employee", ""),
+                year,
+                week,
+            )
+
+            # Collect and sort all entries
+            for datum in data.get("dates", ()):
+                entry: TimeEntry = TimeEntry(
+                    datum.get("title", ""),
+                    datum.get("role", ""),
+                    (
+                        isoparse(datum.get("begin", "")),
+                        isoparse(datum.get("end", "")),
+                    ),
                     None,
-                ),
-                TimeEntry(
-                    date(2023, 12, 12),
-                    "Hl. Messe",
-                    (time(11, 0), time(12, 0)),
-                    None,
-                ),
-                TimeEntry(
-                    date(2023, 12, 13),
-                    "Hl. Messe",
-                    (time(11, 0), time(12, 0)),
-                    None,
-                ),
-                TimeEntry(
-                    date(2023, 12, 14),
-                    "Hl. Messe",
-                    (time(11, 0), time(12, 0)),
-                    None,
-                ),
-                TimeEntry(
-                    date(2023, 12, 15),
-                    "Bußandacht",
-                    (time(11, 0), time(12, 0)),
-                    None,
-                ),
-            ]
+                )
+                if not entry.is_valid():
+                    return (f"Time entry is invalid: {entry}", 400)
+                ts.entries.append(entry)
+            ts.entries.sort(key=lambda x: x.time_span[0])
+
+            # Check week range
+            if any(
+                (
+                    x.time_span[0].date() - start_date >= timedelta(days=7)
+                    for x in ts.entries
+                )
+            ):
+                return (
+                    "At least one entry exceeds the range of one week",
+                    400,
+                )
+
         else:
             return (f'Invalid time sheet type "{ts_type}"', 400)
 
         # Create and download file
         if file_format.lower() == "pdf":
             with NamedTemporaryFile() as fh:
-                ts.generate(fh.name, request.args.get("nofooter") is None)
+                footer: bool = request.args.get("nofooter") is None
+                if not ts.generate(fh.name, footer):
+                    return ("Could not generate time sheet file.", 500)
+
                 return send_file(
                     fh.name,
                     as_attachment=True,

@@ -9,7 +9,7 @@ from typing import List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import LOCALE_LC_ALL, TEMPLATE_DIR, VERSION, URL
+from src.constants import LOCALE_LC_ALL, TEMPLATE_DIR, URL, VERSION
 
 from .entry import TimeEntry
 
@@ -83,5 +83,4 @@ class WeeklyTimeSheet(TimeSheet):
             url=URL,
             version=VERSION,
         )
-
         return self._convert_md_to_pdf(rendered, target_path)

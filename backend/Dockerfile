@@ -1,6 +1,6 @@
 FROM python:3-slim
 
-WORKDIR /keinplan/
+WORKDIR /keinplan-backend/
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive \

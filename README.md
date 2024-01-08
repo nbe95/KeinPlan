@@ -22,8 +22,8 @@ verschickt werden.
 
 > Spoiler: An einer Vollautomatisierung wird zurzeit noch gearbeitet. :smiley:
 
-### Template Handling
+### Hilfreiche Befehle
 
 ```sh
-docker run --rm -v "$(pwd):/data:Z" pandoc/latex -o out.pdf templates/timesheet.jinja.md
+curl -X POST -H "Content-type: application/json" --data "@payload_manual.json" http://127.0.0.1:8080/time-sheet/weekly/pdf?nofooter > out.pdf
 ```
