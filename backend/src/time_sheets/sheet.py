@@ -12,9 +12,9 @@ from jinja2 import Environment, FileSystemLoader, Template
 
 from src.constants import (
     HYPERLINK,
-    TIME_SHEETS_LOCALE
     LOG_LEVEL,
-    TIME_SHEETS_TEMPLATE_DIR
+    TIME_SHEETS_LOCALE,
+    TIME_SHEETS_TEMPLATE_DIR,
     VERSION,
 )
 

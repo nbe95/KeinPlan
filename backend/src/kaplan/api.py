@@ -7,8 +7,9 @@ from typing import Optional
 from flask import request
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
+from hyperlink import URL
 
-from .kaplan_ics import KaPlanIcs, KaPlanIcsCached
+from .kaplan_ics import KaPlanIcs, KaPlanIcsCached, KaPlanInterfaceError
 
 
 class KaPlanApi(Resource):
@@ -23,9 +24,9 @@ class KaPlanApi(Resource):
             if not ics_url_b64:
                 raise Error("Got an empty string.")
             ics_url: str = b64decode(ics_url_b64).decode("ascii")
+            normalized_url: str = URL.from_text(ics_url).normalize().to_text()
+            return self.kaplan_interface.get_events(normalized_url)
         except (Error, UnicodeDecodeError) as e:
-            raise ValueError(
-                "The ICS string was not properly base64 encoded."
-            ) from e
-
-        return self.kaplan_interface.get_events(ics_url)
+            return {"message": f"The ICS string was not properly encoded: {e}"}
+        except KaPlanInterfaceError as e:
+            return {"message": f"Could not import KaPlan data: {e}"}

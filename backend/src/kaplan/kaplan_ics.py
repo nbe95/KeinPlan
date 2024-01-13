@@ -4,18 +4,28 @@ import logging
 from datetime import datetime, timedelta
 from hashlib import sha256
 from os import uname
-from re import Match, match
+from re import Match, match, search
 from typing import Any, Dict, Optional, Tuple
+from urllib.parse import urlparse
 
-from hyperlink import HYPERLINK
 from ics import Calendar, Event
 from requests import Response, get
 
-from src.constants import KAPLAN_ICS_ENCODING, LOG_LEVEL, VERSION
+from src.constants import (
+    KAPLAN_ALLOWED_SERVERS,
+    KAPLAN_ALLOWED_WORKGROUPS,
+    KAPLAN_ICS_ENCODING,
+    LOG_LEVEL,
+    VERSION,
+)
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
+
+
+class KaPlanInterfaceError(Exception):
+    """Custom exception to catch and provide a meaningful user feedback."""
 
 
 class KaPlanIcs:
@@ -29,10 +39,15 @@ class KaPlanIcs:
 
     def get_events(self, ics_url: str) -> Dict[str, Any]:
         """Call the KaPlan endpoint and return all available dates."""
-        normalized_url: str = URL.from_text(ics_url).normalize().to_text()
+        if not self._validate_url(ics_url):
+            raise KaPlanInterfaceError(
+                "The specified URL is either invalid or does not meet the "
+                "requirements of this server."
+            )
+
         ics: str
         fetch_date: datetime
-        ics, fetch_date = self.fetch_ics_data(normalized_url)
+        ics, fetch_date = self.fetch_ics_data(ics_url)
         cal: Calendar = Calendar(ics)
 
         logger.info("Retrieving %d dates from KaPlan data.", len(cal.events))
@@ -60,8 +75,8 @@ class KaPlanIcs:
                 response.status,
                 response.reason,
             )
-            raise ValueError(
-                f"Got an error with code {response.status} from KaPlan server."
+            raise KaPlanInterfaceError(
+                f"Got an error from KaPlan server with code {response.status}."
             )
 
         content: str = response.content.decode(KAPLAN_ICS_ENCODING)
@@ -106,6 +121,23 @@ class KaPlanIcs:
             "end": event.end.for_json(),
             "modified": event.last_modified.for_json(),
         }
+
+    @staticmethod
+    def _validate_url(url: str) -> bool:
+        """Check if the specified URL meets the configured requirements."""
+        # Extract host and workgroup from URL
+        host: str = urlparse(url).netloc
+        workgroup: Optional[str] = None
+        workgroup_matcher: Optional[Match] = search(
+            r"Arbeitsgruppe=(\w+)", url
+        )
+        if workgroup_matcher:
+            workgroup = workgroup_matcher.group(1)
+
+        return (
+            host in KAPLAN_ALLOWED_SERVERS
+            and workgroup in KAPLAN_ALLOWED_WORKGROUPS
+        )
 
 
 class KaPlanIcsCached(KaPlanIcs):
