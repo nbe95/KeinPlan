@@ -2,6 +2,7 @@ python-dateutil
 flake8-pyproject
 flask
 flask_restful
+hyperlink
 ics
 jinja2
 python-dateutil
