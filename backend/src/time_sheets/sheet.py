@@ -1,5 +1,6 @@
 """Time sheet module for KeinPlan."""
 
+import logging
 from abc import abstractmethod
 from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
@@ -9,11 +10,21 @@ from typing import List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import LOCALE_LC_ALL, TEMPLATE_DIR, URL, VERSION
+from src.constants import (
+    HYPERLINK,
+    LOG_LEVEL,
+    TIME_SHEETS_LOCALE,
+    TIME_SHEETS_TEMPLATE_DIR,
+    VERSION,
+)
 
 from .entry import TimeEntry
 
-setlocale(LC_ALL, LOCALE_LC_ALL)
+setlocale(LC_ALL, TIME_SHEETS_LOCALE)
+
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+logger.setLevel(LOG_LEVEL)
 
 
 class TimeSheet:
@@ -64,9 +75,15 @@ class WeeklyTimeSheet(TimeSheet):
             target_file if isinstance(target_file, Path) else Path(target_file)
         )
 
+        logger.info(
+            "Generating weekly time sheet with %d entries at '%s'.",
+            len(self.entries),
+            target_path,
+        )
+
         template_file: str = "weekly.jinja.md"
         jinja_env: Environment = Environment(
-            loader=FileSystemLoader(searchpath=TEMPLATE_DIR)
+            loader=FileSystemLoader(searchpath=TIME_SHEETS_TEMPLATE_DIR)
         )
         jinja_env.filters.update({"format_locale": format_string})
         template: Template = jinja_env.get_template(template_file)
@@ -80,7 +97,7 @@ class WeeklyTimeSheet(TimeSheet):
             total_hours=sum(e.calc_hours() for e in self.entries),
             generation_time=datetime.now(),
             footer=footer,
-            url=URL,
+            hyperlink=HYPERLINK,
             version=VERSION,
         )
         return self._convert_md_to_pdf(rendered, target_path)

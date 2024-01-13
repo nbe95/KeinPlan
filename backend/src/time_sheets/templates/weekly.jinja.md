@@ -38,17 +38,17 @@ aufzuzeichnen.
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
-{% else -%}
-*Keine Dienste vorhanden.*\
-
-{% endif %}
 Summe Dienste: **{{ entries|length }}**\
 Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
 
+{% else -%}
+*Keine Dienste in diesem Zeitraum vorhanden.*\
+
+{% endif %}
 {% if footer -%}
     Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
-    {% if url -%}
-        von _[KeinPlan]({{ url }})_
+    {% if hyperlink -%}
+        von _[KeinPlan]({{ hyperlink }})_
         {%- if version %}
             _v{{ version }}_
         {% endif-%}
