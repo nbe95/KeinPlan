@@ -7,14 +7,22 @@ from typing import List, Any, Dict
 
 from re import match, Match
 
+from src.constants import VERSION
+
+from os import uname
 
 class KaPlanIcs:
+
+    user_agent: str = (
+        f"Mozilla/5.0 ({uname().sysname} {uname().release}) "
+        f"KeinPlan/{VERSION} (JSON)"
+    )
 
     def __init__(self, ics_url: str) -> None:
         self.ics_url = ics_url
 
     def get_events(self) -> List[Any]:
-        ics: str = get(self.ics_url).text
+        ics: str = get(self.ics_url, headers={"User-Agent": self.user_agent}).text
         cal: Calendar = Calendar(ics)
         return [self._parse_event(event) for event in cal.events]
 
