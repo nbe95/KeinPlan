@@ -10,11 +10,17 @@ from typing import List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import LOCALE_LC_ALL, LOG_LEVEL, TEMPLATE_DIR, URL, VERSION
+from src.constants import (
+    HYPERLINK,
+    TIME_SHEETS_LOCALE
+    LOG_LEVEL,
+    TIME_SHEETS_TEMPLATE_DIR
+    VERSION,
+)
 
 from .entry import TimeEntry
 
-setlocale(LC_ALL, LOCALE_LC_ALL)
+setlocale(LC_ALL, TIME_SHEETS_LOCALE)
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -77,7 +83,7 @@ class WeeklyTimeSheet(TimeSheet):
 
         template_file: str = "weekly.jinja.md"
         jinja_env: Environment = Environment(
-            loader=FileSystemLoader(searchpath=TEMPLATE_DIR)
+            loader=FileSystemLoader(searchpath=TIME_SHEETS_TEMPLATE_DIR)
         )
         jinja_env.filters.update({"format_locale": format_string})
         template: Template = jinja_env.get_template(template_file)
@@ -91,7 +97,7 @@ class WeeklyTimeSheet(TimeSheet):
             total_hours=sum(e.calc_hours() for e in self.entries),
             generation_time=datetime.now(),
             footer=footer,
-            url=URL,
+            hyperlink=HYPERLINK,
             version=VERSION,
         )
         return self._convert_md_to_pdf(rendered, target_path)

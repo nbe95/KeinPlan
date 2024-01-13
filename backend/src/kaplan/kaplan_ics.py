@@ -7,7 +7,7 @@ from os import uname
 from re import Match, match
 from typing import Any, Dict, Optional, Tuple
 
-from hyperlink import URL
+from hyperlink import HYPERLINK
 from ics import Calendar, Event
 from requests import Response, get
 
