@@ -1,5 +1,6 @@
 """Time sheet module for KeinPlan."""
 
+import logging
 from abc import abstractmethod
 from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
@@ -9,11 +10,15 @@ from typing import List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import LOCALE_LC_ALL, TEMPLATE_DIR, URL, VERSION
+from src.constants import LOCALE_LC_ALL, LOG_LEVEL, TEMPLATE_DIR, URL, VERSION
 
 from .entry import TimeEntry
 
 setlocale(LC_ALL, LOCALE_LC_ALL)
+
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+logger.setLevel(LOG_LEVEL)
 
 
 class TimeSheet:
@@ -62,6 +67,12 @@ class WeeklyTimeSheet(TimeSheet):
         """Generate a PDF time sheet from the given data."""
         target_path: Path = (
             target_file if isinstance(target_file, Path) else Path(target_file)
+        )
+
+        logger.info(
+            "Generating weekly time sheet with %d entries at '%s'.",
+            len(self.entries),
+            target_path,
         )
 
         template_file: str = "weekly.jinja.md"
