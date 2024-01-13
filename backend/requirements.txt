@@ -1,4 +1,5 @@
 python-dateutil
+flake8-pyproject
 flask
 flask_restful
 ics

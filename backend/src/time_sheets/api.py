@@ -1,4 +1,4 @@
-"""API definition for the time-sheet endpoint."""
+"""API definition for our time-sheet endpoint."""
 
 from datetime import date, timedelta
 from tempfile import NamedTemporaryFile
