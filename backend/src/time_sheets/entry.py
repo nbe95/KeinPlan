@@ -13,6 +13,7 @@ class TimeEntry:
 
     title: str
     role: str
+    location: str
     time_span: TimeSpan
     break_span: Optional[TimeSpan]
 

@@ -1,5 +1,5 @@
 ---
-geometry: a4paper,margin=2.2cm
+geometry: a4paper,margin=1.5cm
 font-size: 11pt
 header-includes:
   - \renewcommand\familydefault\sfdefault
@@ -23,12 +23,12 @@ aufzuzeichnen.
 \
 
 {% if entries %}
-|**Datum**|**Anlass**|**Tätigkeit**|**Zeitraum**|**Pause**|**Stunden**|
-|:---|:-------|:--|:--:|:--:|--:|
+|**Datum**|**Anlass, Ort**|**Tätigkeit**|**Zeitraum**|**Pause**|**Stunden**|
+|:---|:--------|:-|:-:|:-:|-:|
 {% for entry in entries -%}
   |
   {{- entry.time_span.begin.strftime("%a. %d.%m.%Y") }}|
-  {{- entry.title }}|
+  {{- entry.title }}, {{ entry.location }}|
   {{- entry.role }}|
   {{- entry.time_span.begin.strftime("%-H:%M") }} - {{ entry.time_span.end.strftime("%-H:%M") }}|
   {%- if entry.break_span -%}

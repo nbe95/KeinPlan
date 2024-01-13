@@ -42,6 +42,7 @@ class TimeSheetApi(Resource):
                 entry: TimeEntry = TimeEntry(
                     datum.get("title", ""),
                     datum.get("role", ""),
+                    datum.get("location", ""),
                     TimeSpan(
                         isoparse(datum.get("begin", "")),
                         isoparse(datum.get("end", "")),
