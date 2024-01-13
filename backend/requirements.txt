@@ -1,5 +1,8 @@
+python-dateutil
 flask
 flask_restful
+ics
 jinja2
 python-dateutil
+requests
 waitress
