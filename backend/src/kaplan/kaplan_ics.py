@@ -37,7 +37,9 @@ class KaPlanIcs:
         f"KeinPlan/{VERSION} (JSON)"
     )
 
-    def get_events(self, ics_url: str) -> Dict[str, Any]:
+    def get_events(
+        self, ics_url: str, date_from: datetime, date_to: datetime
+    ) -> Dict[str, Any]:
         """Call the KaPlan endpoint and return all available dates."""
         if not self._validate_url(ics_url):
             raise KaPlanInterfaceError(
@@ -52,7 +54,11 @@ class KaPlanIcs:
 
         logger.info("Retrieving %d dates from KaPlan data.", len(cal.events))
         return {
-            "dates": [self._parse_event(event) for event in cal.events],
+            "dates": [
+                self._parse_event(event)
+                for event in cal.events
+                if event.begin >= date_from and event.end <= date_to
+            ],
             "fetched": fetch_date.isoformat(),
         }
 
