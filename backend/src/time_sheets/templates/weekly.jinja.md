@@ -38,6 +38,8 @@ aufzuzeichnen.
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
+Alle Stundenangaben sind auf jeweils 15 Minuten auf- oder abgerundet.\
+
 Summe Dienste: **{{ entries|length }}**\
 Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
 
