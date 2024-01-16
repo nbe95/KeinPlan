@@ -34,7 +34,7 @@ class KaPlanIcs:
     timeout_s: int = 20
     user_agent: str = (
         f"Mozilla/5.0 ({uname().sysname} {uname().release}) "
-        f"KeinPlan/{VERSION} (JSON)"
+        f"KeinPlan/{VERSION or 'beta'} (JSON)"
     )
 
     def get_events(
