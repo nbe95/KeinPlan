@@ -11,12 +11,13 @@ from urllib.parse import ParseResult, parse_qs, urlparse
 from ics import Calendar, Event
 from requests import Response, get
 
-from src.constants import (
+from src.constants import LOG_LEVEL, VERSION
+
+from .constants import (
     KAPLAN_ALLOWED_SERVERS,
     KAPLAN_ALLOWED_WORKGROUPS,
+    KAPLAN_CACHE_TTL,
     KAPLAN_ICS_ENCODING,
-    LOG_LEVEL,
-    VERSION,
 )
 
 logging.basicConfig(level=logging.WARNING)
@@ -159,7 +160,7 @@ class KaPlanIcs:
 class KaPlanIcsCached(KaPlanIcs):
     """KaPlan ICS web interface using cached data."""
 
-    ttl: timedelta = timedelta(minutes=15)
+    ttl: timedelta = timedelta(seconds=KAPLAN_CACHE_TTL)
 
     def __init__(self) -> None:
         self.cache: Dict[bytes, Tuple[str, datetime]] = {}

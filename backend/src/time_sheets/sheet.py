@@ -10,14 +10,9 @@ from typing import List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import (
-    HYPERLINK,
-    LOG_LEVEL,
-    TIME_SHEETS_LOCALE,
-    TIME_SHEETS_TEMPLATE_DIR,
-    VERSION,
-)
+from src.constants import HYPERLINK, LOG_LEVEL, VERSION
 
+from .constants import TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from .entry import TimeEntry
 
 setlocale(LC_ALL, TIME_SHEETS_LOCALE)
