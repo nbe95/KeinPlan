@@ -42,15 +42,15 @@ Summe Dienste: **{{ entries|length }}**\
 Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
 
 {% else -%}
-*Keine Dienste in diesem Zeitraum vorhanden.*\
+Keine Dienste in diesem Zeitraum vorhanden.\
 
 {% endif %}
 {% if footer -%}
-    Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
+    *Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
     {% if hyperlink -%}
-        von _[KeinPlan]({{ hyperlink }})_
+        von [KeinPlan]({{ hyperlink }})
         {%- if version %}
-            _v{{ version }}_
+            v{{ version }}
         {% endif-%}
-    {%- endif-%}.
+    {%- endif-%}.*
 {%- endif %}
