@@ -1,10 +1,9 @@
 """API definition for our time-sheet endpoint."""
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from tempfile import NamedTemporaryFile
 from typing import Any, Dict, List
 
-from dateutil.parser import isoparse
 from flask import request, send_file
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
@@ -44,12 +43,12 @@ class TimeSheetApi(Resource):
                     datum.get("role", ""),
                     datum.get("location", ""),
                     TimeSpan(
-                        isoparse(datum.get("begin", "")),
-                        isoparse(datum.get("end", "")),
+                        datetime.fromisoformat(datum.get("begin", "")),
+                        datetime.fromisoformat(datum.get("end", "")),
                     ),
                     TimeSpan(
-                        isoparse(datum.get("break_begin", "")),
-                        isoparse(datum.get("break_end", "")),
+                        datetime.fromisoformat(datum.get("break_begin", "")),
+                        datetime.fromisoformat(datum.get("break_end", "")),
                     )
                     if all(
                         key in datum for key in ("break_begin", "break_end")

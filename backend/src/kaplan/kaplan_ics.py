@@ -1,11 +1,11 @@
 """KaPlan ICS interface module."""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
 from hashlib import sha256
 from os import uname
 from re import Match, match, search
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from ics import Calendar, Event
@@ -52,15 +52,27 @@ class KaPlanIcs:
         ics, fetch_date = self.fetch_ics_data(ics_url)
         cal: Calendar = Calendar(ics)
 
-        logger.info("Retrieving %d dates from KaPlan data.", len(cal.events))
-        return {
-            "dates": [
-                self._parse_event(event)
-                for event in cal.events
-                if event.begin >= date_from and event.end <= date_to
-            ],
-            "fetched": fetch_date.isoformat(),
-        }
+        # Ensure that any datetime objects has its timezone
+        local_tz: Optional[tzinfo] = datetime.now().astimezone().tzinfo
+        if date_from.tzinfo is None:
+            date_from = date_from.replace(tzinfo=local_tz)
+
+        if date_to.tzinfo is None:
+            date_to = date_to.replace(tzinfo=local_tz)
+
+        dates: List[Dict[str, Any]] = [
+            self._parse_event(event)
+            for event in cal.events
+            if event.begin >= date_from and event.end <= date_to
+        ]
+        logger.info(
+            "Retrieved %d dates (%d total) from KaPlan between %s and %s.",
+            len(dates),
+            len(cal.events),
+            date_from,
+            date_to,
+        )
+        return {"dates": dates, "fetched": fetch_date.isoformat()}
 
     def fetch_ics_data(self, ics_url: str) -> Tuple[str, datetime]:
         """Actual method to call the KaPlan endpoint.

@@ -5,7 +5,6 @@ from binascii import Error
 from datetime import datetime
 from typing import Optional
 
-from dateutil.parser import isoparse
 from flask import request
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
@@ -31,10 +30,10 @@ class KaPlanApi(Resource):
             return {"message": f"The ICS string was not properly encoded: {e}"}
 
         try:
-            date_from: datetime = isoparse(
+            date_from: datetime = datetime.fromisoformat(
                 request.args.get("from", datetime.min.isoformat())
             )
-            date_to: datetime = isoparse(
+            date_to: datetime = datetime.fromisoformat(
                 request.args.get("to", datetime.max.isoformat())
             )
             return self.kaplan_interface.get_events(
