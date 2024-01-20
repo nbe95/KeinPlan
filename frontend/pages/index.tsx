@@ -6,11 +6,11 @@ import PageWrapper from "../components/page-wrapper";
 
 const Page: NextPage = () => {
   return (
-    <PageWrapper>
+    <PageWrapper headline="Worum geht's?">
+      {/* <Row xs={1} md={2}> */}
       <Row>
-        <h1 className="mb-5">Worum geht&apos;s?</h1>
-        <Col className="px-2" xs={4}>
-          <blockquote className="blockquote text-center p-3 mb-5 m-auto bg-light shadow rounded">
+        <Col className="px-0" md={6} lg={4}>
+          <blockquote className="blockquote text-center p-3 mx-3 mb-5 m-auto bg-light shadow rounded">
             <p>
               Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine
               Dienste mit Datum und Uhrzeit schon offiziell in
@@ -21,7 +21,7 @@ const Page: NextPage = () => {
             </p>
           </blockquote>
         </Col>
-        <Col className="px-5">
+        <Col className="px-5" md={6} lg={8}>
           <p className="lead">
             Wenn du dir diese Frage auch schonmal gestellt hast, bist du hier
             genau richtig.
@@ -35,8 +35,8 @@ const Page: NextPage = () => {
           </p>
           <p>
             Das bedeutet, hier kannst du mit nur wenigen Klicks fertige
-            Stundenlisten erstellen, als PDF herunterladen und direkt zwecks
-            Prozessbefriedigung ans Pfarrbüro versenden.
+            Stundenlisten erstellen, als PDF herunterladen und anschließend
+            direkt zwecks Prozessbefriedigung ans Pfarrbüro versenden.
           </p>
           <Button variant="primary" className="mx-auto" href="/time-sheet">
             <FontAwesomeIcon icon={faCalendarCheck} className="me-2" />
