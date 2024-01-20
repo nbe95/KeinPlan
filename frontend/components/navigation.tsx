@@ -5,7 +5,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 
 const Navigation: NextPage = () => {
   return (
-    <Navbar bg="dark" data-bs-theme="dark" expand="lg">
+    <Navbar bg="dark" data-bs-theme="dark" expand="md">
       <Container>
         <Navbar.Brand href="/">
           <FontAwesomeIcon icon={faChurch} className="me-2 text-warning" />
