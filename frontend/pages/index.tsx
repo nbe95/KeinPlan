@@ -8,7 +8,7 @@ const Page: NextPage = () => {
   return (
     <PageWrapper>
       <Row>
-        <h1 className="mb-5">Worum geht's?</h1>
+        <h1 className="mb-5">Worum geht&apos;s?</h1>
         <Col className="px-2" xs={4}>
           <blockquote className="blockquote text-center p-3 mb-5 m-auto bg-light shadow rounded">
             <p>
