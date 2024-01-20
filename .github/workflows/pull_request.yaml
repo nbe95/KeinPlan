@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: 18
       - name: Install dev-dependencies
-        run: npm ci -D
+        run: npm install --only=dev
       - name: Run prettier
         run: npm run lint
 
