@@ -8,6 +8,7 @@ config.autoAddCss = false;
 
 type PageProps = {
   title?: string;
+  headline?: string;
 };
 
 const PageWrapper = (props: PropsWithChildren<PageProps>) => {
@@ -22,7 +23,10 @@ const PageWrapper = (props: PropsWithChildren<PageProps>) => {
         <style>{dom.css()}</style>
       </Head>
       <Navigation></Navigation>
-      <Container className="container-sm pt-5">{props.children}</Container>
+      <Container className="container-sm py-5">
+        {props.headline && <h1 className="mb-4">{props.headline}</h1>}
+        {props.children}
+      </Container>
     </>
   );
 };
