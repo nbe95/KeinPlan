@@ -5,22 +5,20 @@
 ---
 
 > Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine Dienste mit Datum
-und Uhrzeit schon offiziell in _KaPlan_ stehen? \
+und Uhrzeit schon offiziell in *KaPlan* stehen? \
 ***KeinPlan!***
 
-Wenn du dir diese Frage auch schon mal gestellt hat, bist du hier genau richtig!
+Wenn du dir diese Frage auch schon mal gestellt hat, bist du hier genau richtig.
 
 ## Worum geht's?
 
-Dieses Tool erzeugt ~~Datenmüll~~ Stundenlisten, die vollautomatisch mit den in
-_KaPlan_ hinterlegten Diensten gefüttert werden.
-Nicht mehr, aber auch nicht weniger.
+Dieses Online-Tool erzeugt ~~Datenmüll~~ Stundenlisten, die vollautomatisch 1:1
+mit den in *KaPlan* hinterlegten Diensten gefüttert werden. Nicht mehr, aber
+auch nicht weniger.
 
-Das bedeutet, mit **nur 2 Klicks** können fertige Stundenlisten erstellt, ggf.
-als PDF heruntergeladen und zwecks Prozessbefriedigung direkt ans Pfarrbüro
-verschickt werden.
-
-> Spoiler: An einer Vollautomatisierung wird zurzeit noch gearbeitet. :smiley:
+Das bedeutet, hier kannst du mit nur wenigen Klicks fertige Stundenlisten
+erstellen, als PDF herunterladen und direkt zwecks Prozessbefriedigung ans
+Pfarrbüro versenden.
 
 ### Hilfreiche Befehle
 
