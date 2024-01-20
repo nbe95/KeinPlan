@@ -1,9 +1,9 @@
+import { config, dom } from "@fortawesome/fontawesome-svg-core";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
-import Navigation from "./navigation";
 import { PropsWithChildren } from "react";
 import { Container } from "react-bootstrap";
-import { config, dom } from "@fortawesome/fontawesome-svg-core";
+import Navigation from "./navigation";
 config.autoAddCss = false;
 
 type PageProps = {
@@ -20,7 +20,7 @@ const PageWrapper = (props: PropsWithChildren<PageProps>) => {
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
         <style>{dom.css()}</style>
-      </Head >
+      </Head>
       <Navigation></Navigation>
       <Container fluid="sm">{props.children}</Container>
     </>

@@ -1,7 +1,7 @@
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { faChurch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NextPage } from "next";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChurch } from '@fortawesome/free-solid-svg-icons'
+import { Container, Nav, Navbar } from "react-bootstrap";
 
 const Navigation: NextPage = () => {
   return (
