@@ -11,7 +11,7 @@ on:
       - ready_for_review
 
 jobs:
-  lint:
+  lint-backend:
     name: Lint the backend code
     runs-on: ubuntu-latest
     defaults:
@@ -27,6 +27,19 @@ jobs:
         run: pip install tox
       - name: Run tox
         run: tox -e lint
+
+  lint-frontend:
+    name: Lint the frontend code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dev-dependencies
+        run: npm ci -D
+      - name: Run prettier
+        run: npm run lint
 
   validate-release:
     name: Validate release label and notes

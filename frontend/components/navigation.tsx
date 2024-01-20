@@ -9,7 +9,7 @@ const Navigation: NextPage = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Stundenlisten</Nav.Link>
+          <Nav.Link href="/">Stundenlisten</Nav.Link>
             <Nav.Link href="/auto-mailer">AutoMailer</Nav.Link>
             <Nav.Link href="/privacy">Datenschutz</Nav.Link>
           </Nav>
