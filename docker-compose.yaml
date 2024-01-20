@@ -5,3 +5,8 @@ services:
     image: nbe95/keinplan-backend
     volumes:
       - /etc/localtime:/etc/localtime:ro
+
+  frontend:
+    image: nbe95/keinplan-frontend
+    ports:
+      - 80:3000
