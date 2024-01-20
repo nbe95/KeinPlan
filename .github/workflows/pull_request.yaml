@@ -41,7 +41,7 @@ jobs:
           node-version: 18
       - name: Install dev-dependencies
         run: npm install --only=dev
-      - name: Run prettier
+      - name: Run linters
         run: npm run lint
 
   validate-release:

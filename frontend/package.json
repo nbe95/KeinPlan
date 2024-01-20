@@ -3,7 +3,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "npx prettier . --check",
+    "lint": "next lint && npx prettier . --check",
     "format": "npx prettier . --write"
   },
   "dependencies": {
