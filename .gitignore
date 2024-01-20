@@ -1,5 +1,1 @@
-/docker-compose.yaml
-.tox
-venv/
-__pycache__
-*.egg-info
+/.env
