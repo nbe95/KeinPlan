@@ -7,7 +7,7 @@ import Navigation from "./navigation";
 config.autoAddCss = false;
 
 type PageProps = {
-  title: string;
+  title?: string;
 };
 
 const PageWrapper = (props: PropsWithChildren<PageProps>) => {
@@ -22,7 +22,7 @@ const PageWrapper = (props: PropsWithChildren<PageProps>) => {
         <style>{dom.css()}</style>
       </Head>
       <Navigation></Navigation>
-      <Container fluid="sm">{props.children}</Container>
+      <Container className="container-sm pt-5">{props.children}</Container>
     </>
   );
 };
