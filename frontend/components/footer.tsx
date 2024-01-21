@@ -11,7 +11,11 @@ export const Footer = () => {
       <Container className="bg-light text-muted">
         <Stack direction="horizontal" gap={3}>
           <div>
-            <Link href="https://github.com/nbe95/KeinPlan" className="text-muted" target="_blank">
+            <Link
+              href="https://github.com/nbe95/KeinPlan"
+              className="text-muted"
+              target="_blank"
+            >
               <FontAwesomeIcon icon={faGithub} size="xl" />
             </Link>
           </div>
