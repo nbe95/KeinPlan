@@ -15,6 +15,7 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+# ------------------------------------------------------------------------------
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -27,14 +28,19 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+ARG VERSION
+ENV KEINPLAN_VERSION ${VERSION}
+
 RUN yarn build
 
 # If using npm comment out above and use below instead
 # RUN npm run build
 
+# ------------------------------------------------------------------------------
+
 # Production image, copy all the files and run next
 FROM base AS runner
-WORKDIR /app
+WORKDIR /keinplan-frontend
 
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.

@@ -1,4 +1,4 @@
-"""API definition for ou kaplan endpoint."""
+"""API definition for our kaplan endpoint."""
 
 from base64 import b64decode
 from binascii import Error

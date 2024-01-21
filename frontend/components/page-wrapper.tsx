@@ -3,11 +3,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
 import { PropsWithChildren } from "react";
 import { Container } from "react-bootstrap";
+import { Footer } from "./footer";
 import Navigation from "./navigation";
 config.autoAddCss = false;
 
 type PageProps = {
   title?: string;
+  headline?: string;
 };
 
 const PageWrapper = (props: PropsWithChildren<PageProps>) => {
@@ -22,7 +24,16 @@ const PageWrapper = (props: PropsWithChildren<PageProps>) => {
         <style>{dom.css()}</style>
       </Head>
       <Navigation></Navigation>
-      <Container className="container-sm pt-5">{props.children}</Container>
+      <Container className="py-5 mb-4">
+        {props.headline && (
+          <>
+            <h1 className="mb-0">{props.headline}</h1>
+            <hr className="mt-2 mb-4" />
+          </>
+        )}
+        {props.children}
+      </Container>
+      <Footer />
     </>
   );
 };
