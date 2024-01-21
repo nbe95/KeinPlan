@@ -10,13 +10,13 @@ export const Footer = () => {
     <footer className="fixed-bottom bg-light py-3">
       <Container className="bg-light text-muted">
         <Stack direction="horizontal" gap={3}>
-          <div className="me-auto">
-            KeinPlan {version ? `v${version}` : "(unbekannte Version)"}
-          </div>
           <div>
-            <Link href="https://github.com/nbe95/KeinPlan" target="_blank">
+            <Link href="https://github.com/nbe95/KeinPlan" className="text-muted" target="_blank">
               <FontAwesomeIcon icon={faGithub} size="xl" />
             </Link>
+          </div>
+          <div className="me-auto">
+            KeinPlan {version ? `v${version}` : "(unbekannte Version)"}
           </div>
         </Stack>
       </Container>
