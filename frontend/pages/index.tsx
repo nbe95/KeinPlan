@@ -13,7 +13,7 @@ const Page: NextPage = () => {
           <blockquote className="blockquote text-center p-3 mx-3 mb-5 m-auto bg-light shadow rounded">
             <p>
               Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine
-              Dienste mit Datum und Uhrzeit schon offiziell in
+              Dienste mit Datum und Uhrzeit schon offiziell in{" "}
               <em>KaPlan</em> stehen?
             </p>
             <p>
@@ -29,9 +29,9 @@ const Page: NextPage = () => {
           <p>
             Dieses Online-Tool erzeugt{" "}
             <span className="text-decoration-line-through">Datenmüll</span>{" "}
-            Stundenlisten, die vollautomatisch 1:1 mit den in
-            <em>KaPlan</em> hinterlegten Diensten gefüttert werden. Nicht mehr,
-            aber auch nicht weniger.
+            Stundenlisten, die vollautomatisch 1:1 mit den in{" "}
+            <em>KaPlan</em> hinterlegten Diensten gefüttert werden. Nicht
+            mehr, aber auch nicht weniger.
           </p>
           <p>
             Das bedeutet, hier kannst du mit nur wenigen Klicks fertige
