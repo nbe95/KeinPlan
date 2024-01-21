@@ -5,11 +5,11 @@ import { Container, Stack } from "react-bootstrap";
 
 // import KaPlanIcon from "../public/kaplan-icon.svg"
 import KaPlanIcon from "./kaplan-svg";
-import Image from "next/image";
 
 export const Footer = () => {
   const version: string | undefined = process.env.NEXT_PUBLIC_KEINPLAN_VERSION;
-  const kaPlanLink: string | undefined = process.env.NEXT_PUBLIC_KAPLAN_HYPERLINK;
+  const kaPlanLink: string | undefined =
+    process.env.NEXT_PUBLIC_KAPLAN_HYPERLINK;
 
   return (
     <footer className="fixed-bottom bg-light py-3">
@@ -23,13 +23,13 @@ export const Footer = () => {
               <FontAwesomeIcon icon={faGithub} size="xl" />
             </Link>
           </div>
-          {kaPlanLink &&
+          {kaPlanLink && (
             <div>
               <Link href={kaPlanLink} target="_blank">
                 <KaPlanIcon width={24} height={24} />
               </Link>
             </div>
-          }
+          )}
         </Stack>
       </Container>
     </footer>

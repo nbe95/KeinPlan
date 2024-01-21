@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
-const withImages = require('next-images');
-module.exports = withImages(
-  {
-    output: "standalone",
-  }
-);
+const withImages = require("next-images");
+module.exports = withImages({
+  output: "standalone",
+});
