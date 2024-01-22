@@ -53,7 +53,9 @@ const Page: NextPage = () => {
         <FaqContainer>
           <FaqItem question="Ist das hier offiziell?">
             Nein. Dieses Tool hat nichts mit KaPlan, der Kirchengemeinde usw. zu
-            tun. Daher alles ohne Gewähr.<br /><strong>Überprüfe alles, was du ans Pfarrbüro sendest.</strong>
+            tun. Daher alles ohne Gewähr.
+            <br />
+            <strong>Überprüfe alles, was du ans Pfarrbüro sendest.</strong>
           </FaqItem>
           <FaqItem question="Eine Stundenliste ist fehlerhaft!?">
             Rechne nochmal nach. Wenn du sicher bist, einen Fehler gefunden zu
