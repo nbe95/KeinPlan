@@ -37,7 +37,7 @@ class TimeSheetApi(Resource):
                 year,
                 week,
             )
-            file_name += ts.start_date.strftime("%Y-%V")
+            file_name += f"_{ts.date_start.strftime('%Y-%V')}"
 
             # Collect and sort all entries
             for datum in data.get("dates", ()):
@@ -90,7 +90,7 @@ class TimeSheetApi(Resource):
                 return send_file(
                     fh.name,
                     as_attachment=True,
-                    download_name=f"{file_name}.pdf"
+                    download_name=f"{file_name}.pdf",
                 )
         else:
             return (f'Invalid file format "{file_format}"', 400)
