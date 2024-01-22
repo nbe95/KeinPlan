@@ -2,7 +2,7 @@
 
 from base64 import b64decode
 from binascii import Error
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
 
 from flask import request
@@ -30,12 +30,12 @@ class KaPlanApi(Resource):
             return {"message": f"The ICS string was not properly encoded: {e}"}
 
         try:
-            date_from: datetime = datetime.fromisoformat(
-                request.args.get("from", datetime.min.isoformat())
-            )
-            date_to: datetime = datetime.fromisoformat(
-                request.args.get("to", datetime.max.isoformat())
-            )
+            date_from: date = datetime.strptime(
+                request.args.get("from", date.min.isoformat()), "%Y-%m-%d"
+            ).date()
+            date_to: date = datetime.strptime(
+                request.args.get("to", date.max.isoformat()), "%Y-%m-%d"
+            ).date()
             return self.kaplan_interface.get_events(
                 normalized_url, date_from, date_to
             )

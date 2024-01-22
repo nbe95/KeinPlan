@@ -1,10 +1,10 @@
 """KaPlan ICS interface module."""
 
 import logging
-from datetime import datetime, timedelta, tzinfo
+from datetime import date, datetime, timedelta
 from hashlib import sha256
 from os import uname
-from re import Match, match
+from re import Match, fullmatch
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import ParseResult, parse_qs, urlparse
 
@@ -39,7 +39,7 @@ class KaPlanIcs:
     )
 
     def get_events(
-        self, url: str, date_from: datetime, date_to: datetime
+        self, url: str, date_from: date, date_to: date
     ) -> Dict[str, Any]:
         """Call the KaPlan endpoint and return all available dates."""
         if not self._validate_url(url):
@@ -53,18 +53,10 @@ class KaPlanIcs:
         ics, fetch_date = self.fetch_ics_data(url)
         cal: Calendar = Calendar(ics)
 
-        # Ensure that any datetime objects has its timezone
-        local_tz: Optional[tzinfo] = datetime.now().astimezone().tzinfo
-        if date_from.tzinfo is None:
-            date_from = date_from.replace(tzinfo=local_tz)
-
-        if date_to.tzinfo is None:
-            date_to = date_to.replace(tzinfo=local_tz)
-
         dates: List[Dict[str, Any]] = [
             self._parse_event(event)
-            for event in cal.events
-            if event.begin >= date_from and event.end <= date_to
+            for event in sorted(cal.events, key=lambda e: e.begin)
+            if event.begin.date() >= date_from and event.end.date() <= date_to
         ]
         logger.info(
             "Retrieved %d dates (%d total) from KaPlan between %s and %s.",
@@ -107,32 +99,29 @@ class KaPlanIcs:
     @staticmethod
     def _parse_event(event: Event) -> Dict[str, Any]:
         """Parse a single date object to meet our format requirements."""
-        # A typical description looks like this:
-        # "[{role}] {description} Leitung: {host}"
+        # Split optional fields from textual representation
+        # A typical description field looks like this:
+        # "[{role}] {title} Leitung: {host} Interne Info: {internal}"
 
-        # Split role from description field
-        description: str = (event.description or "").strip()
-        role: str = ""
-        role_matcher: Optional[Match] = match(r"\[(.+)\]", description)
-        if role_matcher:
-            role = role_matcher.group(1)
-            description = description[len(role) + 2 :].strip()
-
-        # Split host from description field
-        host: str = ""
-        host_matcher: Optional[Match] = match(
-            r".*Leitung: (.+?)$", description
+        role: Optional[str] = None
+        host: Optional[str] = None
+        internal: Optional[str] = None
+        matcher: Optional[Match] = fullmatch(
+            r"(?:\[(.+)\] )?"
+            r"(.*?)"
+            r"(?: Leitung: (.*?))?"
+            r"(?: Interne Info: (.*?))?",
+            event.description or "",
         )
-        if host_matcher:
-            host = host_matcher.group(1)
-            description = description[: -len(host) - 9].strip()
+        if matcher:
+            role, _, host, internal = matcher.groups()
 
         return {
             "uid": event.uid,
             "title": event.name or "",
-            "description": description,
-            "role": role,
-            "host": host,
+            "internal": internal or "",
+            "role": role or "",
+            "host": host or "",
             "location": event.location or "",
             "begin": event.begin.for_json(),
             "end": event.end.for_json(),
@@ -151,10 +140,19 @@ class KaPlanIcs:
             iter(query.get("Arbeitsgruppe", [])), None
         )
 
-        return (
-            host in KAPLAN_ALLOWED_SERVERS
-            and workgroup in KAPLAN_ALLOWED_WORKGROUPS
-        )
+        if host not in KAPLAN_ALLOWED_SERVERS:
+            logger.warning(
+                "'%s' is not within the allowed KaPlan hosts.", host
+            )
+            return False
+
+        if workgroup not in KAPLAN_ALLOWED_WORKGROUPS:
+            logger.warning(
+                "'%s' is not within the allowed KaPlan workgroups.", workgroup
+            )
+            return False
+
+        return True
 
 
 class KaPlanIcsCached(KaPlanIcs):
