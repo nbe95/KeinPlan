@@ -11,7 +11,7 @@ const Page: NextPage = () => {
   return (
     <PageWrapper>
       <PageSection headline="Worum geht's?">
-        <Row gap={5}>
+        <Row>
           <Col md={6} lg={4}>
             <blockquote className="blockquote text-center p-3 mx-3 mb-5 m-auto bg-light shadow rounded">
               <p>
@@ -52,10 +52,10 @@ const Page: NextPage = () => {
       <PageSection headline="FAQ">
         <FaqContainer>
           <FaqItem question="Ist das hier offiziell?">
-            Nein. Alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro
-            sendest.
+            Nein. Dieses Tool hat nichts mit KaPlan, der Kirchengemeinde usw. zu
+            tun. Daher alles ohne Gewähr.<br /><strong>Überprüfe alles, was du ans Pfarrbüro sendest.</strong>
           </FaqItem>
-          <FaqItem question="Eine Stundenliste ist fehlerhaft">
+          <FaqItem question="Eine Stundenliste ist fehlerhaft!?">
             Rechne nochmal nach. Wenn du sicher bist, einen Fehler gefunden zu
             haben, erstelle gerne{" "}
             <Link
@@ -64,8 +64,8 @@ const Page: NextPage = () => {
             >
               ein Ticket
             </Link>{" "}
-            mit genauer Fehlerbeschreibung oder melde dich direkt beim
-            KeinPlan-Administrator deines Vertrauens."
+            mit genauer Beschreibung des Fehlers oder melde dich direkt beim
+            KeinPlan-Administrator deines Vertrauens.
           </FaqItem>
           <FaqItem question="Ist das alles den Aufwand wert?">
             Ja. Allein aus Prinzip.

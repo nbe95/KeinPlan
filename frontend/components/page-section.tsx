@@ -10,7 +10,7 @@ type SectionProps = {
 
 const PageSection = (props: PropsWithChildren<SectionProps>) => {
   return (
-    <Container className="my-4">
+    <Container className="mt-4 mb-5">
       {props.headline && (
         <>
           <h1 className="mb-0">{props.headline}</h1>
