@@ -1,10 +1,11 @@
 import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NextPage } from "next";
-import { Button, Col, Row } from "react-bootstrap";
-import PageWrapper from "../components/page-wrapper";
-import PageSection from "../components/page-section";
 import Link from "next/link";
+import { Button, Col, Row } from "react-bootstrap";
+import { FaqContainer, FaqItem } from "../components/faq";
+import PageSection from "../components/page-section";
+import PageWrapper from "../components/page-wrapper";
 
 const Page: NextPage = () => {
   return (

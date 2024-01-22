@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Container, Stack } from "react-bootstrap";
 
-export const Footer = () => {
+const Footer = () => {
   const version: string | undefined = process.env.NEXT_PUBLIC_KEINPLAN_VERSION;
 
   return (
@@ -27,3 +27,5 @@ export const Footer = () => {
     </footer>
   );
 };
+
+export default Footer;

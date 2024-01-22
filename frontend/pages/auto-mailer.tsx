@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { Alert } from "react-bootstrap";
-import PageWrapper from "../components/page-wrapper";
 import PageSection from "../components/page-section";
+import PageWrapper from "../components/page-wrapper";
 
 const Page: NextPage = () => {
   return (
