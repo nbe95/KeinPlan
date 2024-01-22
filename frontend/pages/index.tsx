@@ -9,8 +9,8 @@ const Page: NextPage = () => {
   return (
     <PageWrapper>
       <PageSection headline="Worum geht's?">
-        <Row>
-          <Col className="px-0" md={6} lg={4}>
+        <Row gap={5}>
+          <Col md={6} lg={4}>
             <blockquote className="blockquote text-center p-3 mx-3 mb-5 m-auto bg-light shadow rounded">
               <p>
                 Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine
@@ -22,7 +22,7 @@ const Page: NextPage = () => {
               </p>
             </blockquote>
           </Col>
-          <Col className="px-5" md={6} lg={8}>
+          <Col md={6} lg={8}>
             <p className="lead">
               Wenn du dir diese Frage auch schonmal gestellt hast, bist du hier
               genau richtig.

@@ -23,7 +23,9 @@ const PageWrapper = (props: PropsWithChildren<PageProps>) => {
         <style>{dom.css()}</style>
       </Head>
       <Navigation />
-      {props.children}
+      <div className="pt-2 pb-4">
+        {props.children}
+      </div>
       <Footer />
     </>
   );
