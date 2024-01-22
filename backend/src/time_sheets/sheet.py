@@ -15,11 +15,11 @@ from src.constants import HYPERLINK, LOG_LEVEL, VERSION
 from .constants import TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from .entry import TimeEntry
 
-setlocale(LC_ALL, TIME_SHEETS_LOCALE)
-
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
+
+setlocale(LC_ALL, TIME_SHEETS_LOCALE)
 
 
 class TimeSheet:
