@@ -33,8 +33,8 @@ const Page: NextPage = () => {
               Dieses Online-Tool erzeugt{" "}
               <span className="text-decoration-line-through">Datenmüll</span>{" "}
               Stundenlisten, die vollautomatisch 1:1 mit den in <em>KaPlan</em>{" "}
-              hinterlegten Diensten gefüttert werden. Nicht mehr, aber auch nicht
-              weniger.
+              hinterlegten Diensten gefüttert werden. Nicht mehr, aber auch
+              nicht weniger.
             </p>
             <p>
               Das bedeutet, hier kannst du mit nur wenigen Klicks fertige
@@ -50,27 +50,27 @@ const Page: NextPage = () => {
       </PageSection>
 
       <PageSection headline="FAQ">
-        <p className="lead mb-0">Ist das hier offiziell?</p>
-        <p>
-          Nein. Alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro
-          sendest.
-        </p>
-
-        <p className="lead mb-0">Eine Stundenliste ist fehlerhaft.</p>
-        <p>
-          Rechne nochmal nach. Wenn du sicher bist, einen Fehler gefunden zu
-          haben, erstelle gerne{" "}
-          <Link
-            href="https://github.com/nbe95/KeinPlan/issues/new"
-            target="_blank">
+        <FaqContainer>
+          <FaqItem question="Ist das hier offiziell?">
+            Nein. Alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro
+            sendest.
+          </FaqItem>
+          <FaqItem question="Eine Stundenliste ist fehlerhaft">
+            Rechne nochmal nach. Wenn du sicher bist, einen Fehler gefunden zu
+            haben, erstelle gerne{" "}
+            <Link
+              href="https://github.com/nbe95/KeinPlan/issues/new"
+              target="_blank"
+            >
               ein Ticket
-          </Link>{" "}
-          mit genauer Fehlerbeschreibung oder melde dich direkt beim
-          KeinPlan-Administrator deines Vertrauens.
-        </p>
-
-        <p className="lead mb-0">Ist das alles den Aufwand wert?</p>
-        <p>Ja. Allein aus Prinzip.</p>
+            </Link>{" "}
+            mit genauer Fehlerbeschreibung oder melde dich direkt beim
+            KeinPlan-Administrator deines Vertrauens."
+          </FaqItem>
+          <FaqItem question="Ist das alles den Aufwand wert?">
+            Ja. Allein aus Prinzip.
+          </FaqItem>
+        </FaqContainer>
       </PageSection>
     </PageWrapper>
   );
