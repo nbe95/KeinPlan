@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { Button, Col, Row } from "react-bootstrap";
 import PageWrapper from "../components/page-wrapper";
 import PageSection from "../components/page-section";
+import Link from "next/link";
 
 const Page: NextPage = () => {
   return (
@@ -49,7 +50,23 @@ const Page: NextPage = () => {
 
       <PageSection headline="FAQ">
         <p className="lead mb-0">Ist das hier offiziell?</p>
-        <p>Nein. Alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro sendest.</p>
+        <p>
+          Nein. Alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro
+          sendest.
+        </p>
+
+        <p className="lead mb-0">Eine Stundenliste ist fehlerhaft.</p>
+        <p>
+          Rechne nochmal nach. Wenn du sicher bist, einen Fehler gefunden zu
+          haben, erstelle gerne{" "}
+          <Link
+            href="https://github.com/nbe95/KeinPlan/issues/new"
+            target="_blank">
+              ein Ticket
+          </Link>{" "}
+          mit genauer Fehlerbeschreibung oder melde dich direkt beim
+          KeinPlan-Administrator deines Vertrauens.
+        </p>
 
         <p className="lead mb-0">Ist das alles den Aufwand wert?</p>
         <p>Ja. Allein aus Prinzip.</p>
