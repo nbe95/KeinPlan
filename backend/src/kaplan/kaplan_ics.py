@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timedelta, tzinfo
 from hashlib import sha256
 from os import uname
-from re import Match, match
+from re import Match, fullmatch
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import ParseResult, parse_qs, urlparse
 
@@ -107,32 +107,29 @@ class KaPlanIcs:
     @staticmethod
     def _parse_event(event: Event) -> Dict[str, Any]:
         """Parse a single date object to meet our format requirements."""
-        # A typical description looks like this:
-        # "[{role}] {description} Leitung: {host}"
+        # Split optional fields from textual representation
+        # A typical description field looks like this:
+        # "[{role}] {title} Leitung: {host} Interne Info: {internal}"
 
-        # Split role from description field
-        description: str = (event.description or "").strip()
-        role: str = ""
-        role_matcher: Optional[Match] = match(r"\[(.+)\]", description)
-        if role_matcher:
-            role = role_matcher.group(1)
-            description = description[len(role) + 2 :].strip()
-
-        # Split host from description field
-        host: str = ""
-        host_matcher: Optional[Match] = match(
-            r".*Leitung: (.+?)$", description
+        role: Optional[str] = None
+        host: Optional[str] = None
+        internal: Optional[str] = None
+        matcher: Optional[Match] = fullmatch(
+            r"(?:\[(.+)\] )?"
+            r"(.*?)"
+            r"(?: Leitung: (.*?))?"
+            r"(?: Interne Info: (.*?))?",
+            event.description or "",
         )
-        if host_matcher:
-            host = host_matcher.group(1)
-            description = description[: -len(host) - 9].strip()
+        if matcher:
+            role, _, host, internal = matcher.groups()
 
         return {
             "uid": event.uid,
             "title": event.name or "",
-            "description": description,
-            "role": role,
-            "host": host,
+            "internal": internal or "",
+            "role": role or "",
+            "host": host or "",
             "location": event.location or "",
             "begin": event.begin.for_json(),
             "end": event.end.for_json(),
@@ -151,10 +148,19 @@ class KaPlanIcs:
             iter(query.get("Arbeitsgruppe", [])), None
         )
 
-        return (
-            host in KAPLAN_ALLOWED_SERVERS
-            and workgroup in KAPLAN_ALLOWED_WORKGROUPS
-        )
+        if host not in KAPLAN_ALLOWED_SERVERS:
+            logger.warning(
+                "'%s' is not within the allowed KaPlan hosts.", host
+            )
+            return False
+
+        if workgroup not in KAPLAN_ALLOWED_WORKGROUPS:
+            logger.warning(
+                "'%s' is not within the allowed KaPlan workgroups.", workgroup
+            )
+            return False
+
+        return True
 
 
 class KaPlanIcsCached(KaPlanIcs):
