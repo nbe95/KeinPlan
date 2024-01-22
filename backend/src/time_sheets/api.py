@@ -21,6 +21,8 @@ class TimeSheetApi(Resource):
         # Generate time sheet
         data: Dict[str, Any] = request.json or {}
         ts: TimeSheet
+        file_name: str = "Arbeitszeit"
+
         if ts_type.lower() == "weekly":
             # Fetch general data
             start_date: date = date.fromisocalendar(
@@ -35,6 +37,7 @@ class TimeSheetApi(Resource):
                 year,
                 week,
             )
+            file_name += f"_{ts.date_start.strftime('%Y-%V')}"
 
             # Collect and sort all entries
             for datum in data.get("dates", ()):
@@ -87,7 +90,7 @@ class TimeSheetApi(Resource):
                 return send_file(
                     fh.name,
                     as_attachment=True,
-                    download_name="time-sheet.pdf",
+                    download_name=f"{file_name}.pdf",
                 )
         else:
             return (f'Invalid file format "{file_format}"', 400)
