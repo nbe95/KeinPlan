@@ -5,6 +5,13 @@ services:
     image: nbe95/keinplan-backend
     volumes:
       - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 8080:8080
+    environment:
+      - KEINPLAN_HYPERLINK=$KEINPLAN_HYPERLINK
+      - KAPLAN_ALLOWED_SERVERS=$KAPLAN_ALLOWED_SERVERS
+      - KAPLAN_ALLOWED_WORKGROUPS=$KAPLAN_ALLOWED_WORKGROUPS
+
 
   frontend:
     image: nbe95/keinplan-frontend
