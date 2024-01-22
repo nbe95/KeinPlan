@@ -55,7 +55,7 @@ class KaPlanIcs:
 
         dates: List[Dict[str, Any]] = [
             self._parse_event(event)
-            for event in cal.events
+            for event in sorted(cal.events, key=lambda e: e.begin)
             if event.begin.date() >= date_from and event.end.date() <= date_to
         ]
         logger.info(

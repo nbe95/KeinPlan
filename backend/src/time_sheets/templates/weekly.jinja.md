@@ -24,7 +24,7 @@ aufzuzeichnen.
 
 {% if entries %}
 |**Datum**|**Anlass**|**Ort**|**Zeitraum**|**Pause**|**Stunden**|
-|:---|:-------|:----|:--:|:--:|--:|
+|:-----|:----------|:------|:---:|:---:|--:|
 {% for entry in entries -%}
   |
   {{- entry.time_span.begin.strftime("%a. %d.%m.%Y") }}|

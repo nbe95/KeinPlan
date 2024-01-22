@@ -83,6 +83,7 @@ class WeeklyTimeSheet(TimeSheet):
         jinja_env.filters.update({"format_locale": format_string})
         template: Template = jinja_env.get_template(template_file)
 
+        self.entries.sort(key=lambda e: e.time_span.begin)
         rendered: str = template.render(
             employer=self.employer,
             employee=self.employee,
