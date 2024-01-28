@@ -22,5 +22,6 @@ EXPOSE 8080
 
 ARG VERSION
 ENV KEINPLAN_VERSION ${VERSION}
+ENV GITHUB_LINK https://github.com/nbe95/KeinPlan
 
 CMD waitress-serve --port 8080 src.main:backend
