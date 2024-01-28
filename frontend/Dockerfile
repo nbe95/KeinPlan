@@ -30,6 +30,7 @@ COPY . .
 
 ARG VERSION
 ENV KEINPLAN_VERSION ${VERSION}
+ENV KEINPLAN_GITHUB_LINK https://github.com/nbe95/KeinPlan
 
 RUN yarn build
 
