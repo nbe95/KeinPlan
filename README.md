@@ -3,8 +3,9 @@
 Ein inoffizielles Tool zur einfachen Erstellung von Stundenlisten anhand Daten
 eines offiziellen *KaPlan* Servers.
 
-Alle Komponenten sind als Docker-Container verfügbar und werden bei
-Funktionserweiterungen/Updates via CI automatisch veröffentlicht.
+Alle Komponenten sind als Docker-Images verfügbar für ein einfaches und
+effizientes Deployment. Nach jedem Pull Request in `main` werden sie via CI
+automatisch gebaut und veröffentlicht.
 
 ## Frontend
 
@@ -15,21 +16,20 @@ Lokale Entwicklung mittels `npm run dev` etc.
 
 ## Backend
 
-Die eigentliche Funktionalität, Datem vom *KaPlan* Server abzufragen und daraus
-Stundenlisten zu erstellen, findet sich im Backend mit den folgenden Endpunkten.
+Die eigentlichen Kernfunktionalitäten finden sich im Backend, welches folgende
+Endpunkte bereitstellt:
 
-- `/info`: Stellt generelle Informationen zur Laufzeit für das Frontend bereit,
-  die u. a. in optimierten/kompilierten next.js-Docker Containern nicht mehr
-  (ohne krasse Hacks) ausgelesen und ins Frontend eingebunden werden können.
-- `/kaplan`: Schnittstelle zum *KaPlan* Server, die Anfragen entgegennimmt und
-  mit den Ergebnissen möglichst geschickt umgeht (Caching usw.).
-- `/time-sheet`: Endpunkt für die Generierung verschiedener Stundenlisten.
+|Endpunkt-URL|Methode(n)|Beschreibung|
+|:---|:-:|:--|
+|`/info`|GET|Stellt generelle Informationen zur Laufzeit für das Frontend bereit, die u. a. in optimierten/kompilierten *next.js*-Docker Containern nicht mehr (ohne krasse Hacks) ausgelesen und ins Frontend eingebunden werden können.|
+|`/kaplan`|POST|Schnittstelle zum *KaPlan* Server, die Anfragen entgegennimmt und mit den Ergebnissen möglichst geschickt umgeht (Caching usw.).|
+|`/time-sheet`|GET|Endpunkt für die Generierung verschiedener Stundenlisten.|
 
 > Hinweis: Alle Endpunkte erhalten das URL-Präfix `/api/v1`.
 
 Auf einem produktiven Server, der als reverse Proxy fungieren sollte, müssen
 Anfragen an den `/api`-Pfad ans Backend geleitet werden (ohne die URL dabei zu
-ändern!), alle anderen Anfragen sind fürs Frontend bestimmt.
+ändern); alle anderen Anfragen sind fürs Frontend bestimmt.
 
 Beispielkonfiguration mittels Caddy, hier mit dem Docker-Host als Ziel:
 
@@ -44,7 +44,7 @@ keinplan.domain.tld {
 }
 ```
 
-Lokale Entwicklung in einer venv mittels `waitress-server --port 8080
+Lokale Entwicklung in einer `venv` mittels `waitress-server --port 8080
 src.main:backend`. Eine tox-Umgebung steht für Linting und Formatting bereit.
 
 ## Sonstiges
