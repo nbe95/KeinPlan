@@ -5,14 +5,12 @@ import logging
 from flask import Flask
 from flask_restful import Api
 
-from src.kaplan import KaPlanApi
 from src.kaplan.constants import (
     KAPLAN_ALLOWED_SERVERS,
     KAPLAN_ALLOWED_WORKGROUPS,
 )
-from src.time_sheets import TimeSheetApi
-from src.version import VersionApi
 
+from .api import api_blueprint
 from .constants import LOG_LEVEL, VERSION
 
 logging.basicConfig(level=logging.WARNING)
@@ -27,10 +25,4 @@ logger.info(
 
 
 backend: Flask = Flask(__name__)
-api: Api = Api(backend)
-
-api.add_resource(VersionApi, "/version")
-api.add_resource(KaPlanApi, "/kaplan")
-api.add_resource(
-    TimeSheetApi, "/time-sheet/<string:ts_type>/<string:file_format>"
-)
+backend.register_blueprint(api_blueprint)
