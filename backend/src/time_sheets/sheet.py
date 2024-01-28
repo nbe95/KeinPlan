@@ -10,7 +10,7 @@ from typing import List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import HYPERLINK, LOG_LEVEL, VERSION
+from src.constants import KEINPLAN_LINK, LOG_LEVEL, VERSION
 
 from .constants import TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from .entry import TimeEntry
@@ -93,7 +93,7 @@ class WeeklyTimeSheet(TimeSheet):
             total_hours=sum(e.calc_hours() for e in self.entries),
             generation_time=datetime.now(),
             footer=footer,
-            hyperlink=HYPERLINK,
+            hyperlink=KEINPLAN_LINK,
             version=VERSION,
         )
         return self._convert_md_to_pdf(rendered, target_path)

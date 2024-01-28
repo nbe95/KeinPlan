@@ -1,24 +1,58 @@
 # KeinPlan
 
-**:warning: Aktuell noch in der Entwicklung! :warning:**
+Ein inoffizielles Tool zur einfachen Erstellung von Stundenlisten anhand Daten
+eines offiziellen *KaPlan* Servers.
 
----
+Alle Komponenten sind als Docker-Images verfügbar für ein einfaches und
+effizientes Deployment. Nach jedem Pull Request in `main` werden sie via CI
+automatisch gebaut und veröffentlicht.
 
-> Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine Dienste mit Datum
-und Uhrzeit schon offiziell in *KaPlan* stehen? \
-***KeinPlan!***
+## Frontend
 
-Wenn du dir diese Frage auch schon mal gestellt hat, bist du hier genau richtig.
+Zur einfachen Bedienung im Browser gibt es ein interaktives Web-Frontend
+basierend auf *next.js*, welches (intern) auf Port 3000 lauscht.
 
-## Worum geht's?
+Lokale Entwicklung mittels `npm run dev` etc.
 
-Dieses Online-Tool erzeugt ~~Datenmüll~~ Stundenlisten, die vollautomatisch 1:1
-mit den in *KaPlan* hinterlegten Diensten gefüttert werden. Nicht mehr, aber
-auch nicht weniger.
+## Backend
 
-Das bedeutet, hier kannst du mit nur wenigen Klicks fertige Stundenlisten
-erstellen, als PDF herunterladen und direkt zwecks Prozessbefriedigung ans
-Pfarrbüro versenden.
+Die eigentlichen Kernfunktionalitäten finden sich im Backend, welches folgende
+Endpunkte bereitstellt:
+
+|Endpunkt-URL|Methode(n)|Beschreibung|
+|:---|:-:|:--|
+|`/info`|GET|Stellt generelle Informationen zur Laufzeit für das Frontend bereit, die u. a. in optimierten/kompilierten *next.js*-Docker Containern nicht mehr (ohne krasse Hacks) ausgelesen und ins Frontend eingebunden werden können.|
+|`/kaplan`|POST|Schnittstelle zum *KaPlan* Server, die Anfragen entgegennimmt und mit den Ergebnissen möglichst geschickt umgeht (Caching usw.).|
+|`/time-sheet`|GET|Endpunkt für die Generierung verschiedener Stundenlisten.|
+
+> Hinweis: Alle Endpunkte erhalten das URL-Präfix `/api/v1`.
+
+Auf einem produktiven Server, der als reverse Proxy fungieren sollte, müssen
+Anfragen an den `/api`-Pfad ans Backend geleitet werden (ohne die URL dabei zu
+ändern); alle anderen Anfragen sind fürs Frontend bestimmt.
+
+Beispielkonfiguration mittels Caddy, hier mit dem Docker-Host als Ziel:
+
+```Caddyfile
+keinplan.domain.tld {
+        handle /api/* {
+                reverse_proxy 172.17.0.1:8080
+        }
+        handle {
+                reverse_proxy 172.17.0.1:3000
+        }
+}
+```
+
+Lokale Entwicklung in einer `venv` mittels `waitress-server --port 8080
+src.main:backend`. Eine tox-Umgebung steht für Linting und Formatting bereit.
+
+## Sonstiges
+
+### Funktionsweise
+
+Die Generierung der Stundenlisten geschieht intern via Jinja Templates.
+Resultierende Markdown-Dateien werden mittels `pandoc` in PDFs umgewandelt.
 
 ### Hilfreiche Befehle
 

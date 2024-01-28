@@ -4,6 +4,7 @@ import Head from "next/head";
 import { PropsWithChildren } from "react";
 import Footer from "./footer";
 import Navigation from "./navigation";
+
 config.autoAddCss = false;
 
 type PageProps = {

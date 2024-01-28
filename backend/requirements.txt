@@ -1,5 +1,6 @@
 flake8-pyproject
 flask
+flask_cors
 flask_restful
 hyperlink
 ics
