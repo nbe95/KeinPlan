@@ -3,17 +3,20 @@ version: "2"
 services:
   backend:
     image: nbe95/keinplan-backend
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
     ports:
       - 8080:8080
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     environment:
-      - KEINPLAN_HYPERLINK=$KEINPLAN_HYPERLINK
+      - ADMIN_MAIL_LINK=$ADMIN_MAIL_LINK
+      - KEINPLAN_LINK=$KEINPLAN_HYPERLINK
+      - KAPLAN_LINK=$KAPLAN_LINK
       - KAPLAN_ALLOWED_SERVERS=$KAPLAN_ALLOWED_SERVERS
       - KAPLAN_ALLOWED_WORKGROUPS=$KAPLAN_ALLOWED_WORKGROUPS
 
-
   frontend:
     image: nbe95/keinplan-frontend
+    restart: unless-stopped
     ports:
-      - 80:3000
+      - 3000:3000
