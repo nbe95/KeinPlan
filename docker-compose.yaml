@@ -9,7 +9,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - ADMIN_MAIL_LINK=$ADMIN_MAIL_LINK
+      - ADMIN_MAIL=$ADMIN_MAIL
       - KEINPLAN_LINK=$KEINPLAN_HYPERLINK
       - KAPLAN_LINK=$KAPLAN_LINK
       - KAPLAN_ALLOWED_SERVERS=$KAPLAN_ALLOWED_SERVERS

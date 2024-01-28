@@ -1,15 +1,26 @@
 import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQuery } from "@tanstack/react-query";
 import { NextPage } from "next";
 import Link from "next/link";
 import { Button, Col, Row } from "react-bootstrap";
 import { FaqContainer, FaqItem } from "../components/faq";
 import PageSection from "../components/page-section";
 import PageWrapper from "../components/page-wrapper";
+import { API_BASE_URL, BACKEND_INFO_KEY } from "../constants";
 
 const Page: NextPage = () => {
-  const githubLink: string | undefined =
-    process.env.NEXT_PUBLIC_KEINPLAN_GITHUB_LINK;
+  const backendInfo = useQuery({
+    queryKey: [BACKEND_INFO_KEY],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/info`);
+      if (!response.ok) {
+        throw new Error("Got an invalid response from backend.");
+      }
+      return response.json();
+    },
+    gcTime: 1000 * 60 * 60 * 24, // 1 day
+  });
 
   return (
     <PageWrapper>
@@ -53,18 +64,36 @@ const Page: NextPage = () => {
         <FaqContainer>
           <FaqItem question="Ist das hier offiziell?">
             Nein. Dieses Tool hat nichts mit <em>KaPlan</em>, der
-            Kirchengemeinde usw. zu tun. Daher alles ohne Gewähr.{" "}
-            <strong>Überprüfe alles, was du ans Pfarrbüro sendest.</strong>
+            Kirchengemeinde usw. zu tun. Daher alles ohne Gewähr. Überprüfe
+            alles, was du ans Pfarrbüro sendest!
           </FaqItem>
+
           <FaqItem question="Meine Stundenliste ist fehlerhaft!?">
             Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit
             gefunden zu haben, erstelle gerne{" "}
-            <Link href={githubLink + "/issues"} target="_blank">
-              ein Ticket
-            </Link>{" "}
+            {backendInfo.data?.env?.GithubLink ? (
+              <Link
+                href={`${backendInfo.data.env.GithubLink}/issues`}
+                target="_blank"
+              >
+                ein Ticket
+              </Link>
+            ) : (
+              <>ein Ticket</>
+            )}{" "}
             mit genauer Beschreibung des Fehlers oder melde dich direkt beim
-            KeinPlan-Administrator deines Vertrauens.
+            KeinPlan-Administrator deines Vertrauens
+            {backendInfo.data?.env?.AdminMail && (
+              <>
+                , z.B.{" "}
+                <Link href={`mailto:${backendInfo.data.env.AdminMail}`}>
+                  per Mail
+                </Link>
+              </>
+            )}
+            .
           </FaqItem>
+
           <FaqItem question="Ist das alles den Aufwand wert?">
             Ja. Allein aus Prinzip.
           </FaqItem>

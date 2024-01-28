@@ -3,7 +3,7 @@
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
 
-from ..constants import ADMIN_MAIL_LINK, GITHUB_LINK, KAPLAN_LINK, VERSION
+from ..constants import ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION
 
 
 class InfoApi(Resource):
@@ -18,6 +18,6 @@ class InfoApi(Resource):
             "env": {
                 "GithubLink": GITHUB_LINK,
                 "KaPlanLink": KAPLAN_LINK,
-                "AdminMail": ADMIN_MAIL_LINK,
+                "AdminMail": ADMIN_MAIL,
             },
         }
