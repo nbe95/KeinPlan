@@ -4,7 +4,10 @@ import Head from "next/head";
 import { PropsWithChildren } from "react";
 import Footer from "./footer";
 import Navigation from "./navigation";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 config.autoAddCss = false;
+const queryClient = new QueryClient();
 
 type PageProps = {
   title?: string;
@@ -12,7 +15,7 @@ type PageProps = {
 
 const PageWrapper = (props: PropsWithChildren<PageProps>) => {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Head>
         <title>KeinPlan {props.title && ` | ${props.title}`}</title>
         <link rel="icon" href="/icon" sizes="any" />
@@ -24,7 +27,7 @@ const PageWrapper = (props: PropsWithChildren<PageProps>) => {
       <Navigation />
       <div className="py-4">{props.children}</div>
       <Footer />
-    </>
+    </QueryClientProvider>
   );
 };
 
