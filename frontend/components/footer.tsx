@@ -8,9 +8,9 @@ import KaPlanIcon from "./kaplan-svg";
 import { API_BASE_URL, BACKEND_INFO_KEY, VERSION } from "../constants";
 
 const Footer = () => {
-  const frontendVersion: string = VERSION;
+  const versionFrontend: string = VERSION;
 
-  const backendInfo = useQuery({
+  const info = useQuery({
     queryKey: [BACKEND_INFO_KEY],
     queryFn: async () => {
       const response = await fetch(`${API_BASE_URL}/info`);
@@ -25,20 +25,20 @@ const Footer = () => {
   return (
     <footer className="fixed-bottom bg-light py-3">
       <Container className="bg-light text-muted">
-        {frontendVersion &&
-          backendInfo.data?.version?.KeinPlanBackend != frontendVersion && (
+        {versionFrontend &&
+          info.data?.version?.KeinPlanBackend != versionFrontend && (
             <Alert variant="danger" className="mb-3">
               Auf diesem Server läuft eine andere Backend-Version (
-              {backendInfo.data?.version?.KeinPlanBackend ?? "unbekannt"}),
-              sodass es zu Fehlfunktionen kommen kann. Bitte aktualisiere die
-              Software bzw. Docker-Images!
+              {info.data?.version?.KeinPlanBackend ?? "unbekannt"}), sodass es
+              zu Fehlfunktionen kommen kann. Bitte aktualisiere die Software
+              bzw. Docker-Images!
             </Alert>
           )}
         <Stack direction="horizontal" gap={3}>
-          {backendInfo.data?.env?.GithubLink && (
+          {info.data?.env?.GithubLink && (
             <div>
               <Link
-                href={backendInfo.data.env.GithubLink}
+                href={info.data.env.GithubLink}
                 className="text-muted"
                 target="_blank"
               >
@@ -48,12 +48,12 @@ const Footer = () => {
           )}
           <div className="me-auto">
             KeinPlan{" "}
-            {frontendVersion ? `v${frontendVersion}` : "(unbekannte Version)"}
+            {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
           </div>
-          {backendInfo.data?.env?.KaPlanLink && (
+          {info.data?.env?.KaPlanLink && (
             <div>
               <Link
-                href={backendInfo.data.env.KaPlanLink}
+                href={info.data.env.KaPlanLink}
                 className="text-muted"
                 target="_blank"
               >

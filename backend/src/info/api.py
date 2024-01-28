@@ -12,7 +12,7 @@ class InfoApi(Resource):
     def get(self) -> ResponseReturnValue:
         """Handle GET requests."""
         return {
-            "versions": {
+            "version": {
                 "KeinPlanBackend": VERSION,
             },
             "env": {
