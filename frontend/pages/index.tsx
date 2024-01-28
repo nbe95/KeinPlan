@@ -10,7 +10,7 @@ import PageWrapper from "../components/page-wrapper";
 import { API_BASE_URL, BACKEND_INFO_KEY } from "../constants";
 
 const Page: NextPage = () => {
-  const backendInfo = useQuery({
+  const info = useQuery({
     queryKey: [BACKEND_INFO_KEY],
     queryFn: async () => {
       const response = await fetch(`${API_BASE_URL}/info`);
@@ -71,11 +71,8 @@ const Page: NextPage = () => {
           <FaqItem question="Meine Stundenliste ist fehlerhaft!?">
             Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit
             gefunden zu haben, erstelle gerne{" "}
-            {backendInfo.data?.env?.GithubLink ? (
-              <Link
-                href={`${backendInfo.data.env.GithubLink}/issues`}
-                target="_blank"
-              >
+            {info.data?.env?.GithubLink ? (
+              <Link href={`${info.data.env.GithubLink}/issues`} target="_blank">
                 ein Ticket
               </Link>
             ) : (
@@ -83,12 +80,10 @@ const Page: NextPage = () => {
             )}{" "}
             mit genauer Beschreibung des Fehlers oder melde dich direkt beim
             KeinPlan-Administrator deines Vertrauens
-            {backendInfo.data?.env?.AdminMail && (
+            {info.data?.env?.AdminMail && (
               <>
                 , z.B.{" "}
-                <Link href={`mailto:${backendInfo.data.env.AdminMail}`}>
-                  per Mail
-                </Link>
+                <Link href={`mailto:${info.data.env.AdminMail}`}>per Mail</Link>
               </>
             )}
             .
