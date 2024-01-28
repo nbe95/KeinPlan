@@ -1,9 +1,9 @@
-"""API definition for KeinPlan backend."""
+"""Main KeinPlan backend module."""
 
 import logging
 
 from flask import Flask
-from flask_restful import Api
+from flask_cors import CORS
 
 from src.kaplan.constants import (
     KAPLAN_ALLOWED_SERVERS,
@@ -25,4 +25,5 @@ logger.info(
 
 
 backend: Flask = Flask(__name__)
+CORS(backend)
 backend.register_blueprint(api_blueprint)
