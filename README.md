@@ -1,24 +1,39 @@
 # KeinPlan
 
-**:warning: Aktuell noch in der Entwicklung! :warning:**
-
----
-
 > Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine Dienste mit Datum
 und Uhrzeit schon offiziell in *KaPlan* stehen? \
-***KeinPlan!***
+– ***KeinPlan!***
 
-Wenn du dir diese Frage auch schon mal gestellt hat, bist du hier genau richtig.
+Wenn du dir diese Frage auch schonmal gestellt hat, bist du hier genau richtig.
 
 ## Worum geht's?
 
-Dieses Online-Tool erzeugt ~~Datenmüll~~ Stundenlisten, die vollautomatisch 1:1
-mit den in *KaPlan* hinterlegten Diensten gefüttert werden. Nicht mehr, aber
-auch nicht weniger.
+Dieses Online-Tool exportiert vollautomatisch Stundenlisten aus deinen in
+*KaPlan*> hinterlegten Diensten.
 
-Das bedeutet, hier kannst du mit nur wenigen Klicks fertige Stundenlisten
-erstellen, als PDF herunterladen und direkt zwecks Prozessbefriedigung ans
-Pfarrbüro versenden.
+Mit nur ein paar Klicks erstellt es Auflistungen deiner Arbeitszeit, die als PDF
+herunterladen und anschließend direkt ans Pfarrbüro versendet werden können.
+
+## FAQ
+
+### Ist das hier offiziell?
+
+Nein. Dieses Tool hat nichts mit *KaPlan*, der Kirchengemeinde usw. zu tun.
+Daher alles ohne Gewähr.\
+**Überprüfe alles, was du ans Pfarrbüro sendest.**
+
+### Meine Stundenliste ist fehlerhaft!?
+
+Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit gefunden zu haben,
+erstelle gerne [ein Ticket](https://github.com/nbe95/KeinPlan/issues) mit
+genauer Beschreibung des Fehlers oder melde dich direkt beim
+KeinPlan-Administrator deines Vertrauens.
+
+### Ist das alles den Aufwand wert?
+
+Ja. Allein aus Prinzip.
+
+## Sonstiges
 
 ### Hilfreiche Befehle
 
