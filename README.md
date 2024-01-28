@@ -1,39 +1,58 @@
 # KeinPlan
 
-> Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine Dienste mit Datum
-und Uhrzeit schon offiziell in *KaPlan* stehen? \
-– ***KeinPlan!***
+Ein inoffizielles Tool zur einfachen Erstellung von Stundenlisten anhand Daten
+eines offiziellen *KaPlan* Servers.
 
-Wenn du dir diese Frage auch schonmal gestellt hat, bist du hier genau richtig.
+Alle Komponenten sind als Docker-Container verfügbar und werden bei
+Funktionserweiterungen/Updates via CI automatisch veröffentlicht.
 
-## Worum geht's?
+## Frontend
 
-Dieses Online-Tool exportiert vollautomatisch Stundenlisten aus deinen in
-*KaPlan*> hinterlegten Diensten.
+Zur einfachen Bedienung im Browser gibt es ein interaktives Web-Frontend
+basierend auf *next.js*, welches (intern) auf Port 3000 lauscht.
 
-Mit nur ein paar Klicks erstellt es Auflistungen deiner Arbeitszeit, die als PDF
-herunterladen und anschließend direkt ans Pfarrbüro versendet werden können.
+Lokale Entwicklung mittels `npm run dev` etc.
 
-## FAQ
+## Backend
 
-### Ist das hier offiziell?
+Die eigentliche Funktionalität, Datem vom *KaPlan* Server abzufragen und daraus
+Stundenlisten zu erstellen, findet sich im Backend mit den folgenden Endpunkten.
 
-Nein. Dieses Tool hat nichts mit *KaPlan*, der Kirchengemeinde usw. zu tun.
-Daher alles ohne Gewähr.\
-**Überprüfe alles, was du ans Pfarrbüro sendest.**
+- `/info`: Stellt generelle Informationen zur Laufzeit für das Frontend bereit,
+  die u. a. in optimierten/kompilierten next.js-Docker Containern nicht mehr
+  (ohne krasse Hacks) ausgelesen und ins Frontend eingebunden werden können.
+- `/kaplan`: Schnittstelle zum *KaPlan* Server, die Anfragen entgegennimmt und
+  mit den Ergebnissen möglichst geschickt umgeht (Caching usw.).
+- `/time-sheet`: Endpunkt für die Generierung verschiedener Stundenlisten.
 
-### Meine Stundenliste ist fehlerhaft!?
+> Hinweis: Alle Endpunkte erhalten das URL-Präfix `/api/v1`.
 
-Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit gefunden zu haben,
-erstelle gerne [ein Ticket](https://github.com/nbe95/KeinPlan/issues) mit
-genauer Beschreibung des Fehlers oder melde dich direkt beim
-KeinPlan-Administrator deines Vertrauens.
+Auf einem produktiven Server, der als reverse Proxy fungieren sollte, müssen
+Anfragen an den `/api`-Pfad ans Backend geleitet werden (ohne die URL dabei zu
+ändern!), alle anderen Anfragen sind fürs Frontend bestimmt.
 
-### Ist das alles den Aufwand wert?
+Beispielkonfiguration mittels Caddy, hier mit dem Docker-Host als Ziel:
 
-Ja. Allein aus Prinzip.
+```Caddyfile
+keinplan.domain.tld {
+        handle /api/* {
+                reverse_proxy 172.17.0.1:8080
+        }
+        handle {
+                reverse_proxy 172.17.0.1:3000
+        }
+}
+```
+
+Lokale Entwicklung in einer venv mittels `waitress-server --port 8080
+src.main:backend`. Eine tox-Umgebung steht für Linting und Formatting bereit.
 
 ## Sonstiges
+
+### Funktionsweise
+
+Die Generierung der Stundenlisten geschieht intern via Jinja Templates.
+Resultierende Markdown-Dateien werden mittels `pandoc` in PDFs umgewandelt.
 
 ### Hilfreiche Befehle
 
