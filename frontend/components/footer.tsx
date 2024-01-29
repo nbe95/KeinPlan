@@ -40,6 +40,7 @@ const Footer = () => {
               <Link
                 href={info.data.env.GithubLink}
                 className="text-muted"
+                title="KeinPlan auf Github"
                 target="_blank"
               >
                 <FontAwesomeIcon icon={faGithub} size="xl" />
@@ -55,6 +56,7 @@ const Footer = () => {
               <Link
                 href={info.data.env.KaPlanLink}
                 className="text-muted"
+                title="KaPlan öffnen"
                 target="_blank"
               >
                 <KaPlanIcon width={24} height={24} />
