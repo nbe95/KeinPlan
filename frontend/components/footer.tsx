@@ -1,11 +1,11 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Alert, Container, Stack } from "react-bootstrap";
-import KaPlanIcon from "./kaplan-svg";
-
 import { API_BASE_URL, BACKEND_INFO_KEY, VERSION } from "../constants";
+import KaPlanIcon from "./kaplan-svg";
 
 const Footer = () => {
   const versionFrontend: string = VERSION;
@@ -54,6 +54,18 @@ const Footer = () => {
             KeinPlan{" "}
             {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
           </div>
+          {info.data?.env?.AdminMail && (
+            <div>
+              <Link
+                href={`mailto:${info.data.env.AdminMail}`}
+                className="text-muted"
+                title="Kontakt per E-Mail"
+                target="_blank"
+              >
+                <FontAwesomeIcon icon={faEnvelope} size="lg" />
+              </Link>
+            </div>
+          )}
           {info.data?.env?.KaPlanLink && (
             <div>
               <Link
