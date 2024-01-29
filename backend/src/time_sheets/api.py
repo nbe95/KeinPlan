@@ -49,14 +49,19 @@ class TimeSheetApi(Resource):
                         datetime.fromisoformat(datum.get("begin", "")),
                         datetime.fromisoformat(datum.get("end", "")),
                     ),
-                    TimeSpan(
-                        datetime.fromisoformat(datum.get("break_begin", "")),
-                        datetime.fromisoformat(datum.get("break_end", "")),
-                    )
-                    if all(
-                        key in datum for key in ("break_begin", "break_end")
-                    )
-                    else None,
+                    (
+                        TimeSpan(
+                            datetime.fromisoformat(
+                                datum.get("break_begin", "")
+                            ),
+                            datetime.fromisoformat(datum.get("break_end", "")),
+                        )
+                        if all(
+                            key in datum
+                            for key in ("break_begin", "break_end")
+                        )
+                        else None
+                    ),
                 )
                 if not entry.is_valid():
                     return (f"Time entry is invalid: {entry}", 400)

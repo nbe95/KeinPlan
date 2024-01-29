@@ -17,7 +17,10 @@ logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
 
-logger.info("Setting up KeinPlan backend v%s.", VERSION)
+logger.info(
+    "Setting up KeinPlan backend %s.",
+    f"v{VERSION}" if VERSION else "<unknown version>",
+)
 logger.info("Allowed KaPlan servers: %s", ", ".join(KAPLAN_ALLOWED_SERVERS))
 logger.info(
     "Allowed KaPlan workgroups: %s", ", ".join(KAPLAN_ALLOWED_WORKGROUPS)
