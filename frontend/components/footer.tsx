@@ -19,7 +19,10 @@ const Footer = () => {
       }
       return response.json();
     },
-    gcTime: 1000 * 60 * 60 * 24, // 1 day
+    staleTime: 1000 * 60 * 60 * 24,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 
   return (
