@@ -44,7 +44,7 @@ keinplan.domain.tld {
 }
 ```
 
-Lokale Entwicklung in einer `venv` mittels `waitress-server --port 8080
+Lokale Entwicklung in einer `venv` mittels `waitress-serve --port 8080
 src.main:backend`. Eine tox-Umgebung steht für Linting und Formatting bereit.
 
 ## Sonstiges

@@ -1,11 +1,11 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Alert, Container, Stack } from "react-bootstrap";
-import KaPlanIcon from "./kaplan-svg";
-
 import { API_BASE_URL, BACKEND_INFO_KEY, VERSION } from "../constants";
+import KaPlanIcon from "./kaplan-svg";
 
 const Footer = () => {
   const versionFrontend: string = VERSION;
@@ -19,7 +19,10 @@ const Footer = () => {
       }
       return response.json();
     },
-    gcTime: 1000 * 60 * 60 * 24, // 1 day
+    staleTime: 1000 * 60 * 60 * 24,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 
   return (
@@ -40,6 +43,7 @@ const Footer = () => {
               <Link
                 href={info.data.env.GithubLink}
                 className="text-muted"
+                title="KeinPlan auf Github"
                 target="_blank"
               >
                 <FontAwesomeIcon icon={faGithub} size="xl" />
@@ -50,11 +54,24 @@ const Footer = () => {
             KeinPlan{" "}
             {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
           </div>
+          {info.data?.env?.AdminMail && (
+            <div>
+              <Link
+                href={`mailto:${info.data.env.AdminMail}`}
+                className="text-muted"
+                title="Kontakt per E-Mail"
+                target="_blank"
+              >
+                <FontAwesomeIcon icon={faEnvelope} size="lg" />
+              </Link>
+            </div>
+          )}
           {info.data?.env?.KaPlanLink && (
             <div>
               <Link
                 href={info.data.env.KaPlanLink}
                 className="text-muted"
+                title="KaPlan öffnen"
                 target="_blank"
               >
                 <KaPlanIcon width={24} height={24} />
