@@ -1,32 +1,16 @@
 import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
 import { NextPage } from "next";
 import Link from "next/link";
 import { Button, Col, Row } from "react-bootstrap";
 import { FaqContainer, FaqItem } from "../components/faq";
 import PageSection from "../components/page-section";
 import PageWrapper from "../components/page-wrapper";
-import { API_BASE_URL, BACKEND_INFO_KEY } from "../constants";
+import { PageProps, getBackendInfo } from "../utils/backend-info";
 
-const Page: NextPage = () => {
-  const info = useQuery({
-    queryKey: [BACKEND_INFO_KEY],
-    queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/info`);
-      if (!response.ok) {
-        throw new Error("Got an invalid response from backend.");
-      }
-      return response.json();
-    },
-    staleTime: 1000 * 60 * 60 * 24,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
-
+const Page: NextPage = (pageProps: PageProps) => {
   return (
-    <PageWrapper>
+    <PageWrapper backendInfo={pageProps.backendInfo}>
       <PageSection headline="Worum geht's?">
         <Row>
           <Col md={6} lg={4}>
@@ -74,8 +58,11 @@ const Page: NextPage = () => {
           <FaqItem question="Meine Stundenliste ist fehlerhaft!?">
             Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit
             gefunden zu haben, erstelle gerne{" "}
-            {info.data?.env?.GithubLink ? (
-              <Link href={`${info.data.env.GithubLink}/issues`} target="_blank">
+            {pageProps.backendInfo.env?.GithubLink ? (
+              <Link
+                href={`${pageProps.backendInfo.env.GithubLink}/issues`}
+                target="_blank"
+              >
                 ein Ticket
               </Link>
             ) : (
@@ -83,10 +70,12 @@ const Page: NextPage = () => {
             )}{" "}
             mit genauer Beschreibung des Fehlers oder melde dich direkt beim
             KeinPlan-Administrator deines Vertrauens
-            {info.data?.env?.AdminMail && (
+            {pageProps.backendInfo.env?.AdminMail && (
               <>
                 , z.B.{" "}
-                <Link href={`mailto:${info.data.env.AdminMail}`}>per Mail</Link>
+                <Link href={`mailto:${pageProps.backendInfo.env.AdminMail}`}>
+                  per Mail
+                </Link>
               </>
             )}
             .
@@ -99,6 +88,14 @@ const Page: NextPage = () => {
       </PageSection>
     </PageWrapper>
   );
+};
+
+export const getServerSideProps = async ({ req, res }) => {
+  return {
+    props: {
+      backendInfo: await getBackendInfo(res),
+    },
+  };
 };
 
 export default Page;
