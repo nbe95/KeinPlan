@@ -1,7 +1,5 @@
 import { createContext } from "react";
-import { API_BASE_URL } from "../constants";
-
-const BACKEND_INFO_CACHE_TIME: number = 60;
+import { API_BASE_URL, BACKEND_INFO_CACHE_TIME } from "../constants";
 
 export const BackendInfoContext = createContext({});
 
