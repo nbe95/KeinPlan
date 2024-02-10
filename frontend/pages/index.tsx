@@ -9,6 +9,7 @@ import PageWrapper from "../components/page-wrapper";
 import { PageProps, getBackendInfo } from "../utils/backend-info";
 
 const Page: NextPage = (pageProps: PageProps) => {
+  const info = pageProps.backendInfo;
   return (
     <PageWrapper backendInfo={pageProps.backendInfo}>
       <PageSection headline="Worum geht's?">
@@ -58,11 +59,8 @@ const Page: NextPage = (pageProps: PageProps) => {
           <FaqItem question="Meine Stundenliste ist fehlerhaft!?">
             Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit
             gefunden zu haben, erstelle gerne{" "}
-            {pageProps.backendInfo.env?.GithubLink ? (
-              <Link
-                href={`${pageProps.backendInfo.env.GithubLink}/issues`}
-                target="_blank"
-              >
+            {info.env?.GithubLink ? (
+              <Link href={`${info.env.GithubLink}/issues`} target="_blank">
                 ein Ticket
               </Link>
             ) : (
@@ -70,12 +68,10 @@ const Page: NextPage = (pageProps: PageProps) => {
             )}{" "}
             mit genauer Beschreibung des Fehlers oder melde dich direkt beim
             KeinPlan-Administrator deines Vertrauens
-            {pageProps.backendInfo.env?.AdminMail && (
+            {info.env?.AdminMail && (
               <>
                 , z.B.{" "}
-                <Link href={`mailto:${pageProps.backendInfo.env.AdminMail}`}>
-                  per Mail
-                </Link>
+                <Link href={`mailto:${info.env.AdminMail}`}>per Mail</Link>
               </>
             )}
             .
