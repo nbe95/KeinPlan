@@ -31,15 +31,21 @@ Auf einem produktiven Server, der als reverse Proxy fungieren sollte, müssen
 Anfragen an den `/api`-Pfad ans Backend geleitet werden (ohne die URL dabei zu
 ändern); alle anderen Anfragen sind fürs Frontend bestimmt.
 
-Beispielkonfiguration mittels Caddy, hier mit dem Docker-Host als Ziel:
+Für ein möglichst simples und sicheres Setup sollte ein Netzwerk erstellt werden
+mit dem Reverse Proxy und allen Containern, die darin erreichbar sein sollen.
+Diese können dann auch untereinander kommunizieren und es müssen keine Ports
+extra nach außen geöffnet werden (außer 80/443). Für Details bzw. ein Beispiel
+siehe `docker-compose.yaml`.
+
+Beispielkonfiguration mittels Caddy, hier mit den Docker-Namen als Ziel:
 
 ```Caddyfile
 keinplan.domain.tld {
         handle /api/* {
-                reverse_proxy 172.17.0.1:8080
+                reverse_proxy keinplan-backend:8080
         }
         handle {
-                reverse_proxy 172.17.0.1:3000
+                reverse_proxy keinplan-frontend:3000
         }
 }
 ```

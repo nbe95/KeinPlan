@@ -3,6 +3,7 @@ version: "2"
 services:
   backend:
     image: nbe95/keinplan-backend
+    container_name: keinplan-backend
     restart: unless-stopped
     ports:
       - 8080:8080
@@ -14,9 +15,26 @@ services:
       - KAPLAN_LINK=$KAPLAN_LINK
       - KAPLAN_ALLOWED_SERVERS=$KAPLAN_ALLOWED_SERVERS
       - KAPLAN_ALLOWED_WORKGROUPS=$KAPLAN_ALLOWED_WORKGROUPS
+    networks:
+      - webserver
 
   frontend:
     image: nbe95/keinplan-frontend
+    container_name: keinplan-frontend
     restart: unless-stopped
     ports:
       - 3000:3000
+    networks:
+      - webserver
+
+networks:
+  webserver:
+    # In production, a reverse proxy with automatic TLS support (e.g. Caddy)
+    # should serve this site on the internal ports 3000 (frontend) and 8080
+    # (backend). Routes to /api/* should go to the backend, any other route
+    # should target the frontend.
+    # Either open the above ports to your host OR create a network named
+    # "webserver" with all containers attached, and open only your reverse proxy
+    # to the outside world (ports 80/443).
+    name: webserver
+    external: true
