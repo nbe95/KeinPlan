@@ -11,19 +11,18 @@ import { BackendInfoContext } from "../utils/backend-info";
 
 const Footer = () => {
   const versionFrontend: string = VERSION;
-
   const info: any = useContext(BackendInfoContext);
 
   return (
     <footer className="fixed-bottom bg-light py-3">
       <Container className="bg-light text-muted">
         {versionFrontend &&
+          info.version?.KeinPlanBackend &&
           info.version?.KeinPlanBackend != versionFrontend && (
             <Alert variant="danger" className="mb-3">
               Auf diesem Server läuft eine andere Backend-Version (
-              {info.version?.KeinPlanBackend ?? "unbekannt"}), sodass es zu
-              Fehlfunktionen kommen kann. Bitte aktualisiere die Software bzw.
-              Docker-Images!
+              {info.version.KeinPlanBackend}), sodass es zu Fehlfunktionen
+              kommen kann. Bitte aktualisiere die Software bzw. Docker-Images!
             </Alert>
           )}
         <Stack direction="horizontal" gap={3}>
