@@ -9,6 +9,10 @@ export type PageProps = {
 
 export const getBackendInfo = async (res) => {
   res.setHeader("Cache-Control", `private, max-age=${BACKEND_INFO_CACHE_TIME}`);
-  const query = await fetch(`${API_BASE_URL_SERVER}/info`);
-  return await query.json();
+  try {
+    const query = await fetch(`${API_BASE_URL_SERVER}/info`);
+    return await query.json();
+  } catch (error) {
+    return {"error": `${error}`}
+  }
 };

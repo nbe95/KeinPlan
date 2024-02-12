@@ -6,7 +6,7 @@ import { Alert, Container, Stack } from "react-bootstrap";
 import KaPlanIcon from "./kaplan-svg";
 
 import { useContext } from "react";
-import { VERSION } from "../constants";
+import { PROD, VERSION } from "../constants";
 import { BackendInfoContext } from "../utils/backend-info";
 
 const Footer = () => {
@@ -16,6 +16,11 @@ const Footer = () => {
   return (
     <footer className="fixed-bottom bg-light py-3">
       <Container className="bg-light text-muted">
+        {PROD && info.error &&
+            <Alert variant="warning" className="mb-3">
+              Backend-Informationen konnten nicht abgerufen werden: <code>{info.error}</code>
+            </Alert>
+          }
         {versionFrontend &&
           info.version?.KeinPlanBackend &&
           info.version?.KeinPlanBackend != versionFrontend && (
