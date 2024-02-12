@@ -16,11 +16,12 @@ const Footer = () => {
   return (
     <footer className="fixed-bottom bg-light py-3">
       <Container className="bg-light text-muted">
-        {PROD && info.error &&
-            <Alert variant="warning" className="mb-3">
-              Backend-Informationen konnten nicht abgerufen werden: <code>{info.error}</code>
-            </Alert>
-          }
+        {PROD && info.error && (
+          <Alert variant="warning" className="mb-3">
+            Backend-Informationen konnten nicht abgerufen werden:{" "}
+            <code>{info.error}</code>
+          </Alert>
+        )}
         {versionFrontend &&
           info.version?.KeinPlanBackend &&
           info.version?.KeinPlanBackend != versionFrontend && (

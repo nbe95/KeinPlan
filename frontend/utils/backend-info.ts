@@ -13,6 +13,6 @@ export const getBackendInfo = async (res) => {
     const query = await fetch(`${API_BASE_URL_SERVER}/info`);
     return await query.json();
   } catch (error) {
-    return {"error": `${error}`}
+    return { error: `${error}` };
   }
 };
