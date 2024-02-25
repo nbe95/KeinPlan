@@ -1,31 +1,27 @@
 import { useState } from "react";
 
-import { TSParams, TSSteps } from "./common";
+import { TimeSheetDate, TimeSheetParams } from "./common";
 import TSDateCheck from "./step-date-check";
 import TSParamInput from "./step-param-input";
 
 const TimeSheetGenerator = () => {
-  const [params, setParams] = useState<TSParams>();
-  const [step, setStep] = useState<TSSteps>(TSSteps.ParamInput);
+  const [params, setParams] = useState<TimeSheetParams>();
+  const [dateList, setDateList] = useState<TimeSheetDate[]>();
 
   return (
     <>
-      {step == TSSteps.ParamInput && (
+      {!dateList ? ( // Step 1
         <TSParamInput
-          setParams={setParams}
-          nextStep={() => setStep(TSSteps.DateCheck)}
-        />
-      )}
-
-      {step == TSSteps.DateCheck && (
-        <TSDateCheck
           params={params}
-          prevStep={() => setStep(TSSteps.ParamInput)}
-          nextStep={() => setStep(TSSteps.Download)}
+          setParams={setParams}
+          setDateList={setDateList}
         />
+      ) : true ? ( // Step 2
+        <TSDateCheck setParams={setParams} dateList={dateList} />
+      ) : (
+        // Step 3
+        <>foo</>
       )}
-
-      {step == TSSteps.Download && <></>}
     </>
   );
 };

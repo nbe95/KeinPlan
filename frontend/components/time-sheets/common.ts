@@ -1,4 +1,4 @@
-export type TSParams = {
+export type TimeSheetParams = {
   firstName: string;
   lastName: string;
   employer: string;
@@ -6,8 +6,12 @@ export type TSParams = {
   kaPlanIcs: string;
 };
 
-export enum TSSteps {
-  ParamInput,
-  DateCheck,
-  Download,
-}
+export type TimeSheetDate = {
+  title: string;
+  role: string;
+  location: string;
+  begin: Date;
+  end: Date;
+  break_begin: Date;
+  break_end: Date;
+};
