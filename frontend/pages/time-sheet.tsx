@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import PageSection from "../components/page-section";
 import PageWrapper from "../components/page-wrapper";
-import TimeSheetGenerator from "../components/time-sheet-generator";
+import TimeSheetGenerator from "../components/time-sheets/generator";
 import { PageProps, getBackendInfo } from "../utils/backend-info";
 
 const Page: NextPage = (pageProps: PageProps) => {
