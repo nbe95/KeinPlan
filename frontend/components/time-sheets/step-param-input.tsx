@@ -3,12 +3,12 @@ import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 
 import { getWeek, getWeekYear } from "../../utils/iso-week";
 
-type TSDataInputProps = {
+type TSParamInputProps = {
   setParams: (GeneralData) => void;
   nextStep: () => void;
 };
 
-export const TSDataInput = (props: TSDataInputProps) => {
+export const TSParamInput = (props: TSParamInputProps) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.setParams({
@@ -34,6 +34,7 @@ export const TSDataInput = (props: TSDataInputProps) => {
   return (
     <>
       <h2 className="mb-4">Schritt 1: Allgemeine Daten</h2>
+
       <form onSubmit={(event) => handleSubmit(event)}>
         <Row>
           <Col lg={6} md={12}>
@@ -126,4 +127,4 @@ export const TSDataInput = (props: TSDataInputProps) => {
   );
 };
 
-export default TSDataInput;
+export default TSParamInput;
