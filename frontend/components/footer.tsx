@@ -2,7 +2,7 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { Alert, Container, Stack } from "react-bootstrap";
+import { Container, Stack } from "react-bootstrap";
 import KaPlanIcon from "./kaplan-svg";
 
 import { useContext } from "react";
@@ -28,7 +28,9 @@ const Footer = () => {
             <MsgBox type="error">
               Auf diesem Server läuft eine andere Backend-Version (
               {info.version.KeinPlanBackend}), sodass es zu Fehlfunktionen
-              kommen kann.<br />Bitte aktualisiere die Software bzw. Docker-Images!
+              kommen kann.
+              <br />
+              Bitte aktualisiere die Software bzw. Docker-Images!
             </MsgBox>
           )}
         <Stack direction="horizontal" gap={3}>
