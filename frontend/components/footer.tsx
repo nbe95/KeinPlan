@@ -8,6 +8,7 @@ import KaPlanIcon from "./kaplan-svg";
 import { useContext } from "react";
 import { PROD, VERSION } from "../constants";
 import { BackendInfoContext } from "../utils/backend-info";
+import MsgBox from "./msg-box";
 
 const Footer = () => {
   const versionFrontend: string = VERSION;
@@ -17,19 +18,18 @@ const Footer = () => {
     <footer className="fixed-bottom bg-light py-3">
       <Container className="bg-light text-muted">
         {PROD && info.error && (
-          <Alert variant="warning" className="mb-3">
-            Backend-Informationen konnten nicht abgerufen werden:{" "}
-            <code>{info.error}</code>
-          </Alert>
+          <MsgBox type="warning" trace={info.error}>
+            Backend-Informationen konnten nicht abgerufen werden.
+          </MsgBox>
         )}
         {versionFrontend &&
           info.version?.KeinPlanBackend &&
           info.version?.KeinPlanBackend != versionFrontend && (
-            <Alert variant="danger" className="mb-3">
+            <MsgBox type="error">
               Auf diesem Server läuft eine andere Backend-Version (
               {info.version.KeinPlanBackend}), sodass es zu Fehlfunktionen
-              kommen kann. Bitte aktualisiere die Software bzw. Docker-Images!
-            </Alert>
+              kommen kann.<br />Bitte aktualisiere die Software bzw. Docker-Images!
+            </MsgBox>
           )}
         <Stack direction="horizontal" gap={3}>
           {info.env?.GithubLink && (
