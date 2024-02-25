@@ -1,14 +1,14 @@
 import { NextPage } from "next";
 import PageSection from "../components/page-section";
 import PageWrapper from "../components/page-wrapper";
-import TimesheetGenerator from "../components/timesheet-generator";
+import TimeSheetGenerator from "../components/time-sheet-generator";
 import { PageProps, getBackendInfo } from "../utils/backend-info";
 
 const Page: NextPage = (pageProps: PageProps) => {
   return (
     <PageWrapper backendInfo={pageProps.backendInfo} title="Stundenliste">
       <PageSection headline="Stundenliste erstellen">
-        <TimesheetGenerator />
+        <TimeSheetGenerator />
       </PageSection>
     </PageWrapper>
   );
