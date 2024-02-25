@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { API_BASE_URL } from "../constants";
 
+import { getWeek, getWeekYear } from "../utils/iso-week";
+
 type GeneralData = {
   firstName: string;
   lastName: string;
@@ -51,7 +53,18 @@ const TimeSheetGenerator = () => {
     }
 
     event.preventDefault();
+    return false;
   };
+
+  const getLastMonday = () => {
+    const target = new Date();
+    target.setDate(target.getDate() - ((target.getDay() + 6) % 7));
+    return target;
+  };
+  const getCwLabel = (date: Date) => (
+    <>{`KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`}</>
+  );
+  const [targetDate, setTargetDate] = useState(getLastMonday());
 
   return (
     <>
@@ -82,7 +95,7 @@ const TimeSheetGenerator = () => {
                     />
                   </InputGroup>
                   <Form.Text>
-                    Dein Name, der auf der Stundenliste auftauchen soll.
+                    Dein Name, der als Dienstnehmer auf der Stundenliste steht.
                   </Form.Text>
                 </Form.Group>
 
@@ -96,7 +109,7 @@ const TimeSheetGenerator = () => {
                   />
                   <Form.Text>
                     Deine Gemeinde, die als Dienstgeber auf der Stundenliste
-                    auftauchen soll.
+                    auftaucht.
                   </Form.Text>
                 </Form.Group>
               </Col>
@@ -106,12 +119,21 @@ const TimeSheetGenerator = () => {
                     Für welche Kalenderwoche möchtest du eine Stundenliste
                     erstellen?
                   </Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="target_date"
-                    placeholder="Datum"
-                    required
-                  />
+                  <InputGroup>
+                    <Form.Control
+                      type="date"
+                      name="target_date"
+                      placeholder="Datum"
+                      defaultValue={targetDate.toISOString().split("T")[0]}
+                      onChange={(event) =>
+                        setTargetDate(
+                          (event.target as HTMLInputElement).valueAsDate,
+                        )
+                      }
+                      required
+                    />
+                    <InputGroup.Text>{getCwLabel(targetDate)}</InputGroup.Text>
+                  </InputGroup>
                   <Form.Text>
                     Wähle irgendein Datum aus, das in der gewünschten
                     Kalenderwoche liegt.
