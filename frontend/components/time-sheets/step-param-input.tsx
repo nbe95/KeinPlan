@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Spinner } from "react-bootstrap";
 
 import { useQuery } from "@tanstack/react-query";
-import { API_BASE_URL, KAPLAN_QUERY_KEY } from "../../constants";
+import { API_BASE_URL, KAPLAN_QUERY_KEY, KAPLAN_ICS_HEADER } from "../../constants";
 import { getWeek, getWeekYear } from "../../utils/iso-week";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
@@ -14,10 +14,16 @@ type TSParamInputProps = {
 };
 
 export const TSParamInput = (props: TSParamInputProps) => {
+  const b64_encode = (str: string) => Buffer.from(str, "binary").toString("base64")
   const { data, refetch, isLoading, isSuccess, isError, error } = useQuery({
     queryKey: [KAPLAN_QUERY_KEY],
     queryFn: async () => {
-      const response: Response = await fetch(`${API_BASE_URL}/kaplan`);
+      const response: Response = await fetch(`${API_BASE_URL}/kaplan`, {
+        method: "GET",
+        headers: {
+          [KAPLAN_ICS_HEADER]: b64_encode(props.params.kaPlanIcs)
+        },
+      });
       if (!response.ok) {
         let msg: string = `The KaPlan query returned status code ${response.status} (${response.statusText}).`
         try {

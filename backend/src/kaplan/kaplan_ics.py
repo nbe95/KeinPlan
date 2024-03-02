@@ -140,6 +140,10 @@ class KaPlanIcs:
             iter(query.get("Arbeitsgruppe", [])), None
         )
 
+        if all(x is None for x in (host, workgroup)):
+            logger.warning("Invalid URL without host or workgroup provided.")
+            return False
+
         if host not in KAPLAN_ALLOWED_SERVERS:
             logger.warning(
                 "'%s' is not within the allowed KaPlan hosts.", host

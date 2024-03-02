@@ -12,6 +12,8 @@ from hyperlink import URL
 
 from .kaplan_ics import KaPlanIcs, KaPlanIcsCached, KaPlanInterfaceError
 
+from .constants import KAPLAN_ICS_HEADER
+
 
 class KaPlanApi(Resource):
     """Restful API for the KaPlan interface."""
@@ -21,7 +23,7 @@ class KaPlanApi(Resource):
     def get(self) -> ResponseReturnValue:
         """Handle GET requests."""
         try:
-            ics_url_b64: Optional[str] = request.args.get("ics")
+            ics_url_b64: Optional[str] = request.headers.get(KAPLAN_ICS_HEADER)
             if not ics_url_b64:
                 raise Error("Got an empty string.")
             ics_url: str = b64decode(ics_url_b64).decode("ascii")
