@@ -17,7 +17,7 @@ const TimeSheetGenerator = () => {
           setDateList={setDateList}
         />
       ) : true ? ( // Step 2
-        <TSDateCheck setParams={setParams} dateList={dateList} />
+        <TSDateCheck dateList={dateList} setDateList={setDateList} />
       ) : (
         // Step 3
         <>foo</>

@@ -1,27 +1,50 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Spinner } from "react-bootstrap";
 
 import { useQuery } from "@tanstack/react-query";
 import { API_BASE_URL, KAPLAN_QUERY_KEY, KAPLAN_ICS_HEADER } from "../../constants";
-import { getWeek, getWeekYear } from "../../utils/iso-week";
+import { addDaysToDate, getDateString, getMonday, getWeek, getWeekYear } from "../../utils/dates";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
+import { b64_encode } from "../../utils/base64";
 
 type TSParamInputProps = {
-  params: TimeSheetParams;
+  params?: TimeSheetParams;
   setParams: (params: TimeSheetParams) => void;
   setDateList: (dates: TimeSheetDate[]) => void;
 };
 
 export const TSParamInput = (props: TSParamInputProps) => {
-  const b64_encode = (str: string) => Buffer.from(str, "binary").toString("base64")
+  const fiveDaysAgo = addDaysToDate(new Date(), -5)
+  const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo))
+
+  const getCalWeekLabel = useCallback(
+    (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
+    [targetDate]
+  )
+
+  const getEndpointUrl = useCallback((): URL => {
+    const startDate = getMonday(props.params.dateInTargetWeek)
+    const endDate = addDaysToDate(startDate, 6)
+
+    const url = new URL(`${API_BASE_URL}/kaplan`)
+    url.searchParams.append("from", getDateString(startDate))
+    url.searchParams.append("to", getDateString(endDate))
+    return url
+  }, [props.params]);
+
+  const getKaplanEncodedString = useCallback(
+    (): string => b64_encode(props.params?.kaPlanIcs ?? ""),
+    [props.params]
+  )
+
   const { data, refetch, isLoading, isSuccess, isError, error } = useQuery({
     queryKey: [KAPLAN_QUERY_KEY],
     queryFn: async () => {
-      const response: Response = await fetch(`${API_BASE_URL}/kaplan`, {
+      const response: Response = await fetch(getEndpointUrl(), {
         method: "GET",
         headers: {
-          [KAPLAN_ICS_HEADER]: b64_encode(props.params.kaPlanIcs)
+          [KAPLAN_ICS_HEADER]: getKaplanEncodedString()
         },
       });
       if (!response.ok) {
@@ -34,6 +57,7 @@ export const TSParamInput = (props: TSParamInputProps) => {
       }
       return response.json();
     },
+    select: (data: any): TimeSheetDate[] => data.dates,
     enabled: false, // Trigger query only using refetch() manually
   });
 
@@ -43,28 +67,22 @@ export const TSParamInput = (props: TSParamInputProps) => {
       firstName: event.target.first_name.value,
       lastName: event.target.last_name.value,
       employer: event.target.employer.value,
-      targetDate: event.target.target_date.value,
+      dateInTargetWeek: targetDate,
       kaPlanIcs: event.target.kaplan_ics.value,
     });
-    refetch();
   };
 
-  useEffect(() => {
+  useEffect(() => { // Trigger query as soon as params have been set
+    if (props.params) {
+      refetch()
+    }
+  }, [props.params])
+
+  useEffect(() => { // Trigger next step as soon as we've got a date list
     if (isSuccess) {
-      // console.log(data, isSuccess, isError)
       props.setDateList(data);
     }
   }, [isSuccess]);
-
-  const getLastMonday = () => {
-    const date = new Date();
-    date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
-    return date;
-  };
-  const getCwLabel = (date: Date) => (
-    <>{`KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`}</>
-  );
-  const [targetDate, setTargetDate] = useState(getLastMonday());
 
   return (
     <>
@@ -119,7 +137,7 @@ export const TSParamInput = (props: TSParamInputProps) => {
                   type="date"
                   name="target_date"
                   placeholder="Datum"
-                  defaultValue={targetDate.toISOString().split("T")[0]}
+                  defaultValue={getDateString(targetDate)}
                   onChange={(event) => {
                     const date = (event.target as HTMLInputElement).valueAsDate;
                     if (date) {
@@ -128,7 +146,7 @@ export const TSParamInput = (props: TSParamInputProps) => {
                   }}
                   required
                 />
-                <InputGroup.Text>{getCwLabel(targetDate)}</InputGroup.Text>
+                <InputGroup.Text>{getCalWeekLabel()}</InputGroup.Text>
               </InputGroup>
               <Form.Text>
                 Wähle irgendein Datum aus, das in der gewünschten Kalenderwoche

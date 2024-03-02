@@ -2,7 +2,7 @@ export type TimeSheetParams = {
   firstName: string;
   lastName: string;
   employer: string;
-  targetDate: Date;
+  dateInTargetWeek: Date;
   kaPlanIcs: string;
 };
 
@@ -12,6 +12,6 @@ export type TimeSheetDate = {
   location: string;
   begin: Date;
   end: Date;
-  break_begin: Date;
-  break_end: Date;
+  breakBegin: Date;
+  breakEnd: Date;
 };
