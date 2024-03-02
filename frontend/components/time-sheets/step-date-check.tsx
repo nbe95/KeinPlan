@@ -18,7 +18,7 @@ export const TSDateCheck = (props: TSDateCheckProps) => {
             variant="secondary"
             type="button"
             className="float-start"
-            onClick={() => props.setParams(undefined)}
+            onClick={() => props.setParams(null)}
           >
             Zurück
           </Button>

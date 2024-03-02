@@ -17,7 +17,15 @@ export const TSParamInput = (props: TSParamInputProps) => {
   const { data, refetch, isLoading, isSuccess, isError, error } = useQuery({
     queryKey: [KAPLAN_QUERY_KEY],
     queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/kaplan/`);
+      const response: Response = await fetch(`${API_BASE_URL}/kaplan`);
+      if (!response.ok) {
+        let msg: string = `The KaPlan query returned status code ${response.status} (${response.statusText}).`
+        try {
+          msg = await response.json().then(payload => payload.message)
+        } finally {
+          throw Error(msg)
+        }
+      }
       return response.json();
     },
     enabled: false, // Trigger query only using refetch() manually
@@ -37,6 +45,7 @@ export const TSParamInput = (props: TSParamInputProps) => {
 
   useEffect(() => {
     if (isSuccess) {
+      // console.log(data, isSuccess, isError)
       props.setDateList(data);
     }
   }, [isSuccess]);
