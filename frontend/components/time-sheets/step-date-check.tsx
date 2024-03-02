@@ -1,9 +1,12 @@
 import { Button, Col, Row, Table } from "react-bootstrap";
 
-import { TimeSheetDate, TimeSheetParams } from "./common";
-import { getDateString } from "../../utils/dates";
+import {
+  faPen,
+  faSquarePlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faSquarePlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { TimeSheetDate } from "./common";
 
 type TSDateCheckProps = {
   dateList: TimeSheetDate[];
@@ -11,7 +14,6 @@ type TSDateCheckProps = {
 };
 
 export const TSDateCheck = (props: TSDateCheckProps) => {
-  console.log(props.dateList)
   return (
     <>
       <h2 className="mb-4 mt-5">Schritt 2: Termine kontrollieren</h2>
@@ -30,23 +32,23 @@ export const TSDateCheck = (props: TSDateCheckProps) => {
               </tr>
             </thead>
             <tbody>
-              {
-                props.dateList.map((entry: TimeSheetDate) => (
-                  <tr>
-                    <td>?</td>
-                    <td>?</td>
-                    <td>{entry.title}</td>
-                    <td>{entry.location}</td>
-                    <td>{entry.begin} - {entry.end}</td>
-                    <td>?</td>
-                    <td>
-                      <FontAwesomeIcon icon={faPen} size="xl"/>
-                      <FontAwesomeIcon icon={faTrash} size="xl"/>
-                      <FontAwesomeIcon icon={faSquarePlus} size="xl"/>
-                    </td>
-                  </tr>
-                ))
-              }
+              {props.dateList.map((entry: TimeSheetDate) => (
+                <tr>
+                  <td>?</td>
+                  <td>?</td>
+                  <td>{entry.title}</td>
+                  <td>{entry.location}</td>
+                  <td>
+                    {entry.begin} - {entry.end}
+                  </td>
+                  <td>?</td>
+                  <td>
+                    <FontAwesomeIcon icon={faPen} size="xl" />
+                    <FontAwesomeIcon icon={faTrash} size="xl" />
+                    <FontAwesomeIcon icon={faSquarePlus} size="xl" />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Col>

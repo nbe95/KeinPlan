@@ -1,24 +1,22 @@
 export const getMonday = (dateInWeek: Date) => {
-  const date: Date = new Date(dateInWeek)
+  const date: Date = new Date(dateInWeek);
   date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
   return date;
 };
 
-export const addDaysToDate = ((refDate: Date, daysToAdd: number) => {
-  let result: Date = new Date(refDate)
-  result.setDate(result.getDate() + daysToAdd)
-  return result
-})
+export const addDaysToDate = (refDate: Date, daysToAdd: number) => {
+  let result: Date = new Date(refDate);
+  result.setDate(result.getDate() + daysToAdd);
+  return result;
+};
 
 export const getDateString = (date: Date) => {
   return [
     date.getFullYear().toString().padStart(4, "0"),
     (date.getMonth() + 1).toString().padStart(2, "0"),
-    date.getDate().toString().padStart(2, "0")
-  ].join("-")
-}
-
-
+    date.getDate().toString().padStart(2, "0"),
+  ].join("-");
+};
 
 // This following script is released to the public domain and may be used,
 // modified and distributed without restrictions. Attribution not necessary but

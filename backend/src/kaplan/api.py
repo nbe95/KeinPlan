@@ -10,9 +10,8 @@ from flask.typing import ResponseReturnValue
 from flask_restful import Resource
 from hyperlink import URL
 
-from .kaplan_ics import KaPlanIcs, KaPlanIcsCached, KaPlanInterfaceError
-
 from .constants import KAPLAN_ICS_HEADER
+from .kaplan_ics import KaPlanIcs, KaPlanIcsCached, KaPlanInterfaceError
 
 
 class KaPlanApi(Resource):
@@ -29,7 +28,9 @@ class KaPlanApi(Resource):
             ics_url: str = b64decode(ics_url_b64).decode("ascii")
             normalized_url: str = URL.from_text(ics_url).normalize().to_text()
         except (Error, UnicodeDecodeError) as e:
-            return {"message": f"The ICS string was not properly encoded: {e}"}, 400
+            return {
+                "message": f"The ICS string was not properly encoded: {e}"
+            }, 400
 
         try:
             date_from: date = datetime.strptime(

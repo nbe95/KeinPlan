@@ -1,12 +1,22 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Spinner } from "react-bootstrap";
 
 import { useQuery } from "@tanstack/react-query";
-import { API_BASE_URL, KAPLAN_QUERY_KEY, KAPLAN_ICS_HEADER } from "../../constants";
-import { addDaysToDate, getDateString, getMonday, getWeek, getWeekYear } from "../../utils/dates";
+import {
+  API_BASE_URL,
+  KAPLAN_ICS_HEADER,
+  KAPLAN_QUERY_KEY,
+} from "../../constants";
+import { b64_encode } from "../../utils/base64";
+import {
+  addDaysToDate,
+  getDateString,
+  getMonday,
+  getWeek,
+  getWeekYear,
+} from "../../utils/dates";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
-import { b64_encode } from "../../utils/base64";
 
 type TSParamInputProps = {
   params?: TimeSheetParams;
@@ -15,28 +25,28 @@ type TSParamInputProps = {
 };
 
 export const TSParamInput = (props: TSParamInputProps) => {
-  const fiveDaysAgo = addDaysToDate(new Date(), -5)
-  const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo))
+  const fiveDaysAgo = addDaysToDate(new Date(), -5);
+  const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo));
 
   const getCalWeekLabel = useCallback(
     (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
-    [targetDate]
-  )
+    [targetDate],
+  );
 
   const getEndpointUrl = useCallback((): URL => {
-    const startDate = getMonday(props.params.dateInTargetWeek)
-    const endDate = addDaysToDate(startDate, 6)
+    const startDate = getMonday(props.params.dateInTargetWeek);
+    const endDate = addDaysToDate(startDate, 6);
 
-    const url = new URL(`${API_BASE_URL}/kaplan`)
-    url.searchParams.append("from", getDateString(startDate))
-    url.searchParams.append("to", getDateString(endDate))
-    return url
+    const url = new URL(`${API_BASE_URL}/kaplan`);
+    url.searchParams.append("from", getDateString(startDate));
+    url.searchParams.append("to", getDateString(endDate));
+    return url;
   }, [props.params]);
 
   const getKaplanEncodedString = useCallback(
     (): string => b64_encode(props.params?.kaPlanIcs ?? ""),
-    [props.params]
-  )
+    [props.params],
+  );
 
   const { data, refetch, isLoading, isSuccess, isError, error } = useQuery({
     queryKey: [KAPLAN_QUERY_KEY],
@@ -44,15 +54,15 @@ export const TSParamInput = (props: TSParamInputProps) => {
       const response: Response = await fetch(getEndpointUrl(), {
         method: "GET",
         headers: {
-          [KAPLAN_ICS_HEADER]: getKaplanEncodedString()
+          [KAPLAN_ICS_HEADER]: getKaplanEncodedString(),
         },
       });
       if (!response.ok) {
-        let msg: string = `The KaPlan query returned status code ${response.status} (${response.statusText}).`
+        let msg: string = `The KaPlan query returned status code ${response.status} (${response.statusText}).`;
         try {
-          msg = await response.json().then(payload => payload.message)
+          msg = await response.json().then((payload) => payload.message);
         } finally {
-          throw Error(msg)
+          throw Error(msg);
         }
       }
       return response.json();
@@ -72,13 +82,15 @@ export const TSParamInput = (props: TSParamInputProps) => {
     });
   };
 
-  useEffect(() => { // Trigger query as soon as params have been set
+  useEffect(() => {
+    // Trigger query as soon as params have been set
     if (props.params) {
-      refetch()
+      refetch();
     }
-  }, [props.params])
+  }, [props.params]);
 
-  useEffect(() => { // Trigger next step as soon as we've got a date list
+  useEffect(() => {
+    // Trigger next step as soon as we've got a date list
     if (isSuccess) {
       props.setDateList(data);
     }
