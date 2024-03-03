@@ -12,4 +12,5 @@ export const BACKEND_INFO_CACHE_TIME: number = 60 * 60 * 24;
 export const KAPLAN_QUERY_KEY: string = "kaplan";
 export const TIME_SHEET_QUERY_KEY: string = "time-sheet";
 
+// Miscellaneous
 export const KAPLAN_ICS_HEADER: string = "X-KaPlan-ICS";

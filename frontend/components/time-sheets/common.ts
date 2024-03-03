@@ -1,17 +1,20 @@
-export type TimeSheetParams = {
-  firstName: string;
-  lastName: string;
-  employer: string;
-  dateInTargetWeek: Date;
-  kaPlanIcs: string;
+export interface UserData {
+  firstName: string
+  lastName: string
+  employer: string
+  kaPlanIcs: string
 };
 
-export type TimeSheetDate = {
-  title: string;
-  role: string;
-  location: string;
-  begin: Date;
-  end: Date;
-  breakBegin: Date;
-  breakEnd: Date;
+export interface TimeSheetParams extends UserData {
+  dateInTargetWeek: Date
+}
+
+export interface TimeSheetDate {
+  title: string
+  role: string
+  location: string
+  begin: Date
+  end: Date
+  breakBegin: Date
+  breakEnd: Date
 };

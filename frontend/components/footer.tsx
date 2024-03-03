@@ -6,7 +6,7 @@ import { Container, Stack } from "react-bootstrap";
 import KaPlanIcon from "./kaplan-svg";
 
 import { useContext } from "react";
-import { PROD, VERSION } from "../constants";
+import { PROD, VERSION } from "../utils/constants";
 import { BackendInfoContext } from "../utils/backend-info";
 import MsgBox from "./msg-box";
 

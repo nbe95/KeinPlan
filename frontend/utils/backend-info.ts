@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { API_BASE_URL_SERVER, BACKEND_INFO_CACHE_TIME } from "../constants";
+import { API_BASE_URL_SERVER, BACKEND_INFO_CACHE_TIME } from "./constants";
 
 export const BackendInfoContext = createContext({});
 
