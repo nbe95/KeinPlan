@@ -6,7 +6,7 @@ import {
   API_BASE_URL,
   KAPLAN_ICS_HEADER,
   KAPLAN_QUERY_KEY,
-} from "../../constants";
+} from "../../utils/constants";
 import { b64_encode } from "../../utils/base64";
 import {
   addDaysToDate,
@@ -17,6 +17,7 @@ import {
 } from "../../utils/dates";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
+import { useCookies } from "react-cookie";
 
 type TSParamInputProps = {
   params?: TimeSheetParams;
@@ -25,6 +26,15 @@ type TSParamInputProps = {
 };
 
 export const TSParamInput = (props: TSParamInputProps) => {
+
+  const [cookies, setCookie, removeCookie] = useCookies()
+  const [enableCookie, setEnableCookie] = useState<boolean>(!!cookies.userData)
+  useEffect(() => {
+    if (!enableCookie) {
+      removeCookie("userData")
+    }
+  }, [enableCookie])
+
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
   const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo));
 
@@ -73,18 +83,27 @@ export const TSParamInput = (props: TSParamInputProps) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.setParams({
-      firstName: event.target.first_name.value,
-      lastName: event.target.last_name.value,
-      employer: event.target.employer.value,
-      dateInTargetWeek: targetDate,
-      kaPlanIcs: event.target.kaplan_ics.value,
-    });
+
+
+    props.setParams()
+
+
+    props.setParams(
+      () => {
+        firstName: event.target.first_name.value,
+        lastName: event.target.last_name.value,
+        employer: event.target.employer.value,
+        kaPlanIcs: event.target.kaplan_ics.value,
+        dateInTargetWeek: targetDate,
+      }, () => {});
   };
 
   useEffect(() => {
-    // Trigger query as soon as params have been set
+    // Trigger query and cookie as soon as params have been set
     if (props.params) {
+      if (enableCookie) {
+        setCookie("userData", props.params, { expires: addDaysToDate(new Date(), 365) })
+      }
       refetch();
     }
   }, [props.params]);
@@ -100,7 +119,7 @@ export const TSParamInput = (props: TSParamInputProps) => {
     <>
       <h3 className="mb-4 mt-5">Schritt 1: Allgemeine Daten</h3>
 
-      <form onSubmit={(event) => handleSubmit(event)}>
+      <form name="param_form" onSubmit={(event) => handleSubmit(event)}>
         <Row>
           <Col lg={6} md={12}>
             <Form.Group className="mb-4">
@@ -110,12 +129,14 @@ export const TSParamInput = (props: TSParamInputProps) => {
                   type="text"
                   name="first_name"
                   placeholder="Vorname"
+                  defaultValue={props.params?.firstName}
                   required
                 />
                 <Form.Control
                   type="text"
                   name="last_name"
                   placeholder="Nachname"
+                  defaultValue={props.params?.lastName}
                   required
                 />
               </InputGroup>
@@ -130,6 +151,7 @@ export const TSParamInput = (props: TSParamInputProps) => {
                 type="text"
                 name="employer"
                 placeholder="Dienstgeber"
+                defaultValue={props.params?.employer}
                 required
               />
               <Form.Text>
@@ -167,11 +189,12 @@ export const TSParamInput = (props: TSParamInputProps) => {
             </Form.Group>
 
             <Form.Group className="mb-4">
-              <Form.Label>Persönlicher KaPlan-Link</Form.Label>
+              <Form.Label>Persönlicher KaPlan-Abonnement-String</Form.Label>
               <Form.Control
                 type="password"
                 name="kaplan_ics"
                 placeholder="KaPlan ICS-Link"
+                defaultValue={props.params?.kaPlanIcs}
                 required
               />
               <Form.Text>
@@ -179,6 +202,17 @@ export const TSParamInput = (props: TSParamInputProps) => {
                 verarbeitet wird.
               </Form.Text>
             </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Check
+              type="switch"
+              name="use_cookie"
+              label="Daten als Cookie speichern, damit's beim nächsten Mal schneller geht" defaultChecked={enableCookie}
+              onChange={e => setEnableCookie(e.target.checked)}
+            />
+
           </Col>
         </Row>
         <Row>
