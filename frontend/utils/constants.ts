@@ -14,3 +14,4 @@ export const TIME_SHEET_QUERY_KEY: string = "time-sheet";
 
 // Miscellaneous
 export const KAPLAN_ICS_HEADER: string = "X-KaPlan-ICS";
+export const KEINPLAN_USER_COOKIE: string = "userData";

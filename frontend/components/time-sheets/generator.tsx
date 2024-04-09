@@ -1,37 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
-import TSDateCheck from "./step-date-check";
-import TSParamInput from "./step-param-input";
-import { useCookies } from "react-cookie";
-import { KEINPLAN_PARAMS_COOKIE } from "../../utils/constants";
+import { TimeSheetDate, TimeSheetParams, GeneralData } from "./common";
+import StepKaPlanData from "./step-kaplan-data";
+import TSUserData from "./step-user-data";
 
 const TimeSheetGenerator = () => {
-  // Apply saved values upon initial rendering
-  const [cookies] = useCookies()
-  const getInitialParams = ():TimeSheetParams => {
-    return {
-      firstName: cookies.userData?.firstName ?? "",
-      lastName: cookies.userData?.lastName ?? "",
-      employer: cookies.userData?.employer ?? "",
-      kaPlanIcs: cookies.userData?.kaPlanIcs ?? "",
-      dateInTargetWeek: new Date()
-    }
-  }
 
-  const [params, setParams] = useState<TimeSheetParams>(getInitialParams)
+   const [userData, setUserData] = useState<GeneralData>();
+   const [kaPlanData, setKaPlanData] = useState<KaPlanData>();
+
+  const [params, setParams] = useState<TimeSheetParams>()
   const [dateList, setDateList] = useState<TimeSheetDate[]>();
+
+  const isStep1: boolean = params && params.firstName && params.lastName && params.employer && true;
+  const isStep2: boolean = !!dateList;
 
   return (
     <>
-      {!dateList ? ( // Step 1
-        <TSParamInput
+      {isStep1 ? (
+        <TSUserData
           params={params}
           setParams={setParams}
           setDateList={setDateList}
         />
-      ) : true ? ( // Step 2
-        <TSDateCheck dateList={dateList} setDateList={setDateList} />
+      ) : isStep2 ? (
+        <StepKaPlanData dateList={dateList} setDateList={setDateList} />
       ) : (
         // Step 3
         <>foo</>

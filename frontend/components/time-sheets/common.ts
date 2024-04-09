@@ -2,11 +2,12 @@ export interface UserData {
   firstName: string
   lastName: string
   employer: string
-  kaPlanIcs: string
 };
 
-export interface TimeSheetParams extends UserData {
-  dateInTargetWeek: Date
+export type TimeSheetType = "weekly"
+export interface TimeSheetData {
+  type: TimeSheetType
+  targetDate: Date
 }
 
 export interface TimeSheetDate {
@@ -18,3 +19,10 @@ export interface TimeSheetDate {
   breakBegin: Date
   breakEnd: Date
 };
+
+export interface KaPlanData {
+  icsString: string
+  dates: Array<TimeSheetDate>
+}
+
+// TODO: Diese Interfaces im Code umsetzen
