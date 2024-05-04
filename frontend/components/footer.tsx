@@ -6,8 +6,8 @@ import { Container, Stack } from "react-bootstrap";
 import KaPlanIcon from "./kaplan-svg";
 
 import { useContext } from "react";
-import { PROD, VERSION } from "../utils/constants";
 import { BackendInfoContext } from "../utils/backend-info";
+import { PROD, VERSION } from "../utils/constants";
 import MsgBox from "./msg-box";
 
 const Footer = () => {
@@ -30,7 +30,7 @@ const Footer = () => {
               {info.version.KeinPlanBackend}), sodass es zu Fehlfunktionen
               kommen kann.
               <br />
-              Bitte aktualisiere die Software bzw. Docker-Images!
+              Bitte aktualisiere die Software bzw. Docker Images!
             </MsgBox>
           )}
         <Stack direction="horizontal" gap={3}>

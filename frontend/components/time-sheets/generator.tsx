@@ -1,36 +1,41 @@
 import { useState } from "react";
 
-import { TimeSheetDate, TimeSheetParams, GeneralData } from "./common";
-import StepKaPlanData from "./step-kaplan-data";
-import TSUserData from "./step-user-data";
+import { TimeSheetData, UserData } from "./common";
+import FormTimeSheetData from "./form-time-sheet-data";
+import FormUserData from "./form-user-data";
 
 const TimeSheetGenerator = () => {
+  const [userData, setUserData] = useState<UserData>();
+  const [timeSheetData, setTimeSheetData] = useState<TimeSheetData>();
 
-   const [userData, setUserData] = useState<GeneralData>();
-   const [kaPlanData, setKaPlanData] = useState<KaPlanData>();
+  enum Steps {
+    USER_DATA,
+    TIME_SHEET_DATA,
+  }
+  const [step, setStep] = useState<Steps>(Steps.USER_DATA);
 
-  const [params, setParams] = useState<TimeSheetParams>()
-  const [dateList, setDateList] = useState<TimeSheetDate[]>();
-
-  const isStep1: boolean = params && params.firstName && params.lastName && params.employer && true;
-  const isStep2: boolean = !!dateList;
-
-  return (
-    <>
-      {isStep1 ? (
-        <TSUserData
-          params={params}
-          setParams={setParams}
-          setDateList={setDateList}
+  switch (step) {
+    case Steps.USER_DATA:
+      return (
+        <FormUserData
+          userData={userData}
+          setUserData={setUserData}
+          nextStep={() => {
+            setStep(Steps.TIME_SHEET_DATA);
+          }}
         />
-      ) : isStep2 ? (
-        <StepKaPlanData dateList={dateList} setDateList={setDateList} />
-      ) : (
-        // Step 3
-        <>foo</>
-      )}
-    </>
-  );
+      );
+    case Steps.TIME_SHEET_DATA:
+      return (
+        <FormTimeSheetData
+          timeSheetData={timeSheetData}
+          setTimeSheetData={setTimeSheetData}
+          prevStep={() => {
+            setStep(Steps.USER_DATA);
+          }}
+        />
+      );
+  }
 };
 
 export default TimeSheetGenerator;
