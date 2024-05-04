@@ -1,12 +1,13 @@
 import { useState } from "react";
 
-import { TimeSheetData, UserData } from "./common";
+import { TimeSheetData, TimeSheetDate, UserData } from "./common";
 import FormTimeSheetData from "./form-time-sheet-data";
 import FormUserData from "./form-user-data";
 
 const TimeSheetGenerator = () => {
   const [userData, setUserData] = useState<UserData>();
   const [timeSheetData, setTimeSheetData] = useState<TimeSheetData>();
+  const [dateList, setDateList] = useState<TimeSheetDate[]>();
 
   enum Steps {
     USER_DATA,
@@ -30,6 +31,8 @@ const TimeSheetGenerator = () => {
         <FormTimeSheetData
           timeSheetData={timeSheetData}
           setTimeSheetData={setTimeSheetData}
+          dateList={dateList}
+          setDateList={setDateList}
           prevStep={() => {
             setStep(Steps.USER_DATA);
           }}

@@ -26,7 +26,7 @@ export const MsgBox = (props: PropsWithChildren<MsgBoxProps>) => {
   };
 
   return (
-    <Alert variant={styling[props.type].bsVariant} className="my-3">
+    <Alert variant={styling[props.type].bsVariant} className="my-4">
       <Stack direction="horizontal" gap={4}>
         <FontAwesomeIcon icon={styling[props.type].faIcon} size="3x" />
         <div>

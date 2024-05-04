@@ -1,21 +1,33 @@
-export const getMonday = (dateInWeek: Date) => {
+export const getMonday = (dateInWeek: Date): Date => {
   const date: Date = new Date(dateInWeek);
   date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
   return date;
 };
 
-export const addDaysToDate = (refDate: Date, daysToAdd: number) => {
+export const addDaysToDate = (refDate: Date, daysToAdd: number): Date => {
   let result: Date = new Date(refDate);
   result.setDate(result.getDate() + daysToAdd);
   return result;
 };
 
-export const getDateString = (date: Date) => {
+export const getDateString = (date: Date): string => {
   return [
     date.getFullYear().toString().padStart(4, "0"),
     (date.getMonth() + 1).toString().padStart(2, "0"),
     date.getDate().toString().padStart(2, "0"),
   ].join("-");
+};
+
+export const parseDateStr = (date: string): Date => {
+  let result: Date = new Date();
+  result.setTime(Date.parse(date));
+  return result;
+};
+
+export const printTime = (date: Date): string => {
+  const hours: number = date.getHours();
+  const minutes: number = date.getMinutes();
+  return `${hours}:${minutes.toString().padStart(2, "0")}`;
 };
 
 // This following script is released to the public domain and may be used,
@@ -24,7 +36,7 @@ export const getDateString = (date: Date) => {
 // Source: https://weeknumber.com/how-to/javascript
 
 // Returns the ISO week of the date.
-export const getWeek = (date: Date) => {
+export const getWeek = (date: Date): number => {
   date.setHours(0, 0, 0, 0);
   // Thursday in current week decides the year.
   date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
@@ -43,10 +55,7 @@ export const getWeek = (date: Date) => {
 };
 
 // Returns the four-digit year corresponding to the ISO week of the date.
-export const getWeekYear = (date: Date) => {
+export const getWeekYear = (date: Date): number => {
   date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
   return date.getFullYear();
 };
-function strftime(arg0: string) {
-  throw new Error("Function not implemented.");
-}

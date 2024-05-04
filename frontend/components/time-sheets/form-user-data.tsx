@@ -24,7 +24,7 @@ export const FormUserData = (props: FormUserDataProps) => {
     <>
       <h3 className="mb-4 mt-5">Schritt 1: First things first</h3>
 
-      <form name="param_form" onSubmit={(event) => handleSubmit(event)}>
+      <form name="user_data_form" onSubmit={(event) => handleSubmit(event)}>
         <Row>
           <Col lg={6} md={12}>
             <Form.Group className="mb-4">
@@ -69,39 +69,12 @@ export const FormUserData = (props: FormUserDataProps) => {
         </Row>
         <Row>
           <Col>
-            <Button
-              variant="primary"
-              type="submit"
-              className="float-end"
-              //   disabled={isLoading}
-            >
-              {/* {isLoading ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    className="me-2"
-                  />
-                  <span>Lädt…</span>
-                </>
-              ) : ( */}
-              <>Weiter</>
-              {/* )} */}
+            <Button variant="primary" type="submit" className="float-end">
+              Weiter
             </Button>
           </Col>
         </Row>
       </form>
-
-      {/* {isError && (
-        <div className="my-5">
-          <MsgBox type="error" trace={error.message}>
-            Fehler bei Anfrage ans Backend.
-          </MsgBox>
-        </div>
-      )} */}
     </>
   );
 };
