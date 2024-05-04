@@ -116,12 +116,14 @@ class KaPlanIcs:
         if matcher:
             role, _, host, internal = matcher.groups()
 
-        short_location: str = ""
         location_matcher: Optional[Match] = fullmatch(
-            r"(.+), \d{5} \w+", event.location or ""
+            r"(.+), \d{5} .+", event.location or ""
         )
-        if location_matcher:
-            short_location = location_matcher.group(1)
+        short_location: Optional[str] = (
+            event.location
+            if not location_matcher
+            else location_matcher.group(1)
+        )
 
         return {
             "uid": event.uid,
@@ -130,7 +132,7 @@ class KaPlanIcs:
             "role": role or "",
             "host": host or "",
             "location": event.location or "",
-            "location_short": short_location,
+            "location_short": short_location or "",
             "begin": event.begin.for_json(),
             "end": event.end.for_json(),
             "modified": event.last_modified.for_json(),
