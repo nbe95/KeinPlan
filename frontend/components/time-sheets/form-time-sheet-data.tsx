@@ -204,7 +204,7 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
           </Row>
         )}
 
-        {props.dateList && (
+        {props.dateList && !isError && !isFetching && (
           <>
             Folgende Daten kamen zurück:
             <Row className="my-4">

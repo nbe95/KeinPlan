@@ -27,8 +27,6 @@ export const DateCard = (props: DateCardProps) => {
     return `${beginStr} - ${endStr}`;
   };
 
-  console.log(props.date);
-
   return (
     <Card border={getDateVariant(props.date.begin)} className="p-2 my-2 mx-0">
       <Stack direction="horizontal" gap={3} className="align-items-start">
@@ -44,12 +42,7 @@ export const DateCard = (props: DateCardProps) => {
           </Badge>
         </div>
         <div className="me-auto text-nowrap">
-          <p className="my-0">
-            <Stack direction="horizontal" gap={3}>
-              <span className="fw-bold">{props.date.title}</span>
-              {/* <span>{props.date.role}</span> */}
-            </Stack>
-          </p>
+          <p className="my-0 fw-bold">{props.date.title}</p>
           <p className="my-0">{props.date.role}</p>
           <p className="my-0">
             <small className="text-muted">{props.date.location}</small>
