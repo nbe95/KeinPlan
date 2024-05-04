@@ -1,12 +1,4 @@
-import {
-  Button,
-  Col,
-  Form,
-  InputGroup,
-  Row,
-  Stack,
-  Table,
-} from "react-bootstrap";
+import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 
 import {
   faCircleChevronLeft,
@@ -28,8 +20,8 @@ import {
   getWeek,
   getWeekYear,
   parseDateStr,
-  printTime,
 } from "../../utils/dates";
+import DateCard from "../date-card";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetData, TimeSheetDate } from "./common";
@@ -57,8 +49,6 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
     setTargetDate(addDaysToDate(getMonday(targetDate), 7));
   };
 
-  const [kaplanIcsValid, setKaplanIcsValid] = useState(false);
-
   const getKaplanEncodedString = useCallback(
     (): string => b64_encode(props.timeSheetData?.kaPlanIcs ?? ""),
     [props.timeSheetData?.kaPlanIcs],
@@ -72,7 +62,7 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
     url.searchParams.append("from", getDateString(startDate));
     url.searchParams.append("to", getDateString(endDate));
     return url;
-  }, [props.timeSheetData]);
+  }, [props.timeSheetData?.targetDate]);
 
   const { data, refetch, isFetching, isSuccess, isError, error } = useQuery({
     queryKey: [KAPLAN_QUERY_KEY],
@@ -108,12 +98,6 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
     enabled: false, // Trigger query only manually using refetch()
   });
 
-  useEffect(() => {
-    if (isSuccess) {
-      props.setDateList(data);
-    }
-  }, [isFetching]);
-
   const handleSubmit = (event) => {
     event.preventDefault();
     props.setTimeSheetData({
@@ -121,8 +105,19 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
       targetDate: targetDate,
       kaPlanIcs: event.target.kaplan_ics.value,
     });
-    refetch();
   };
+
+  // Trigger backend request as soon as time sheet data has been stored
+  useEffect(() => {
+    if (props.timeSheetData) refetch();
+  }, [props.timeSheetData]);
+
+  // Save local date list upon successful backend request
+  useEffect(() => {
+    if (isSuccess) {
+      props.setDateList(data);
+    }
+  }, [isFetching]);
 
   return (
     <>
@@ -177,18 +172,13 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
                   name="kaplan_ics"
                   placeholder="KaPlan ICS-Link"
                   defaultValue={props.timeSheetData?.kaPlanIcs}
-                  onChange={(event) => {
-                    setKaplanIcsValid(
-                      (event.target as HTMLInputElement).value.length >= 5,
-                    );
-                  }}
                   required
                 />
                 <Button
                   variant="primary"
                   type="submit"
                   className="float-end"
-                  disabled={isFetching || !kaplanIcsValid}
+                  disabled={isFetching}
                 >
                   Termine laden
                 </Button>
@@ -215,50 +205,16 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
         )}
 
         {props.dateList && (
-          <Row>
-            <Col>
-              Folgende Daten kamen zurück:
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Nr.</th>
-                    <th>Datum, Anlass</th>
-                    <th>Zeitraum</th>
-                    {/* <th>Bearbeiten</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {props.dateList.map((entry: TimeSheetDate, index: number) => (
-                    <tr>
-                      <td>{index + 1}</td>
-                      <td>
-                        <Stack gap={4} direction="horizontal">
-                          <span>{entry.begin.toLocaleDateString()}</span>
-                          <span className="fw-bold">{entry.title}</span>
-                          <span className="text-muted">
-                            <small>{entry.location}</small>
-                          </span>
-                        </Stack>
-                      </td>
-                      <td>
-                        {printTime(entry.begin)} - {printTime(entry.end)}
-                        {/* { (entry.breakBegin && entry.breakEnd) && (
-                          <>
-                            {printTime(entry.breakBegin)} - {printTime(entry.breakEnd)}
-                          </>
-                        )} */}
-                      </td>
-                      {/* <td>
-<FontAwesomeIcon icon={faPen} size="xl" />
-<FontAwesomeIcon icon={faTrash} size="xl" />
-<FontAwesomeIcon icon={faSquarePlus} size="xl" />
-</td> */}
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Col>
-          </Row>
+          <>
+            Folgende Daten kamen zurück:
+            <Row className="my-4">
+              {props.dateList.map((entry: TimeSheetDate) => (
+                <Col md={12} lg={6} xl={4}>
+                  <DateCard date={entry} />
+                </Col>
+              ))}
+            </Row>
+          </>
         )}
 
         <Row>

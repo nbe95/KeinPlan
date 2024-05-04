@@ -18,16 +18,13 @@ export const getDateString = (date: Date): string => {
   ].join("-");
 };
 
-export const parseDateStr = (date: string): Date => {
-  let result: Date = new Date();
+export const parseDateStr = (date: string): Date | null => {
+  let result: Date | null = new Date();
+  let parsed = Date.parse(date);
+  if (isNaN(parsed)) return null;
+
   result.setTime(Date.parse(date));
   return result;
-};
-
-export const printTime = (date: Date): string => {
-  const hours: number = date.getHours();
-  const minutes: number = date.getMinutes();
-  return `${hours}:${minutes.toString().padStart(2, "0")}`;
 };
 
 // This following script is released to the public domain and may be used,

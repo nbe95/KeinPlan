@@ -18,6 +18,6 @@ export interface TimeSheetDate {
   location: string;
   begin: Date;
   end: Date;
-  breakBegin: Date;
-  breakEnd: Date;
+  breakBegin?: Date;
+  breakEnd?: Date;
 }
