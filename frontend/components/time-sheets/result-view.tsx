@@ -1,11 +1,12 @@
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { useCallback } from "react";
-import { Button, Col, Row, Stack } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { useDownloadFile } from "../../hooks/download-file";
 import { API_ENDPOINT_TIME_SHEET } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
+import MsgBox from "../msg-box";
 import { TimeSheetData, TimeSheetDate, UserData } from "./common";
+import DownloadButton from "./download-button";
 
 type ResultViewProps = {
   userData: UserData;
@@ -26,8 +27,8 @@ export const ResultView = (props: ResultViewProps) => {
     return `Arbeitszeit_${props.timeSheetData?.targetDate.getFullYear()}-${getWeek(props.timeSheetData?.targetDate)}.${props.timeSheetData?.format.toLowerCase()}}`;
   }, [props.timeSheetData?.targetDate, props.timeSheetData?.format]);
 
-  const { ref, url, download, name } = useDownloadFile({
-    apiDefinition: () => {
+  const pdf = useDownloadFile({
+    apiCall: () => {
       return fetch(getEndpointUrl(), {
         method: "POST",
         headers: {
@@ -42,33 +43,45 @@ export const ResultView = (props: ResultViewProps) => {
         }),
       });
     },
-    preDownloading: () => {
-      console.log("pre");
-    },
-    postDownloading: () => {
-      console.log("post");
-    },
     onError: (error) => {
       console.log(error);
     },
-    getFileName: getTimeSheetName,
+    downloadName: getTimeSheetName(),
   });
 
   return (
     <>
       <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
-
+      Deine Stundenliste ist bereit und kann heruntergeladen werden. Viel Spaß
+      damit!
       <Row>
-        <Col>
-          <Button variant="primary" onClick={download}>
-            <Stack direction="vertical" gap={1}>
-              <FontAwesomeIcon icon={faDownload} size="4x" className="m-3" />
-              <span>Download</span>
-            </Stack>
-          </Button>
+        <Col sm={12} md={6} className="my-3">
+          <div className="text-center">
+            <p>Wähle das passende Dateiformat aus:</p>
+            <DownloadButton
+              isPrimary={true}
+              text="Download als PDF"
+              faIcon={faFilePdf}
+              download={pdf}
+            />
+          </div>
+        </Col>
+        <Col sm={12} md={6} className="my-3 border-start">
+          <p className="lead">Wie geht&apos;s jetzt weiter?</p>
+          <p>
+            Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine
+            E-Mail.
+          </p>
         </Col>
       </Row>
-
+      <Row className="my-2">
+        <Col>
+          <MsgBox type="info">
+            Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller
+            geht...
+          </MsgBox>
+        </Col>
+      </Row>
       <Row>
         <Col>
           <Button

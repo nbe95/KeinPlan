@@ -21,10 +21,10 @@ import {
   getWeekYear,
   parseDateStr,
 } from "../../utils/dates";
-import DateCard from "../date-card";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetData, TimeSheetDate } from "./common";
+import DateCard from "./date-card";
 
 type FormDatesProps = {
   timeSheetData: TimeSheetData;
