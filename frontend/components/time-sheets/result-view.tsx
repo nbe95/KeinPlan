@@ -1,5 +1,5 @@
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDownloadFile } from "../../hooks/download-file";
 import { API_ENDPOINT_TIME_SHEET } from "../../utils/constants";
@@ -43,11 +43,29 @@ export const ResultView = (props: ResultViewProps) => {
         }),
       });
     },
+    // ToDo(Niklas): Add an error message
     onError: (error) => {
       console.log(error);
     },
     downloadName: getTimeSheetName(),
   });
+
+  // ToDo(Niklas): Create an interface etc.?
+  const mailParams = useMemo(() => {
+    return {
+      // ToDo(Niklas): Use correct recipient by env var
+      recipient: "test@test.test",
+      subject: `Arbeitszeit ${props.userData.lastName}, ${props.userData.firstName} - KW ${getWeek(props.timeSheetData.targetDate)}/${props.timeSheetData.targetDate.getFullYear()}`,
+      body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner wöchentlichen Arbeitszeit für die vergangenen Kalenderwoche.\n\nViele Grüße\n${props.userData.firstName} ${props.userData.lastName}`,
+    };
+  }, [props.userData, props.timeSheetData]);
+
+  const createMailToLink = (props: {
+    recipient: string;
+    subject?: string;
+    body?: string;
+  }): string =>
+    `mailto:${props.recipient}?subject=${encodeURIComponent(props.subject)}&body=${encodeURIComponent(props.body)}`;
 
   return (
     <>
@@ -72,11 +90,21 @@ export const ResultView = (props: ResultViewProps) => {
             Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine
             E-Mail.
           </p>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => {
+              window.location.href = createMailToLink(mailParams);
+            }}
+          >
+            Mail-Vorlage öffnen
+          </Button>
         </Col>
       </Row>
       <Row className="my-2">
         <Col>
           <MsgBox type="info">
+            {/* ToDo(Niklas): Implement link */}
             Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller
             geht...
           </MsgBox>

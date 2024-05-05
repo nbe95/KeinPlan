@@ -17,7 +17,7 @@ export const DownloadButton = (
   return (
     <>
       <Button
-        variant={props.isPrimary ? "primary" : "secondary"}
+        variant={props.isPrimary ? "success" : "secondary"}
         className="m-2"
         onClick={props.download.download}
       >
