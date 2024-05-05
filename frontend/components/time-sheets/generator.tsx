@@ -1,8 +1,9 @@
 import { useState } from "react";
 
 import { TimeSheetData, TimeSheetDate, UserData } from "./common";
-import FormTimeSheetData from "./form-time-sheet-data";
+import FormDates from "./form-dates";
 import FormUserData from "./form-user-data";
+import ResultView from "./result-view";
 
 const TimeSheetGenerator = () => {
   const [userData, setUserData] = useState<UserData>();
@@ -10,31 +11,48 @@ const TimeSheetGenerator = () => {
   const [dateList, setDateList] = useState<TimeSheetDate[]>();
 
   enum Steps {
-    USER_DATA,
-    TIME_SHEET_DATA,
+    FORM_USER_DATA,
+    FORM_DATES,
+    RESULT_VIEW,
   }
-  const [step, setStep] = useState<Steps>(Steps.USER_DATA);
+  const [step, setStep] = useState<Steps>(Steps.FORM_USER_DATA);
 
   switch (step) {
-    case Steps.USER_DATA:
+    case Steps.FORM_USER_DATA:
       return (
         <FormUserData
           userData={userData}
           setUserData={setUserData}
           nextStep={() => {
-            setStep(Steps.TIME_SHEET_DATA);
+            setStep(Steps.FORM_DATES);
           }}
         />
       );
-    case Steps.TIME_SHEET_DATA:
+
+    case Steps.FORM_DATES:
       return (
-        <FormTimeSheetData
+        <FormDates
           timeSheetData={timeSheetData}
           setTimeSheetData={setTimeSheetData}
           dateList={dateList}
           setDateList={setDateList}
           prevStep={() => {
-            setStep(Steps.USER_DATA);
+            setStep(Steps.FORM_USER_DATA);
+          }}
+          nextStep={() => {
+            setStep(Steps.RESULT_VIEW);
+          }}
+        />
+      );
+
+    case Steps.RESULT_VIEW:
+      return (
+        <ResultView
+          userData={userData}
+          timeSheetData={timeSheetData}
+          dateList={dateList}
+          prevStep={() => {
+            setStep(Steps.FORM_DATES);
           }}
         />
       );

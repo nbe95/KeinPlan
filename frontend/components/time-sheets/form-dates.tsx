@@ -26,15 +26,16 @@ import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetData, TimeSheetDate } from "./common";
 
-type FormTimeSheetDataProps = {
+type FormDatesProps = {
   timeSheetData: TimeSheetData;
   setTimeSheetData: (data: TimeSheetData) => void;
   dateList: TimeSheetDate[];
   setDateList: (data: TimeSheetDate[]) => void;
   prevStep: () => void;
+  nextStep: () => void;
 };
 
-export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
+export const FormDates = (props: FormDatesProps) => {
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
   const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo));
   const getCalWeekLabel = useCallback(
@@ -102,6 +103,7 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
     event.preventDefault();
     props.setTimeSheetData({
       type: "weekly",
+      format: "pdf",
       targetDate: targetDate,
       kaPlanIcs: event.target.kaplan_ics.value,
     });
@@ -231,11 +233,12 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
           <Col>
             <Button
               variant="primary"
-              type="submit"
+              type="button"
               className="float-end"
-              disabled
+              disabled={!props.dateList || isError || isFetching}
+              onClick={props.nextStep}
             >
-              Weiter
+              Stundenliste erstellen
             </Button>
           </Col>
         </Row>
@@ -244,4 +247,4 @@ export const FormTimeSheetData = (props: FormTimeSheetDataProps) => {
   );
 };
 
-export default FormTimeSheetData;
+export default FormDates;

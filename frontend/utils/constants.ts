@@ -7,6 +7,7 @@ export const API_BASE_URL_SERVER: string =
   process.env.SERVER_API_BASE_URL || "";
 
 export const API_ENDPOINT_KAPLAN: string = `${API_BASE_URL}/kaplan`;
+export const API_ENDPOINT_TIME_SHEET: string = `${API_BASE_URL}/time-sheet`;
 export const API_ENDPOINT_INFO: string = `${API_BASE_URL_SERVER}/info`;
 
 export const BACKEND_INFO_CACHE_TIME: number = 60 * 60 * 24;

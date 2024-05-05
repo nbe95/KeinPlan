@@ -5,9 +5,11 @@ export interface UserData {
 }
 
 export type TimeSheetType = "weekly";
+export type TimeSheetFormat = "pdf";
 
 export interface TimeSheetData {
   type: TimeSheetType;
+  format: TimeSheetFormat;
   targetDate: Date;
   kaPlanIcs: string;
 }
