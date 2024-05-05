@@ -1,47 +1,51 @@
-// Borrowed from  https://levelup.gitconnected.com/react-custom-hook-typescript-to-download-a-file-through-api-b766046db18a
+// Inspired by https://levelup.gitconnected.com/react-custom-hook-typescript-to-download-a-file-through-api-b766046db18a
 
 import { useRef, useState } from "react";
 
 interface DownloadFileProps {
-  readonly apiDefinition: () => Promise<Response>;
-  readonly preDownloading: () => void;
-  readonly postDownloading: () => void;
-  readonly onError: (e: Error) => void;
-  readonly getFileName: () => string;
+  readonly apiCall: () => Promise<Response>;
+  readonly downloadName: string;
+  readonly onStart?: () => void;
+  readonly onDone?: () => void;
+  readonly onError: (e: Error) => void | undefined;
 }
 
-interface DownloadedFileInfo {
+export interface DownloadedFileInfo {
   readonly download: () => Promise<void>;
-  readonly ref: React.MutableRefObject<HTMLAnchorElement | null>;
-  readonly name: string | undefined;
   readonly url: string | undefined;
+  readonly name: string | undefined;
+  readonly ref: React.MutableRefObject<HTMLAnchorElement | null>;
+  readonly isLoading: boolean;
 }
 
-export const useDownloadFile = ({
-  apiDefinition,
-  preDownloading,
-  postDownloading,
-  onError,
-  getFileName,
-}: DownloadFileProps): DownloadedFileInfo => {
+export const useDownloadFile = (
+  props: DownloadFileProps,
+): DownloadedFileInfo => {
   const ref = useRef<HTMLAnchorElement | null>(null);
   const [url, setFileUrl] = useState<string>();
   const [name, setFileName] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const download = async () => {
     try {
-      preDownloading();
-      const data = await apiDefinition();
+      setIsLoading(true);
+      if (props.onStart) props.onStart();
+
+      const data = await props.apiCall();
       const url = URL.createObjectURL(new Blob([await data.blob()]));
       setFileUrl(url);
-      setFileName(getFileName());
+      setFileName(props.downloadName);
+
+      // Simulate click on hidden anchor tag identified by ref attribute
       ref.current?.click();
-      postDownloading();
+
+      setIsLoading(false);
+      if (props.onDone) props.onDone();
       URL.revokeObjectURL(url);
     } catch (error) {
-      onError(error);
+      props.onError(error);
     }
   };
 
-  return { download, ref, url, name };
+  return { download, url, name, ref, isLoading };
 };

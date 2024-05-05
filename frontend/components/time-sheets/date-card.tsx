@@ -1,5 +1,5 @@
 import { Badge, Card, Stack } from "react-bootstrap";
-import { TimeSheetDate } from "./time-sheets/common";
+import { TimeSheetDate } from "./common";
 
 type DateCardProps = {
   date: TimeSheetDate;
@@ -28,7 +28,11 @@ export const DateCard = (props: DateCardProps) => {
   };
 
   return (
-    <Card border={getDateVariant(props.date.begin)} className="p-2 my-2 mx-0">
+    <Card
+      border={getDateVariant(props.date.begin)}
+      bg="light"
+      className="p-2 my-2 mx-0"
+    >
       <Stack direction="horizontal" gap={3} className="align-items-start">
         <div className="text-center">
           <Badge
