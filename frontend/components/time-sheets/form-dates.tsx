@@ -111,15 +111,18 @@ export const FormDates = (props: FormDatesProps) => {
 
   // Trigger backend request as soon as time sheet data has been stored
   useEffect(() => {
-    if (props.timeSheetData) refetch();
-  }, [props.timeSheetData]);
+    if (props.timeSheetData) {
+      refetch();
+    }
+  }, [props.timeSheetData, refetch]);
 
   // Save local date list upon successful backend request
+  const setDateListRef = props.setDateList;
   useEffect(() => {
     if (isSuccess) {
-      props.setDateList(data);
+      setDateListRef(data);
     }
-  }, [isFetching]);
+  }, [isFetching, isSuccess, data, setDateListRef]);
 
   return (
     <>
@@ -210,8 +213,8 @@ export const FormDates = (props: FormDatesProps) => {
           <>
             Folgende Daten kamen zurück:
             <Row className="my-4">
-              {props.dateList.map((entry: TimeSheetDate) => (
-                <Col md={12} lg={6} xl={4}>
+              {props.dateList.map((entry: TimeSheetDate, index: number) => (
+                <Col key={index} md={12} lg={6} xl={4}>
                   <DateCard date={entry} />
                 </Col>
               ))}
