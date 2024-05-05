@@ -15,12 +15,12 @@ export const DateCard = (props: DateCardProps) => {
 
   const getDurationLabel = (begin: Date, end: Date): string => {
     const beginStr: string = begin.toLocaleTimeString([], {
-      hour12: true,
+      hour12: false,
       hour: "numeric",
       minute: "2-digit",
     });
     const endStr: string = end.toLocaleTimeString([], {
-      hour12: true,
+      hour12: false,
       hour: "numeric",
       minute: "2-digit",
     });
@@ -41,7 +41,7 @@ export const DateCard = (props: DateCardProps) => {
             </p>
           </Badge>
         </div>
-        <div className="me-auto text-nowrap">
+        <div className="me-auto">
           <p className="my-0 fw-bold">{props.date.title}</p>
           <p className="my-0">{props.date.role}</p>
           <p className="my-0">
@@ -49,11 +49,11 @@ export const DateCard = (props: DateCardProps) => {
           </p>
         </div>
         <div className="text-end">
-          <p className="my-0">
+          <p className="text-nowrap my-0">
             {getDurationLabel(props.date.begin, props.date.end)}
           </p>
           {props.date.breakBegin && props.date.breakEnd && (
-            <p className="my-0 text-muted">
+            <p className="text-nowrap my-0 text-muted">
               Pause{" "}
               {getDurationLabel(props.date.breakBegin, props.date.breakEnd)}
             </p>
