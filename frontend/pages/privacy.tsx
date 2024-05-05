@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { Alert } from "react-bootstrap";
+import MsgBox from "../components/msg-box";
 import PageSection from "../components/page-section";
 import PageWrapper from "../components/page-wrapper";
 import { PageProps, getBackendInfo } from "../utils/backend-info";
@@ -8,7 +8,7 @@ const Page: NextPage = (pageProps: PageProps) => {
   return (
     <PageWrapper backendInfo={pageProps.backendInfo} title="Datenschutz">
       <PageSection headline="Datenschutz">
-        <Alert variant="warning">Seite noch im Aufbau.</Alert>
+        <MsgBox type="info">Seite noch im Aufbau.</MsgBox>
       </PageSection>
     </PageWrapper>
   );

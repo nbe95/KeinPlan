@@ -116,6 +116,15 @@ class KaPlanIcs:
         if matcher:
             role, _, host, internal = matcher.groups()
 
+        location_matcher: Optional[Match] = fullmatch(
+            r"(.+), \d{5} .+", event.location or ""
+        )
+        short_location: Optional[str] = (
+            event.location
+            if not location_matcher
+            else location_matcher.group(1)
+        )
+
         return {
             "uid": event.uid,
             "title": event.name or "",
@@ -123,6 +132,7 @@ class KaPlanIcs:
             "role": role or "",
             "host": host or "",
             "location": event.location or "",
+            "location_short": short_location or "",
             "begin": event.begin.for_json(),
             "end": event.end.for_json(),
             "modified": event.last_modified.for_json(),
@@ -139,6 +149,10 @@ class KaPlanIcs:
         workgroup: Optional[str] = next(
             iter(query.get("Arbeitsgruppe", [])), None
         )
+
+        if all(x is None for x in (host, workgroup)):
+            logger.warning("Invalid URL without host or workgroup provided.")
+            return False
 
         if host not in KAPLAN_ALLOWED_SERVERS:
             logger.warning(
