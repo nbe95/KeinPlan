@@ -59,7 +59,7 @@ export const FormDates = (props: FormDatesProps) => {
     const startDate = getMonday(props.timeSheetData?.targetDate);
     const endDate = addDaysToDate(startDate, 6);
 
-    const url = new URL(API_ENDPOINT_KAPLAN);
+    const url = new URL(API_ENDPOINT_KAPLAN, window.location.href);
     url.searchParams.append("from", getDateString(startDate));
     url.searchParams.append("to", getDateString(endDate));
     return url;

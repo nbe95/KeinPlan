@@ -18,6 +18,7 @@ export const ResultView = (props: ResultViewProps) => {
   const getEndpointUrl = useCallback((): URL => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetData?.type.toLowerCase()}/${props.timeSheetData?.format.toLowerCase()}`,
+      window.location.href,
     );
   }, [props.timeSheetData?.type, props.timeSheetData?.format]);
 
