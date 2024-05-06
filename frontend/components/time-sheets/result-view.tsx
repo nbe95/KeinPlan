@@ -24,7 +24,10 @@ export const ResultView = (props: ResultViewProps) => {
   }, [props.timeSheetData?.type, props.timeSheetData?.format]);
 
   const getTimeSheetName = useCallback((): string => {
-    return `Arbeitszeit_${props.timeSheetData?.targetDate.getFullYear()}-${getWeek(props.timeSheetData?.targetDate)}.${props.timeSheetData?.format.toLowerCase()}}`;
+    const basename: string = "Arbeitszeit";
+    const timestamp: string = `${props.timeSheetData?.targetDate.getFullYear()}-${getWeek(props.timeSheetData?.targetDate)}`;
+    const format: string = props.timeSheetData?.format.toLocaleLowerCase();
+    return `${basename}_${timestamp}.${format}`;
   }, [props.timeSheetData?.targetDate, props.timeSheetData?.format]);
 
   const pdf = useDownloadFile({
