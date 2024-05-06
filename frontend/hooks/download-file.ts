@@ -18,6 +18,9 @@ export interface DownloadedFileInfo {
   readonly isLoading: boolean;
 }
 
+// ToDo(Niklas): Use axios
+
+// ToDo(Niklas): Make API request only once upon page load and download on click
 export const useDownloadFile = (
   props: DownloadFileProps,
 ): DownloadedFileInfo => {
@@ -41,7 +44,6 @@ export const useDownloadFile = (
 
       setIsLoading(false);
       if (props.onDone) props.onDone();
-      URL.revokeObjectURL(url);
     } catch (error) {
       props.onError(error);
     }
