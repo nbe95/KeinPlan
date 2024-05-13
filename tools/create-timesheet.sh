@@ -2,10 +2,17 @@
 
 source "$(dirname "$0")/.env"
 
-date_from=$(date -d "last-monday" +"%Y-%m-%d")
-date_to=$(date -d "last-sunday" +"%Y-%m-%d")
-week=$(date -d "last-monday" +"%V")
-year=$(date -d "last-monday" +"%Y")
+function week2date {
+  local year=$1
+  local week=$2
+  local dayofweek=$3
+  date -d "$year-01-01 +$(( week * 7 + 1 - $(date -d "$year-01-04" +%u ) - 3 )) days -2 days + $dayofweek days" +"%Y-%m-%d"
+}
+
+week=${1:-$(date -d "last-monday" +"%V")}
+year=${2:-$(date -d "last-monday" +"%Y")}
+date_from=$(week2date "$year" "$week" 1)
+date_to=$(week2date "$year" "$week" 7)
 
 out_file="Arbeitszeit_$year-$week.pdf"
 
