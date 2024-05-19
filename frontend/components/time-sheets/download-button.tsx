@@ -11,9 +11,7 @@ type DownloadButtonProps = {
   download: DownloadedFileInfo;
 };
 
-export const DownloadButton = (
-  props: PropsWithChildren<DownloadButtonProps>,
-) => {
+export const DownloadButton = (props: PropsWithChildren<DownloadButtonProps>) => {
   return (
     <>
       <Button

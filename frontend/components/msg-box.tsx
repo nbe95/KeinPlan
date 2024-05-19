@@ -16,10 +16,7 @@ type MsgBoxProps = {
 };
 
 export const MsgBox = (props: PropsWithChildren<MsgBoxProps>) => {
-  const styling: Record<
-    MsgBoxType,
-    { bsVariant: string; faIcon: IconDefinition }
-  > = {
+  const styling: Record<MsgBoxType, { bsVariant: string; faIcon: IconDefinition }> = {
     error: { bsVariant: "danger", faIcon: faTriangleExclamation },
     warning: { bsVariant: "warning", faIcon: faCircleExclamation },
     info: { bsVariant: "info", faIcon: faCircleInfo },

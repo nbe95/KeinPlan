@@ -26,9 +26,8 @@ const Footer = () => {
           info.version?.KeinPlanBackend &&
           info.version?.KeinPlanBackend != versionFrontend && (
             <MsgBox type="error">
-              Auf diesem Server läuft eine andere Backend-Version (
-              {info.version.KeinPlanBackend}), sodass es zu Fehlfunktionen
-              kommen kann.
+              Auf diesem Server läuft eine andere Backend-Version ({info.version.KeinPlanBackend}),
+              sodass es zu Fehlfunktionen kommen kann.
               <br />
               Bitte aktualisiere die Software bzw. Docker Images!
             </MsgBox>
@@ -47,8 +46,7 @@ const Footer = () => {
             </div>
           )}
           <div className="me-auto">
-            KeinPlan{" "}
-            {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
+            KeinPlan {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
           </div>
           {info.env?.AdminMail && (
             <div>

@@ -33,6 +33,7 @@
     "typescript": "5.3.3"
   },
   "prettier": {
+    "printWidth": 100,
     "plugins": [
       "prettier-plugin-organize-imports"
     ]
