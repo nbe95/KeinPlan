@@ -1,6 +1,11 @@
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 
-import { faCircleChevronLeft, faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faCircleChevronLeft,
+  faCircleChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
@@ -218,6 +223,7 @@ export const FormDates = (props: FormDatesProps) => {
               className="float-start px-4"
               onClick={props.prevStep}
             >
+              <FontAwesomeIcon icon={faChevronLeft} className="me-2" />
               Zurück
             </Button>
           </Col>
@@ -230,6 +236,7 @@ export const FormDates = (props: FormDatesProps) => {
               onClick={props.nextStep}
             >
               Weiter
+              <FontAwesomeIcon icon={faChevronRight} className="ms-2" />
             </Button>
           </Col>
         </Row>

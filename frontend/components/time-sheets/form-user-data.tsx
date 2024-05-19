@@ -1,5 +1,7 @@
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserData } from "./common";
 
 type FormUserDataProps = {
@@ -68,6 +70,7 @@ export const FormUserData = (props: FormUserDataProps) => {
           <Col>
             <Button variant="primary" type="submit" className="float-end px-4">
               Weiter
+              <FontAwesomeIcon icon={faChevronRight} className="ms-2" />
             </Button>
           </Col>
         </Row>

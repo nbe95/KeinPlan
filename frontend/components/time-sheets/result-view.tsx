@@ -1,4 +1,5 @@
-import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDownloadFile } from "../../hooks/download-file";
@@ -116,6 +117,7 @@ export const ResultView = (props: ResultViewProps) => {
             className="float-start px-4"
             onClick={props.prevStep}
           >
+            <FontAwesomeIcon icon={faChevronLeft} className="me-2" />
             Zurück
           </Button>
         </Col>
