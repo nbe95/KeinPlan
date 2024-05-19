@@ -7,7 +7,7 @@ export interface UserData {
 export type TimeSheetType = "weekly";
 export type TimeSheetFormat = "pdf";
 
-export interface TimeSheetData {
+export interface TimeSheetParams {
   type: TimeSheetType;
   format: TimeSheetFormat;
   targetDate: Date;

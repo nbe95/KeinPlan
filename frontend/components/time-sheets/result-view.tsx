@@ -5,12 +5,12 @@ import { useDownloadFile } from "../../hooks/download-file";
 import { API_ENDPOINT_TIME_SHEET } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
 import MsgBox from "../msg-box";
-import { TimeSheetData, TimeSheetDate, UserData } from "./common";
+import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
 import DownloadButton from "./download-button";
 
 type ResultViewProps = {
   userData: UserData;
-  timeSheetData: TimeSheetData;
+  timeSheetParams: TimeSheetParams;
   dateList: TimeSheetDate[];
   prevStep: () => void;
 };
@@ -18,17 +18,17 @@ type ResultViewProps = {
 export const ResultView = (props: ResultViewProps) => {
   const getEndpointUrl = useCallback((): URL => {
     return new URL(
-      `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetData?.type.toLowerCase()}/${props.timeSheetData?.format.toLowerCase()}`,
+      `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
       window.location.href,
     );
-  }, [props.timeSheetData?.type, props.timeSheetData?.format]);
+  }, [props.timeSheetParams?.type, props.timeSheetParams?.format]);
 
   const getTimeSheetName = useCallback((): string => {
     const basename: string = "Arbeitszeit";
-    const timestamp: string = `${props.timeSheetData?.targetDate.getFullYear()}-${getWeek(props.timeSheetData?.targetDate)}`;
-    const format: string = props.timeSheetData?.format.toLocaleLowerCase();
+    const timestamp: string = `${props.timeSheetParams?.targetDate.getFullYear()}-${getWeek(props.timeSheetParams?.targetDate)}`;
+    const format: string = props.timeSheetParams?.format.toLocaleLowerCase();
     return `${basename}_${timestamp}.${format}`;
-  }, [props.timeSheetData?.targetDate, props.timeSheetData?.format]);
+  }, [props.timeSheetParams?.targetDate, props.timeSheetParams?.format]);
 
   const pdf = useDownloadFile({
     apiCall: () => {
@@ -40,8 +40,8 @@ export const ResultView = (props: ResultViewProps) => {
         body: JSON.stringify({
           employer: props.userData.employer,
           employee: `${props.userData.lastName}, ${props.userData.firstName}`,
-          year: props.timeSheetData.targetDate.getFullYear(),
-          week: getWeek(props.timeSheetData.targetDate),
+          year: props.timeSheetParams.targetDate.getFullYear(),
+          week: getWeek(props.timeSheetParams.targetDate),
           dates: props.dateList,
         }),
       });
@@ -58,10 +58,10 @@ export const ResultView = (props: ResultViewProps) => {
     return {
       // ToDo(Niklas): Use correct recipient by env var
       recipient: "test@test.test",
-      subject: `Arbeitszeit ${props.userData.lastName}, ${props.userData.firstName} - KW ${getWeek(props.timeSheetData.targetDate)}/${props.timeSheetData.targetDate.getFullYear()}`,
+      subject: `Arbeitszeit ${props.userData.lastName}, ${props.userData.firstName} - KW ${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`,
       body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner wöchentlichen Arbeitszeit für die vergangenen Kalenderwoche.\n\nViele Grüße\n${props.userData.firstName} ${props.userData.lastName}`,
     };
-  }, [props.userData, props.timeSheetData]);
+  }, [props.userData, props.timeSheetParams]);
 
   const createMailToLink = (props: {
     recipient: string;
@@ -73,8 +73,7 @@ export const ResultView = (props: ResultViewProps) => {
   return (
     <>
       <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
-      Deine Stundenliste ist bereit und kann heruntergeladen werden. Viel Spaß
-      damit!
+      Deine Stundenliste ist bereit und kann heruntergeladen werden. Viel Spaß damit!
       <Row>
         <Col sm={12} md={6} className="my-3">
           <div className="text-center">
@@ -89,10 +88,7 @@ export const ResultView = (props: ResultViewProps) => {
         </Col>
         <Col sm={12} md={6} className="my-3 border-start">
           <p className="lead">Wie geht&apos;s jetzt weiter?</p>
-          <p>
-            Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine
-            E-Mail.
-          </p>
+          <p>Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine E-Mail.</p>
           <Button
             type="button"
             variant="primary"
@@ -108,8 +104,7 @@ export const ResultView = (props: ResultViewProps) => {
         <Col>
           <MsgBox type="info">
             {/* ToDo(Niklas): Implement link */}
-            Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller
-            geht...
+            Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller geht...
           </MsgBox>
         </Col>
       </Row>

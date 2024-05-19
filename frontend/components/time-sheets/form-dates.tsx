@@ -1,18 +1,11 @@
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 
-import {
-  faCircleChevronLeft,
-  faCircleChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleChevronLeft, faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { b64_encode } from "../../utils/base64";
-import {
-  API_ENDPOINT_KAPLAN,
-  KAPLAN_ICS_HEADER,
-  KAPLAN_QUERY_KEY,
-} from "../../utils/constants";
+import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../utils/constants";
 import {
   addDaysToDate,
   getDateString,
@@ -23,12 +16,12 @@ import {
 } from "../../utils/dates";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
-import { TimeSheetData, TimeSheetDate } from "./common";
+import { TimeSheetDate, TimeSheetParams } from "./common";
 import DateCard from "./date-card";
 
 type FormDatesProps = {
-  timeSheetData: TimeSheetData;
-  setTimeSheetData: (data: TimeSheetData) => void;
+  timeSheetParams: TimeSheetParams;
+  setTimeSheetParams: (data: TimeSheetParams) => void;
   dateList: TimeSheetDate[];
   setDateList: (data: TimeSheetDate[]) => void;
   prevStep: () => void;
@@ -51,19 +44,19 @@ export const FormDates = (props: FormDatesProps) => {
   };
 
   const getKaplanEncodedString = useCallback(
-    (): string => b64_encode(props.timeSheetData?.kaPlanIcs ?? ""),
-    [props.timeSheetData?.kaPlanIcs],
+    (): string => b64_encode(props.timeSheetParams?.kaPlanIcs ?? ""),
+    [props.timeSheetParams?.kaPlanIcs],
   );
 
   const getEndpointUrl = useCallback((): URL => {
-    const startDate = getMonday(props.timeSheetData?.targetDate);
+    const startDate = getMonday(props.timeSheetParams?.targetDate);
     const endDate = addDaysToDate(startDate, 6);
 
     const url = new URL(API_ENDPOINT_KAPLAN, window.location.href);
     url.searchParams.append("from", getDateString(startDate));
     url.searchParams.append("to", getDateString(endDate));
     return url;
-  }, [props.timeSheetData?.targetDate]);
+  }, [props.timeSheetParams?.targetDate]);
 
   const { data, refetch, isFetching, isSuccess, isError, error } = useQuery({
     queryKey: [KAPLAN_QUERY_KEY],
@@ -101,7 +94,7 @@ export const FormDates = (props: FormDatesProps) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.setTimeSheetData({
+    props.setTimeSheetParams({
       type: "weekly",
       format: "pdf",
       targetDate: targetDate,
@@ -111,10 +104,10 @@ export const FormDates = (props: FormDatesProps) => {
 
   // Trigger backend request as soon as time sheet data has been stored
   useEffect(() => {
-    if (props.timeSheetData) {
+    if (props.timeSheetParams) {
       refetch();
     }
-  }, [props.timeSheetData, refetch]);
+  }, [props.timeSheetParams, refetch]);
 
   // Save local date list upon successful backend request
   const setDateListRef = props.setDateList;
@@ -127,16 +120,12 @@ export const FormDates = (props: FormDatesProps) => {
   return (
     <>
       <h3 className="mb-4 mt-5">Schritt 2: Termine aus KaPlan abholen</h3>
-      <form
-        name="time_sheet_data_form"
-        onSubmit={(event) => handleSubmit(event)}
-      >
+      <form name="time_sheet_data_form" onSubmit={(event) => handleSubmit(event)}>
         <Row>
           <Col lg={6} md={12}>
             <Form.Group className="mb-4">
               <Form.Label>
-                Für welche Kalenderwoche möchtest du eine Stundenliste
-                erstellen?
+                Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
               </Form.Label>
               <InputGroup className="px-auto">
                 <Form.Control
@@ -163,8 +152,7 @@ export const FormDates = (props: FormDatesProps) => {
                 </InputGroup.Text>
               </InputGroup>
               <Form.Text>
-                Wähle irgendein Datum aus, das in der gewünschten Kalenderwoche
-                liegt.
+                Wähle irgendein Datum aus, das in der gewünschten Kalenderwoche liegt.
               </Form.Text>
             </Form.Group>
           </Col>
@@ -176,26 +164,22 @@ export const FormDates = (props: FormDatesProps) => {
                   type="text"
                   name="kaplan_ics"
                   placeholder="KaPlan ICS-Link"
-                  defaultValue={props.timeSheetData?.kaPlanIcs}
+                  defaultValue={props.timeSheetParams?.kaPlanIcs}
                   required
                 />
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="float-end"
-                  disabled={isFetching}
-                >
+                <Button variant="primary" type="submit" className="float-end" disabled={isFetching}>
                   Termine laden
                 </Button>
               </InputGroup>
               <Form.Text>
-                Bitte lies unbedingt, wie dein persönlicher KaPlan-Link
-                verarbeitet wird.
+                Bitte lies unbedingt, wie dein persönlicher KaPlan-Link verarbeitet wird.
               </Form.Text>
             </Form.Group>
           </Col>
         </Row>
-        {(isFetching || isError || isSuccess) && <hr />}
+
+        <hr />
+
         {isFetching && (
           <Row className="py-4">
             <LoadingSpinner message="KaPlan-Server wird kontaktiert…" />
@@ -209,18 +193,22 @@ export const FormDates = (props: FormDatesProps) => {
           </Row>
         )}
 
-        {props.dateList && !isError && !isFetching && (
-          <>
-            Folgende Daten kamen zurück:
-            <Row className="my-4">
-              {props.dateList.map((entry: TimeSheetDate, index: number) => (
-                <Col key={index} md={12} lg={6} xl={4}>
-                  <DateCard date={entry} />
-                </Col>
-              ))}
-            </Row>
-          </>
-        )}
+        {!isError &&
+          !isFetching &&
+          (props.dateList ? (
+            <>
+              Folgende Daten kamen zurück:
+              <Row className="my-4">
+                {props.dateList.map((entry: TimeSheetDate, index: number) => (
+                  <Col key={index} sm={12} md={8} lg={6} xl={4}>
+                    <DateCard date={entry} />
+                  </Col>
+                ))}
+              </Row>
+            </>
+          ) : (
+            <>Bitte erst oben die Felder ausfüllen.</>
+          ))}
 
         <Row>
           <Col>
@@ -241,7 +229,7 @@ export const FormDates = (props: FormDatesProps) => {
               disabled={!props.dateList || isError || isFetching}
               onClick={props.nextStep}
             >
-              Stundenliste erstellen
+              Weiter
             </Button>
           </Col>
         </Row>
