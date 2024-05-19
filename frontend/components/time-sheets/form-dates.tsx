@@ -143,11 +143,11 @@ export const FormDates = (props: FormDatesProps) => {
                 />
                 <InputGroup.Text>
                   <Button variant="none" className="py-0" onClick={prevWeek}>
-                    <FontAwesomeIcon icon={faCircleChevronLeft} />
+                    <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
                   </Button>
                   {getCalWeekLabel()}
                   <Button variant="none" className="py-0" onClick={nextWeek}>
-                    <FontAwesomeIcon icon={faCircleChevronRight} />
+                    <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
                   </Button>
                 </InputGroup.Text>
               </InputGroup>
@@ -180,19 +180,6 @@ export const FormDates = (props: FormDatesProps) => {
 
         <hr />
 
-        {isFetching && (
-          <Row className="py-4">
-            <LoadingSpinner message="KaPlan-Server wird kontaktiert…" />
-          </Row>
-        )}
-        {isError && (
-          <Row className="py-3">
-            <MsgBox type="error" trace={error.message}>
-              Fehler bei Anfrage ans Backend.
-            </MsgBox>
-          </Row>
-        )}
-
         {!isError &&
           !isFetching &&
           (props.dateList ? (
@@ -207,15 +194,28 @@ export const FormDates = (props: FormDatesProps) => {
               </Row>
             </>
           ) : (
-            <>Bitte erst oben die Felder ausfüllen.</>
+            <p>Bitte erst oben die Felder ausfüllen.</p>
           ))}
+
+        {isFetching && (
+          <Row className="py-4">
+            <LoadingSpinner message="KaPlan-Server wird kontaktiert…" />
+          </Row>
+        )}
+        {isError && (
+          <Row className="py-3">
+            <MsgBox type="error" trace={error.message}>
+              Fehler bei Anfrage ans Backend.
+            </MsgBox>
+          </Row>
+        )}
 
         <Row>
           <Col>
             <Button
               variant="secondary"
               type="button"
-              className="float-start"
+              className="float-start px-4"
               onClick={props.prevStep}
             >
               Zurück
@@ -225,7 +225,7 @@ export const FormDates = (props: FormDatesProps) => {
             <Button
               variant="primary"
               type="button"
-              className="float-end"
+              className="float-end px-4"
               disabled={!props.dateList || isError || isFetching}
               onClick={props.nextStep}
             >

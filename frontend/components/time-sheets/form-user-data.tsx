@@ -66,7 +66,7 @@ export const FormUserData = (props: FormUserDataProps) => {
         </Row>
         <Row>
           <Col>
-            <Button variant="primary" type="submit" className="float-end">
+            <Button variant="primary" type="submit" className="float-end px-4">
               Weiter
             </Button>
           </Col>

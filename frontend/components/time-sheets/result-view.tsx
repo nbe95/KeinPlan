@@ -113,7 +113,7 @@ export const ResultView = (props: ResultViewProps) => {
           <Button
             variant="secondary"
             type="button"
-            className="float-start"
+            className="float-start px-4"
             onClick={props.prevStep}
           >
             Zurück
