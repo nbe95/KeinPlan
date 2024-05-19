@@ -21,9 +21,7 @@ export interface DownloadedFileInfo {
 // ToDo(Niklas): Use axios
 
 // ToDo(Niklas): Make API request only once upon page load and download on click
-export const useDownloadFile = (
-  props: DownloadFileProps,
-): DownloadedFileInfo => {
+export const useDownloadFile = (props: DownloadFileProps): DownloadedFileInfo => {
   const ref = useRef<HTMLAnchorElement | null>(null);
   const [url, setFileUrl] = useState<string>();
   const [name, setFileName] = useState<string>();

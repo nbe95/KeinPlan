@@ -1,9 +1,7 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Container, Stack } from "react-bootstrap";
-import KaPlanIcon from "./kaplan-svg";
 
 import { useContext } from "react";
 import { BackendInfoContext } from "../utils/backend-info";
@@ -26,9 +24,8 @@ const Footer = () => {
           info.version?.KeinPlanBackend &&
           info.version?.KeinPlanBackend != versionFrontend && (
             <MsgBox type="error">
-              Auf diesem Server läuft eine andere Backend-Version (
-              {info.version.KeinPlanBackend}), sodass es zu Fehlfunktionen
-              kommen kann.
+              Auf diesem Server läuft eine andere Backend-Version ({info.version.KeinPlanBackend}),
+              sodass es zu Fehlfunktionen kommen kann.
               <br />
               Bitte aktualisiere die Software bzw. Docker Images!
             </MsgBox>
@@ -47,33 +44,30 @@ const Footer = () => {
             </div>
           )}
           <div className="me-auto">
-            KeinPlan{" "}
-            {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
+            KeinPlan {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
           </div>
-          {info.env?.AdminMail && (
-            <div>
-              <Link
-                href={`mailto:${info.env.AdminMail}`}
-                className="text-muted"
-                title="Kontakt per E-Mail"
-                target="_blank"
-              >
-                <FontAwesomeIcon icon={faEnvelope} size="lg" />
-              </Link>
-            </div>
-          )}
-          {info.env?.KaPlanLink && (
-            <div>
+          <Stack direction="horizontal" gap={3}>
+            {info.env?.KaPlanLink && (
               <Link
                 href={info.env.KaPlanLink}
-                className="text-muted"
-                title="KaPlan öffnen"
+                className="text-muted link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
+                title="KaPlan Web öffnen"
                 target="_blank"
               >
-                <KaPlanIcon width={24} height={24} />
+                KaPlan Web
               </Link>
-            </div>
-          )}
+            )}
+            {info.env?.AdminMail && (
+              <Link
+                href={`mailto:${info.env.AdminMail}`}
+                className="text-muted link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
+                title="E-Mail an den Administrator"
+                target="_blank"
+              >
+                Kontakt
+              </Link>
+            )}
+          </Stack>
         </Stack>
       </Container>
     </footer>

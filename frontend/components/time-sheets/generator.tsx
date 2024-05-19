@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-import { TimeSheetData, TimeSheetDate, UserData } from "./common";
+import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
 import FormDates from "./form-dates";
 import FormUserData from "./form-user-data";
 import ResultView from "./result-view";
 
 const TimeSheetGenerator = () => {
   const [userData, setUserData] = useState<UserData>();
-  const [timeSheetData, setTimeSheetData] = useState<TimeSheetData>();
+  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>();
   const [dateList, setDateList] = useState<TimeSheetDate[]>();
 
   enum Steps {
@@ -32,8 +32,8 @@ const TimeSheetGenerator = () => {
     case Steps.FORM_DATES:
       return (
         <FormDates
-          timeSheetData={timeSheetData}
-          setTimeSheetData={setTimeSheetData}
+          timeSheetParams={timeSheetParams}
+          setTimeSheetParams={setTimeSheetParams}
           dateList={dateList}
           setDateList={setDateList}
           prevStep={() => {
@@ -49,7 +49,7 @@ const TimeSheetGenerator = () => {
       return (
         <ResultView
           userData={userData}
-          timeSheetData={timeSheetData}
+          timeSheetParams={timeSheetParams}
           dateList={dateList}
           prevStep={() => {
             setStep(Steps.FORM_DATES);

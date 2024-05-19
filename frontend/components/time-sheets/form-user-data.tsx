@@ -1,5 +1,7 @@
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserData } from "./common";
 
 type FormUserDataProps = {
@@ -45,9 +47,7 @@ export const FormUserData = (props: FormUserDataProps) => {
                   required
                 />
               </InputGroup>
-              <Form.Text>
-                Dein Name, der als Dienstnehmer auf der Stundenliste steht.
-              </Form.Text>
+              <Form.Text>Dein Name, der als Dienstnehmer auf der Stundenliste steht.</Form.Text>
             </Form.Group>
           </Col>
           <Col lg={6} md={12}>
@@ -61,16 +61,16 @@ export const FormUserData = (props: FormUserDataProps) => {
                 required
               />
               <Form.Text>
-                Deine Gemeinde, die als Dienstgeber auf der Stundenliste
-                auftaucht.
+                Deine Gemeinde, die als Dienstgeber auf der Stundenliste auftaucht.
               </Form.Text>
             </Form.Group>
           </Col>
         </Row>
         <Row>
           <Col>
-            <Button variant="primary" type="submit" className="float-end">
+            <Button variant="primary" type="submit" className="float-end px-4">
               Weiter
+              <FontAwesomeIcon icon={faChevronRight} className="ms-2" />
             </Button>
           </Col>
         </Row>
