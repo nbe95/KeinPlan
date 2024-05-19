@@ -23,7 +23,7 @@ const Navigation: NextPage = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {Object.entries(pages).map((page) => (
-              <Nav.Link active={router.pathname == page[0]} href={page[0]}>
+              <Nav.Link active={router.pathname == page[0]} key={page[0]} href={page[0]}>
                 {page[1]}
               </Nav.Link>
             ))}
