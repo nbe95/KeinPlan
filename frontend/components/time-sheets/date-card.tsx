@@ -24,17 +24,17 @@ export const DateCard = (props: DateCardProps) => {
   };
 
   return (
-    <CardGroup className="my-2 mx-0">
+    <CardGroup className="my-2 mx-0 d-flex d-nowrap">
       <Card
         bg="danger"
         text="white"
         className="text-center justify-content-center border-dark border-end-0"
-        style={{ width: "5em", flex: "unset" }}
+        style={{ width: "5em", minWidth: "5em", flex: "unset" }}
       >
         <p className="display-6 m-0">{getDateLabel(props.date.begin)}</p>
         <p className="fs-6 fw-bold m-0">{getMonthLabel(props.date.begin)}</p>
       </Card>
-      <Card className="border-dark px-2 py-1">
+      <Card className="border-dark px-2 py-1" style={{ flex: "auto" }}>
         <Stack direction="horizontal" gap={2} className="align-items-start">
           <div className="me-auto">
             <p className="my-0 fw-bold">{props.date.title}</p>
