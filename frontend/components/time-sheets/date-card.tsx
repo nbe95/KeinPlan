@@ -1,4 +1,4 @@
-import { Card, CardGroup, Stack } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { TimeSheetDate } from "./common";
 
 type DateCardProps = {
@@ -24,18 +24,16 @@ export const DateCard = (props: DateCardProps) => {
   };
 
   return (
-    <CardGroup className="my-2 mx-0 d-flex d-nowrap">
-      <Card
-        bg="danger"
-        text="white"
-        className="text-center justify-content-center border-dark border-end-0"
+    <Stack direction="horizontal" gap={0} className="my-2 mx-0 d-flex align-items-stretch">
+      <div
+        className="bg-danger text-white text-center align-content-center border border-dark border-end-0 rounded-start"
         style={{ width: "5em", minWidth: "5em", flex: "unset" }}
       >
         <p className="display-6 m-0">{getDateLabel(props.date.begin)}</p>
         <p className="fs-6 fw-bold m-0">{getMonthLabel(props.date.begin)}</p>
-      </Card>
-      <Card className="border-dark px-2 py-1">
-        <Stack direction="horizontal" gap={2} className="align-items-start">
+      </div>
+      <div className="border border-dark rounded-end px-2 py-1">
+        <Stack direction="horizontal" gap={1} className="align-items-start">
           <div className="me-auto">
             <p className="my-0 fw-bold">{props.date.title}</p>
             <p className="my-0">{props.date.role}</p>
@@ -52,8 +50,8 @@ export const DateCard = (props: DateCardProps) => {
             )}
           </div>
         </Stack>
-      </Card>
-    </CardGroup>
+      </div>
+    </Stack>
   );
 };
 
