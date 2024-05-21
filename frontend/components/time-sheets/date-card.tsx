@@ -34,7 +34,7 @@ export const DateCard = (props: DateCardProps) => {
         <p className="display-6 m-0">{getDateLabel(props.date.begin)}</p>
         <p className="fs-6 fw-bold m-0">{getMonthLabel(props.date.begin)}</p>
       </Card>
-      <Card className="border-dark px-2 py-1" style={{ flex: "auto" }}>
+      <Card className="border-dark px-2 py-1">
         <Stack direction="horizontal" gap={2} className="align-items-start">
           <div className="me-auto">
             <p className="my-0 fw-bold">{props.date.title}</p>
