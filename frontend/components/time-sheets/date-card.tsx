@@ -1,4 +1,7 @@
-import { Card, Stack } from "react-bootstrap";
+import { faClock } from "@fortawesome/free-regular-svg-icons";
+import { faLocationDot, faMugHot, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Card } from "react-bootstrap";
 import strftime from "strftime";
 import { TimeSheetDate } from "./common";
 
@@ -27,20 +30,38 @@ export const DateCard = (props: DateCardProps) => {
         <div className="py-3">
           <span className="h5 fw-bold mt-0">{props.date.title}</span>
           <div className="mb-1">
-            <Stack direction="horizontal" gap={3}>
+            <div className="d-flex flex-row">
+              <div className="text-muted" style={{ width: "1.5rem" }}>
+                <FontAwesomeIcon icon={faClock} className="text-muted me-2" />
+              </div>
               <span>
                 {strftimeGer("%H:%M", props.date.begin)} - {strftimeGer("%H:%M", props.date.end)}
               </span>
               {props.date.breakBegin && props.date.breakEnd && (
-                <span className="text-muted">
-                  ({strftimeGer("%H:%M", props.date.breakBegin)} -{" "}
-                  {strftimeGer("%H:%M", props.date.breakEnd)} Pause)
-                </span>
+                <>
+                  <div className="text-muted ms-4" style={{ width: "1.5rem" }}>
+                    <FontAwesomeIcon icon={faMugHot} className="text-muted me-2" />
+                  </div>
+                  <span className="text-muted">
+                    {strftimeGer("%H:%M", props.date.breakBegin)} -{" "}
+                    {strftimeGer("%H:%M", props.date.breakEnd)}
+                  </span>
+                </>
               )}
-            </Stack>
+            </div>
           </div>
-          <div className="">{props.date.role}</div>
-          <div className="small text-muted">{props.date.location}</div>
+          <div className="d-flex flex-row">
+            <div className="text-muted" style={{ width: "1.5rem" }}>
+              <FontAwesomeIcon icon={faUser} />
+            </div>
+            <span>{props.date.role}</span>
+          </div>
+          <div className="d-flex flex-row small">
+            <div className="text-muted" style={{ width: "1.5rem" }}>
+              <FontAwesomeIcon icon={faLocationDot} />
+            </div>
+            <span className="text-muted">{props.date.location}</span>
+          </div>
         </div>
       </div>
     </Card>
