@@ -10,14 +10,6 @@ export const addDaysToDate = (refDate: Date, daysToAdd: number): Date => {
   return result;
 };
 
-export const getDateString = (date: Date): string => {
-  return [
-    date.getFullYear().toString().padStart(4, "0"),
-    (date.getMonth() + 1).toString().padStart(2, "0"),
-    date.getDate().toString().padStart(2, "0"),
-  ].join("-");
-};
-
 export const parseDateStr = (date: string): Date | null => {
   let result: Date | null = new Date();
   let parsed = Date.parse(date);

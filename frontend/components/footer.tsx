@@ -13,7 +13,7 @@ const Footer = () => {
   const info: any = useContext(BackendInfoContext);
 
   return (
-    <footer className="fixed-bottom bg-light py-3">
+    <footer className="bg-light">
       <Container className="bg-light text-muted">
         {PROD && info.error && (
           <MsgBox type="warning" trace={info.error}>

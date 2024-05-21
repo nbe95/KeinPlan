@@ -9,16 +9,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import strftime from "strftime";
 import { b64_encode } from "../../utils/base64";
 import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../utils/constants";
-import {
-  addDaysToDate,
-  getDateString,
-  getMonday,
-  getWeek,
-  getWeekYear,
-  parseDateStr,
-} from "../../utils/dates";
+import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../utils/dates";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
@@ -47,6 +41,8 @@ export const FormDates = (props: FormDatesProps) => {
   const nextWeek = () => {
     setTargetDate(addDaysToDate(getMonday(targetDate), 7));
   };
+
+  const getDateString = (date: Date): string => strftime("%Y-%m-%d", date);
 
   const getKaplanEncodedString = useCallback(
     (): string => b64_encode(props.timeSheetParams?.kaPlanIcs ?? ""),
