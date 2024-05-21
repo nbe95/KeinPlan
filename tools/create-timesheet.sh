@@ -9,8 +9,8 @@ function week2date {
   date -d "$year-01-01 +$(( week * 7 + 1 - $(date -d "$year-01-04" +%u ) - 3 )) days -2 days + $dayofweek days" +"%Y-%m-%d"
 }
 
-week=${1:-$(date -d "last-monday" +"%V")}
-year=${2:-$(date -d "last-monday" +"%Y")}
+week=${1:-$(date -d "last-monday-5 days" +"%V")}
+year=${2:-$(date -d "last-monday-5 days" +"%Y")}
 date_from=$(week2date "$year" "$week" 1)
 date_to=$(week2date "$year" "$week" 7)
 

@@ -7,6 +7,9 @@ header-includes:
   - \onehalfspacing
   - \usepackage{hyperref}
   - \hypersetup{colorlinks,urlcolor=blue}
+  - \hypersetup{pdftex,
+      pdftitle={Arbeitszeit {{ employee }} - KW {{ date_start.strftime("%V/%Y") }}},
+      pdfcreator={KeinPlan{% if version %} v{{ version }}{% endif%}}}
 ---
 # Dokumentation der täglichen Arbeitszeit nach §17 MiLoG
 
