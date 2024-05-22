@@ -1,14 +1,8 @@
-import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-
-import {
-  faChevronLeft,
-  faChevronRight,
-  faCircleChevronLeft,
-  faCircleChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleChevronLeft, faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import strftime from "strftime";
 import { b64_encode } from "../../utils/base64";
 import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../utils/constants";
@@ -17,6 +11,7 @@ import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
 import DateCard from "./date-card";
+import { NextButton, PrevButton } from "./process-button";
 
 type FormDatesProps = {
   timeSheetParams: TimeSheetParams;
@@ -27,7 +22,7 @@ type FormDatesProps = {
   nextStep: () => void;
 };
 
-export const FormDates = (props: FormDatesProps) => {
+const FormDates = (props: FormDatesProps) => {
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
   const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo));
   const getCalWeekLabel = useCallback(
@@ -212,28 +207,14 @@ export const FormDates = (props: FormDatesProps) => {
         )}
 
         <Row>
-          <Col>
-            <Button
-              variant="secondary"
-              type="button"
-              className="float-start px-4"
-              onClick={props.prevStep}
-            >
-              <FontAwesomeIcon icon={faChevronLeft} className="me-2" />
-              Zurück
-            </Button>
+          <Col className="d-flex justify-content-start">
+            <PrevButton callback={props.prevStep} />
           </Col>
-          <Col>
-            <Button
-              variant="primary"
-              type="button"
-              className="float-end px-4"
+          <Col className="d-flex justify-content-end">
+            <NextButton
               disabled={!props.dateList || isError || isFetching}
-              onClick={props.nextStep}
-            >
-              Weiter
-              <FontAwesomeIcon icon={faChevronRight} className="ms-2" />
-            </Button>
+              callback={props.nextStep}
+            />
           </Col>
         </Row>
       </form>

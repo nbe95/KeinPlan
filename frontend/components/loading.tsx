@@ -3,7 +3,7 @@ import { Spinner } from "react-bootstrap";
 type LoadingSpinnerProps = {
   message?: string;
 };
-export const LoadingSpinner = (props: LoadingSpinnerProps) => {
+const LoadingSpinner = (props: LoadingSpinnerProps) => {
   return (
     <div className="py-3 text-center fw-light">
       <div
