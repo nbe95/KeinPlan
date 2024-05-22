@@ -1,5 +1,4 @@
-import { faClock } from "@fortawesome/free-regular-svg-icons";
-import { faLocationDot, faMugHot, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faLocationDot, faMugHot, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card } from "react-bootstrap";
 import strftime from "strftime";
@@ -9,7 +8,7 @@ type DateCardProps = {
   date: TimeSheetDate;
 };
 
-export const DateCard = (props: DateCardProps) => {
+const DateCard = (props: DateCardProps) => {
   const strftimeGer = strftime.localizeByIdentifier("de_DE");
   return (
     <Card className="d-flex flex-row my-2 shadow-sm">
@@ -27,7 +26,7 @@ export const DateCard = (props: DateCardProps) => {
         </div>
       </div>
       <div className="mx-3 text-nowrap overflow-auto">
-        <div className="py-3">
+        <div className="pt-3">
           <span className="h5 fw-bold mt-0">{props.date.title}</span>
           <div className="mb-1">
             <div className="d-flex flex-row">

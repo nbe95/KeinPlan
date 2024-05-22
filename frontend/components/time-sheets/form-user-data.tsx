@@ -1,8 +1,6 @@
-import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { UserData } from "./common";
+import { NextButton } from "./process-button";
 
 type FormUserDataProps = {
   userData: UserData;
@@ -10,7 +8,7 @@ type FormUserDataProps = {
   nextStep: () => void;
 };
 
-export const FormUserData = (props: FormUserDataProps) => {
+const FormUserData = (props: FormUserDataProps) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.setUserData({
@@ -67,11 +65,8 @@ export const FormUserData = (props: FormUserDataProps) => {
           </Col>
         </Row>
         <Row>
-          <Col>
-            <Button variant="primary" type="submit" className="float-end px-4">
-              Weiter
-              <FontAwesomeIcon icon={faChevronRight} className="ms-2" />
-            </Button>
+          <Col className="d-flex justify-content-end">
+            <NextButton type="submit" />
           </Col>
         </Row>
       </form>

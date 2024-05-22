@@ -1,5 +1,4 @@
-import { faChevronLeft, faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDownloadFile } from "../../hooks/download-file";
@@ -8,6 +7,7 @@ import { getWeek } from "../../utils/dates";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
 import DownloadButton from "./download-button";
+import { PrevButton } from "./process-button";
 
 type ResultViewProps = {
   userData: UserData;
@@ -16,7 +16,7 @@ type ResultViewProps = {
   prevStep: () => void;
 };
 
-export const ResultView = (props: ResultViewProps) => {
+const ResultView = (props: ResultViewProps) => {
   const getEndpointUrl = useCallback((): URL => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
@@ -110,16 +110,8 @@ export const ResultView = (props: ResultViewProps) => {
         </Col>
       </Row>
       <Row>
-        <Col>
-          <Button
-            variant="secondary"
-            type="button"
-            className="float-start px-4"
-            onClick={props.prevStep}
-          >
-            <FontAwesomeIcon icon={faChevronLeft} className="me-2" />
-            Zurück
-          </Button>
+        <Col className="d-flex justify-content-start">
+          <PrevButton callback={props.prevStep} />
         </Col>
       </Row>
     </>
