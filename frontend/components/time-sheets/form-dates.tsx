@@ -1,6 +1,7 @@
 import { faCircleChevronLeft, faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import strftime from "strftime";
@@ -36,42 +37,23 @@ const FormDates = (props: FormDatesProps) => {
   const nextWeek = () => {
     setTargetDate(addDaysToDate(getMonday(targetDate), 7));
   };
-
-  const getDateString = (date: Date): string => strftime("%Y-%m-%d", date);
-
-  const getKaplanEncodedString = useCallback(
-    (): string => b64_encode(props.timeSheetParams?.kaPlanIcs ?? ""),
-    [props.timeSheetParams?.kaPlanIcs],
-  );
-
-  const getEndpointUrl = useCallback((): URL => {
-    const startDate = getMonday(props.timeSheetParams?.targetDate);
-    const endDate = addDaysToDate(startDate, 6);
-
-    const url = new URL(API_ENDPOINT_KAPLAN, window.location.href);
-    url.searchParams.append("from", getDateString(startDate));
-    url.searchParams.append("to", getDateString(endDate));
-    return url;
-  }, [props.timeSheetParams?.targetDate]);
+  const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
 
   const { data, refetch, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: [KAPLAN_QUERY_KEY],
+    queryKey: [KAPLAN_QUERY_KEY, props.timeSheetParams],
     queryFn: async () => {
-      const response: Response = await fetch(getEndpointUrl(), {
-        method: "GET",
+      const startDate = getMonday(props.timeSheetParams?.targetDate);
+      const endDate = addDaysToDate(startDate, 6);
+      const response = await axios.get(API_ENDPOINT_KAPLAN, {
+        params: {
+          from: getDateStr(startDate),
+          to: getDateStr(endDate),
+        },
         headers: {
-          [KAPLAN_ICS_HEADER]: getKaplanEncodedString(),
+          [KAPLAN_ICS_HEADER]: b64_encode(props.timeSheetParams?.kaPlanIcs),
         },
       });
-      if (!response.ok) {
-        let msg: string = `The KaPlan query returned status code ${response.status} (${response.statusText}).`;
-        try {
-          msg = await response.json().then((payload) => payload.message);
-        } finally {
-          throw Error(msg);
-        }
-      }
-      return response.json();
+      return response.data;
     },
     select: (data: any): TimeSheetDate[] =>
       data.dates?.map((date: any): TimeSheetDate => {
@@ -79,10 +61,10 @@ const FormDates = (props: FormDatesProps) => {
           title: date.title ?? "",
           role: date.role ?? "",
           location: date.location_short ?? "",
-          begin: parseDateStr(date.begin),
-          end: parseDateStr(date.end),
-          breakBegin: parseDateStr(date.breakBegin),
-          breakEnd: parseDateStr(date.breakEnd),
+          time: {
+            begin: parseDateStr(date.begin),
+            end: parseDateStr(date.end),
+          },
         };
       }),
     enabled: false, // Trigger query only manually using refetch()
@@ -128,7 +110,7 @@ const FormDates = (props: FormDatesProps) => {
                   type="date"
                   name="target_date"
                   placeholder="Datum"
-                  value={getDateString(targetDate)}
+                  value={getDateStr(targetDate)}
                   onChange={(event) => {
                     const date = (event.target as HTMLInputElement).valueAsDate;
                     if (date) {
@@ -201,7 +183,7 @@ const FormDates = (props: FormDatesProps) => {
         {isError && (
           <Row className="py-3">
             <MsgBox type="error" trace={error.message}>
-              Fehler bei Anfrage ans Backend.
+              Fehler bei Anfrage ans Backend. 🤨
             </MsgBox>
           </Row>
         )}

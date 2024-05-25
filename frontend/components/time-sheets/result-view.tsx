@@ -1,9 +1,19 @@
-import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { useCallback, useMemo } from "react";
+import { faEnvelopeOpenText, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Link from "next/link";
+import { useCallback, useContext, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import { useDownloadFile } from "../../hooks/download-file";
-import { API_ENDPOINT_TIME_SHEET } from "../../utils/constants";
+import { BackendInfoContext } from "../../utils/backend-info";
+import {
+  API_ENDPOINT_TIME_SHEET,
+  TIME_SHEET_DEFAULT_MAIL,
+  TIME_SHEET_QUERY_KEY,
+} from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
+import { MailProps, createMailToLink } from "../../utils/mail";
+import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
 import DownloadButton from "./download-button";
@@ -17,12 +27,14 @@ type ResultViewProps = {
 };
 
 const ResultView = (props: ResultViewProps) => {
-  const getEndpointUrl = useCallback((): URL => {
+  const info: any = useContext(BackendInfoContext);
+
+  const getEndpointUrl = useCallback((): string => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
       window.location.href,
-    );
-  }, [props.timeSheetParams?.type, props.timeSheetParams?.format]);
+    ).toString();
+  }, [props.timeSheetParams]);
 
   const getTimeSheetName = useCallback((): string => {
     const basename: string = "Arbeitszeit";
@@ -31,84 +43,126 @@ const ResultView = (props: ResultViewProps) => {
     return `${basename}_${timestamp}.${format}`;
   }, [props.timeSheetParams?.targetDate, props.timeSheetParams?.format]);
 
-  const pdf = useDownloadFile({
-    apiCall: () => {
-      return fetch(getEndpointUrl(), {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
+  const {
+    data: pdf,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: [TIME_SHEET_QUERY_KEY, props.timeSheetParams, props.userData],
+    queryFn: async () => {
+      const response = await axios.post(
+        getEndpointUrl(),
+        {
           employer: props.userData.employer,
           employee: `${props.userData.lastName}, ${props.userData.firstName}`,
           year: props.timeSheetParams.targetDate.getFullYear(),
           week: getWeek(props.timeSheetParams.targetDate),
           dates: props.dateList,
-        }),
-      });
+        },
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+          responseType: "blob",
+        },
+      );
+      // Store the result as blob object and return its URL
+      const data = await response.data;
+      const url = URL.createObjectURL(new Blob([data]));
+      return {
+        fileName: getTimeSheetName(),
+        blobUrl: url,
+        size: data.size,
+      };
     },
-    // ToDo(Niklas): Add an error message
-    onError: (error) => {
-      console.log(error);
-    },
-    downloadName: getTimeSheetName(),
+    // Fetch only once
+    staleTime: Infinity,
+    gcTime: Infinity,
   });
 
-  // ToDo(Niklas): Create an interface etc.?
-  const mailParams = useMemo(() => {
+  const mailParams = useMemo((): MailProps => {
+    const name: string = `${props.userData.firstName} ${props.userData.lastName}`;
+    const week: string = `${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`;
     return {
-      // ToDo(Niklas): Use correct recipient by env var
-      recipient: "test@test.test",
-      subject: `Arbeitszeit ${props.userData.lastName}, ${props.userData.firstName} - KW ${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`,
-      body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner wöchentlichen Arbeitszeit für die vergangenen Kalenderwoche.\n\nViele Grüße\n${props.userData.firstName} ${props.userData.lastName}`,
+      recipient: TIME_SHEET_DEFAULT_MAIL ?? "",
+      subject: `Arbeitszeit ${name} - KW ${week}`,
+      body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${name}`,
     };
   }, [props.userData, props.timeSheetParams]);
-
-  const createMailToLink = (props: {
-    recipient: string;
-    subject?: string;
-    body?: string;
-  }): string =>
-    `mailto:${props.recipient}?subject=${encodeURIComponent(props.subject)}&body=${encodeURIComponent(props.body)}`;
 
   return (
     <>
       <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
-      Deine Stundenliste ist bereit und kann heruntergeladen werden. Viel Spaß damit!
-      <Row>
-        <Col sm={12} md={6} className="my-3">
-          <div className="text-center">
-            <p>Wähle das passende Dateiformat aus:</p>
-            <DownloadButton
-              isPrimary={true}
-              text="Download als PDF"
-              faIcon={faFilePdf}
-              download={pdf}
-            />
-          </div>
-        </Col>
-        <Col sm={12} md={6} className="my-3 border-start">
-          <p className="lead">Wie geht&apos;s jetzt weiter?</p>
-          <p>Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine E-Mail.</p>
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => {
-              window.location.href = createMailToLink(mailParams);
-            }}
-          >
-            Mail-Vorlage öffnen
-          </Button>
-        </Col>
-      </Row>
-      <Row className="my-2">
-        <Col>
-          <MsgBox type="info">
-            {/* ToDo(Niklas): Implement link */}
-            Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller geht...
-          </MsgBox>
-        </Col>
-      </Row>
+      {isError ? (
+        <Row>
+          <Col>
+            <MsgBox type="error" trace={error.message}>
+              Oh no, das hat nicht geklappt! Die Stundenliste konnte nicht erstellt werden. 😭
+              <br />
+              Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
+              beim{" "}
+              {info.env?.AdminMail ? (
+                <Link href={`mailto:${info.env.AdminMail}`}>Admin</Link>
+              ) : (
+                <span>Admin</span>
+              )}
+              .
+            </MsgBox>
+          </Col>
+        </Row>
+      ) : (
+        <Row className="align-items-center">
+          <Col sm={12} md={6}>
+            <div className="text-center m-4 py-4 bg-light rounded">
+              {isLoading ? (
+                <div className="my-4">
+                  <LoadingSpinner message="Working hard..." />
+                </div>
+              ) : (
+                <>
+                  <h5>Deine Stundenliste ist fertig! 🎉</h5>
+                  <DownloadButton
+                    fileName={pdf.fileName}
+                    url={pdf.blobUrl}
+                    text="Download als PDF"
+                    size={pdf.size}
+                    faIcon={faFileArrowDown}
+                    isPrimary={true}
+                  />
+                </>
+              )}
+            </div>
+          </Col>
+          <Col sm={12} md={6}>
+            <p className="lead">Wie geht&apos;s jetzt weiter?</p>
+            <p>
+              Lade deine Stundenliste runter. Sende sie dann dem zuständigen Pfarrbüro per E-Mail,
+              z.B. mit der folgenden Vorlage.
+            </p>
+            <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => {
+                window.location.href = createMailToLink(mailParams);
+              }}
+            >
+              <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+              Mail-Vorlage öffnen
+            </Button>
+          </Col>
+        </Row>
+      )}
+      {!isError && (
+        <Row className="my-2">
+          <Col>
+            <MsgBox type="info">
+              Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller geht...
+            </MsgBox>
+          </Col>
+        </Row>
+      )}
       <Row>
         <Col className="d-flex justify-content-start">
           <PrevButton callback={props.prevStep} />

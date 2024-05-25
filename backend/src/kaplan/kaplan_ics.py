@@ -106,7 +106,7 @@ class KaPlanIcs:
         role: Optional[str] = None
         host: Optional[str] = None
         internal: Optional[str] = None
-        matcher: Optional[Match] = fullmatch(
+        matcher: Optional[Match[str]] = fullmatch(
             r"(?:\[(.+)\] )?"
             r"(.*?)"
             r"(?: Leitung: (.*?))?"
@@ -116,7 +116,7 @@ class KaPlanIcs:
         if matcher:
             role, _, host, internal = matcher.groups()
 
-        location_matcher: Optional[Match] = fullmatch(
+        location_matcher: Optional[Match[str]] = fullmatch(
             r"(.+), \d{5} .+", event.location or ""
         )
         short_location: Optional[str] = (

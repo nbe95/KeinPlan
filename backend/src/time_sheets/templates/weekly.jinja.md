@@ -43,7 +43,7 @@ Arbeitsleistung folgenden Kalendertages aufzuzeichnen.
   {{- entry.time_span.begin.strftime("%a. %d.%m.%Y") }}|
   {{- entry.title }}{% if entry.role %} ({{ entry.role }}{% endif %})|
   {{- entry.location }}|
-  {{- entry.time_span.begin.strftime("%-H:%M") }} - {{ entry.time_span.end.strftime("%-H:%M") }}|
+  {{- entry.time_span.begin.strftime("%-H:%M") }} – {{ entry.time_span.end.strftime("%-H:%M") }}|
   {%- if entry.break_span -%}
     {{- entry.break_span.begin.strftime("%-H:%M") }} - {{ entry.break_span.end.strftime("%-H:%M") }}|
   {%- else -%}

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createContext } from "react";
 import { API_ENDPOINT_INFO, BACKEND_INFO_CACHE_TIME } from "./constants";
 
@@ -10,8 +11,8 @@ export type PageProps = {
 export const getBackendInfo = async (res) => {
   res.setHeader("Cache-Control", `private, max-age=${BACKEND_INFO_CACHE_TIME}`);
   try {
-    const query = await fetch(API_ENDPOINT_INFO);
-    return await query.json();
+    const response = await axios.get(API_ENDPOINT_INFO);
+    return response.data;
   } catch (error) {
     return { error: `${error}` };
   }
