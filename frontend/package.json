@@ -13,6 +13,7 @@
     "@fortawesome/react-fontawesome": "github:fortawesome/react-fontawesome",
     "@tanstack/react-query": "^5.17.19",
     "@tanstack/react-query-devtools": "^5.20.1",
+    "axios": "^1.7.2",
     "bootstrap": "^5.3.2",
     "filesize": "^10.1.2",
     "next": "^14.1.0",

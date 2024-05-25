@@ -1,6 +1,7 @@
 import { faEnvelopeOpenText, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Link from "next/link";
 import { useCallback, useContext, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
@@ -24,11 +25,11 @@ type ResultViewProps = {
 const ResultView = (props: ResultViewProps) => {
   const info: any = useContext(BackendInfoContext);
 
-  const getEndpointUrl = useCallback((): URL => {
+  const getEndpointUrl = useCallback((): string => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
       window.location.href,
-    );
+    ).toString();
   }, [props.timeSheetParams]);
 
   const getTimeSheetName = useCallback((): string => {
@@ -46,21 +47,24 @@ const ResultView = (props: ResultViewProps) => {
   } = useQuery({
     queryKey: [TIME_SHEET_QUERY_KEY, props.timeSheetParams, props.userData],
     queryFn: async () => {
-      const response = await fetch(getEndpointUrl(), {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        getEndpointUrl(),
+        {
           employer: props.userData.employer,
           employee: `${props.userData.lastName}, ${props.userData.firstName}`,
           year: props.timeSheetParams.targetDate.getFullYear(),
           week: getWeek(props.timeSheetParams.targetDate),
           dates: props.dateList,
-        }),
-      });
+        },
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+          responseType: "blob"
+        },
+      );
       // Store the result as blob object and return its URL
-      const data = await response.blob();
+      const data = await response.data;
       const url = URL.createObjectURL(new Blob([data]));
       return {
         fileName: getTimeSheetName(),
