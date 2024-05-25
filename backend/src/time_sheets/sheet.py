@@ -52,9 +52,7 @@ class TimeSheet:
             "-o",
             str(output_file.absolute()),
         )
-        result: CompletedProcess[str] = run(
-            cmd, check=True, input=input_str, text=True
-        )
+        result: CompletedProcess[str] = run(cmd, check=True, input=input_str, text=True)
         return result.returncode == 0
 
     @abstractmethod
@@ -65,20 +63,14 @@ class TimeSheet:
 class WeeklyTimeSheet(TimeSheet):
     """Time sheet based on calendar weeks."""
 
-    def __init__(
-        self, employer: str, employee: str, year: int, week_no: int
-    ) -> None:
+    def __init__(self, employer: str, employee: str, year: int, week_no: int) -> None:
         super().__init__(employer, employee)
         self.date_start = date.fromisocalendar(year, week_no, 1)
         self.date_end = self.date_start + timedelta(days=6)
 
-    def generate(
-        self, target_file: Union[Path, str], footer: bool = True
-    ) -> bool:
+    def generate(self, target_file: Union[Path, str], footer: bool = True) -> bool:
         """Generate a PDF time sheet from the given data."""
-        target_pdf: Path = (
-            target_file if isinstance(target_file, Path) else Path(target_file)
-        )
+        target_pdf: Path = target_file if isinstance(target_file, Path) else Path(target_file)
 
         logger.info(
             "Generating weekly time sheet with %d entries at '%s'.",
