@@ -1,9 +1,10 @@
-import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import { useDownloadFile } from "../../hooks/download-file";
-import { API_ENDPOINT_TIME_SHEET } from "../../utils/constants";
+import { API_ENDPOINT_TIME_SHEET, TIME_SHEET_QUERY_KEY } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
+import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
 import DownloadButton from "./download-button";
@@ -31,9 +32,16 @@ const ResultView = (props: ResultViewProps) => {
     return `${basename}_${timestamp}.${format}`;
   }, [props.timeSheetParams?.targetDate, props.timeSheetParams?.format]);
 
-  const pdf = useDownloadFile({
-    apiCall: () => {
-      return fetch(getEndpointUrl(), {
+  const {
+    data: pdf,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: [TIME_SHEET_QUERY_KEY],
+    queryFn: async () => {
+      const response = await fetch(getEndpointUrl(), {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -46,12 +54,16 @@ const ResultView = (props: ResultViewProps) => {
           dates: props.dateList,
         }),
       });
+      // Store the result as blob object and return its URL
+      const url = URL.createObjectURL(new Blob([await response.blob()]));
+      return {
+        fileName: getTimeSheetName(),
+        blobUrl: url,
+      };
     },
-    // ToDo(Niklas): Add an error message
-    onError: (error) => {
-      console.log(error);
-    },
-    downloadName: getTimeSheetName(),
+    // Fetch only once
+    staleTime: Infinity,
+    gcTime: Infinity,
   });
 
   // ToDo(Niklas): Create an interface etc.?
@@ -74,18 +86,28 @@ const ResultView = (props: ResultViewProps) => {
   return (
     <>
       <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
-      Deine Stundenliste ist bereit und kann heruntergeladen werden. Viel Spaß damit!
       <Row>
         <Col sm={12} md={6} className="my-3">
-          <div className="text-center">
-            <p>Wähle das passende Dateiformat aus:</p>
-            <DownloadButton
-              isPrimary={true}
-              text="Download als PDF"
-              faIcon={faFilePdf}
-              download={pdf}
-            />
-          </div>
+          {isLoading ? (
+            <LoadingSpinner message="Working hard..." />
+          ) : isSuccess ? (
+            <div className="text-center">
+              <p>
+                <strong>Deine Stundenliste ist fertig! 🎉</strong>
+              </p>
+              <DownloadButton
+                fileName={pdf.fileName}
+                url={pdf.blobUrl}
+                text="Download als PDF"
+                faIcon={faFileArrowDown}
+                isPrimary={true}
+              />
+            </div>
+          ) : (
+            <MsgBox type="error" trace={error.message}>
+              Oh no! Die Stundenliste konnte nicht erstellt werden. 😭
+            </MsgBox>
+          )}
         </Col>
         <Col sm={12} md={6} className="my-3 border-start">
           <p className="lead">Wie geht&apos;s jetzt weiter?</p>

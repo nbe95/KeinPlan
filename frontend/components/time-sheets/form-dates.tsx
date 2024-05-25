@@ -82,7 +82,7 @@ const FormDates = (props: FormDatesProps) => {
           time: {
             begin: parseDateStr(date.begin),
             end: parseDateStr(date.end),
-          }
+          },
         };
       }),
     enabled: false, // Trigger query only manually using refetch()
@@ -201,7 +201,7 @@ const FormDates = (props: FormDatesProps) => {
         {isError && (
           <Row className="py-3">
             <MsgBox type="error" trace={error.message}>
-              Fehler bei Anfrage ans Backend.
+              Fehler bei Anfrage ans Backend. 🤨
             </MsgBox>
           </Row>
         )}

@@ -41,7 +41,8 @@ const DateCard = (props: DateCardProps) => {
                   <FontAwesomeIcon icon={faClock} className="text-muted me-2" />
                 </div>
                 <span>
-                  {strftimeGer("%H:%M", props.date.time.begin)} - {strftimeGer("%H:%M", props.date.time.end)}
+                  {strftimeGer("%H:%M", props.date.time.begin)} –{" "}
+                  {strftimeGer("%H:%M", props.date.time.end)}
                 </span>
                 {props.date.break?.begin && props.date.break?.end && (
                   <>
@@ -49,7 +50,7 @@ const DateCard = (props: DateCardProps) => {
                       <FontAwesomeIcon icon={faMugHot} className="text-muted me-2" />
                     </div>
                     <span className="text-muted">
-                      {strftimeGer("%H:%M", props.date.break.begin)} -{" "}
+                      {strftimeGer("%H:%M", props.date.break.begin)} –{" "}
                       {strftimeGer("%H:%M", props.date.break.end)}
                     </span>
                   </>
