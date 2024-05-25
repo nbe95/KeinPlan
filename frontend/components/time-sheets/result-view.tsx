@@ -94,6 +94,7 @@ const ResultView = (props: ResultViewProps) => {
     // Fetch only once
     staleTime: Infinity,
     gcTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 
   const mailParams = useMemo((): MailProps => {
@@ -111,9 +112,9 @@ const ResultView = (props: ResultViewProps) => {
       <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
       {isError ? (
         <Row>
-          <Col>
+          <Col className="py-3">
             <MsgBox type="error" trace={error.message}>
-              Oh no, das hat nicht geklappt! Die Stundenliste konnte nicht erstellt werden. 😭
+              Oh no, da hat was nicht geklappt! Deine Stundenliste konnte nicht erstellt werden. 😭
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
@@ -128,8 +129,8 @@ const ResultView = (props: ResultViewProps) => {
         </Row>
       ) : (
         <Row className="align-items-center">
-          <Col sm={12} md={6}>
-            <div className="text-center m-4 py-4 bg-light rounded">
+          <Col sm={12} md={7}>
+            <div className="text-center m-4 p-4 bg-light rounded">
               {isLoading ? (
                 <div className="my-4">
                   <LoadingSpinner message="Working hard..." />
@@ -149,11 +150,11 @@ const ResultView = (props: ResultViewProps) => {
               )}
             </div>
           </Col>
-          <Col sm={12} md={6}>
+          <Col sm={12} md={5}>
             <p className="lead">Wie geht&apos;s jetzt weiter?</p>
             <p>
-              Lade deine Stundenliste runter. Sende sie dann dem zuständigen Pfarrbüro per E-Mail,
-              z.B. mit der folgenden Vorlage.
+              Lade deine Stundenliste runter. Sende sie anschließend an das zuständige Pfarrbüro per
+              E-Mail, z.B. mit der folgenden Vorlage.
             </p>
             <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
             <Button

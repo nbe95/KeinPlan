@@ -67,6 +67,7 @@ const FormDates = (props: FormDatesProps) => {
           },
         };
       }),
+    refetchOnWindowFocus: false,
     enabled: false, // Trigger query only manually using refetch()
   });
 
