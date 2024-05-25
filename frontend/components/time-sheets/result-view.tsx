@@ -6,7 +6,11 @@ import Link from "next/link";
 import { useCallback, useContext, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { BackendInfoContext } from "../../utils/backend-info";
-import { API_ENDPOINT_TIME_SHEET, TIME_SHEET_QUERY_KEY } from "../../utils/constants";
+import {
+  API_ENDPOINT_TIME_SHEET,
+  TIME_SHEET_DEFAULT_MAIL,
+  TIME_SHEET_QUERY_KEY,
+} from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
 import { MailProps, createMailToLink } from "../../utils/mail";
 import LoadingSpinner from "../loading";
@@ -60,7 +64,7 @@ const ResultView = (props: ResultViewProps) => {
           headers: {
             "Content-type": "application/json",
           },
-          responseType: "blob"
+          responseType: "blob",
         },
       );
       // Store the result as blob object and return its URL
@@ -77,16 +81,15 @@ const ResultView = (props: ResultViewProps) => {
     gcTime: Infinity,
   });
 
-  // ToDo(Niklas): Create an interface etc.?
-  const mailParams = useMemo(
-    (): MailProps => ({
-      // ToDo(Niklas): Use correct recipient by env var
-      recipient: "test@test.test",
-      subject: `Arbeitszeit ${props.userData.lastName}, ${props.userData.firstName} - KW ${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`,
-      body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner wöchentlichen Arbeitszeit für die vergangenen Kalenderwoche.\n\nViele Grüße\n${props.userData.firstName} ${props.userData.lastName}`,
-    }),
-    [props.userData, props.timeSheetParams],
-  );
+  const mailParams = useMemo((): MailProps => {
+    const name: string = `${props.userData.firstName} ${props.userData.lastName}`;
+    const week: string = `${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`;
+    return {
+      recipient: TIME_SHEET_DEFAULT_MAIL ?? "",
+      subject: `Arbeitszeit ${name} - KW ${week}`,
+      body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${name}`,
+    };
+  }, [props.userData, props.timeSheetParams]);
 
   return (
     <>
@@ -155,7 +158,6 @@ const ResultView = (props: ResultViewProps) => {
         <Row className="my-2">
           <Col>
             <MsgBox type="info">
-              {/* ToDo(Niklas): Implement link */}
               Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller geht...
             </MsgBox>
           </Col>

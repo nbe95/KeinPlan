@@ -53,7 +53,7 @@ const FormDates = (props: FormDatesProps) => {
           [KAPLAN_ICS_HEADER]: b64_encode(props.timeSheetParams?.kaPlanIcs),
         },
       });
-      return response.data
+      return response.data;
     },
     select: (data: any): TimeSheetDate[] =>
       data.dates?.map((date: any): TimeSheetDate => {
