@@ -1,28 +1,38 @@
 ---
 geometry: a4paper,margin=1.5cm
-font-size: 11pt
+font-size: 12pt
 header-includes:
   - \renewcommand\familydefault\sfdefault
   - \usepackage{setspace}
   - \onehalfspacing
   - \usepackage{hyperref}
   - \hypersetup{colorlinks,urlcolor=blue}
+  - \usepackage{color}
+  - \usepackage{fancyhdr}
   - \hypersetup{pdftex,
       pdftitle={Arbeitszeit {{ employee }} - KW {{ date_start.strftime("%V/%Y") }}},
       pdfcreator={KeinPlan{% if version %} v{{ version }}{% endif%}}}
 ---
 # Dokumentation der täglichen Arbeitszeit nach §17 MiLoG
 
-**Wichtig:** Die Aufzeichnungen sind wöchentlich zu führen. Dabei sind der
-Beginn, das Ende und die Dauer der täglichen Arbeitszeit spätestens bis zum
-Ablauf des siebten auf den Tag der Arbeitsleistung folgenden Kalendertages
-aufzuzeichnen.
+{% macro texbold(text) -%}
+\textbf{{ "{" }}{{ text }}{{ "}" }}
+{%- endmacro -%}
 
----
-
-* Dienstgeber: **{{ employer }}**
-* Name, Vorname des Mitarbeiters: **{{ employee }}**
-* Aufzeichnung für die **Kalenderwoche {{ date_start.strftime("%V/%Y") }}** ({{ date_start.strftime("%d.%m.%Y") }} bis {{ date_end.strftime("%d.%m.%Y") }})
+\bigskip
+\fcolorbox{white}{gray!20}{
+  \parbox{\linewidth-2\fboxsep-1\tabcolsep}{
+    \begin{tabular}{ll}
+      Dienstgeber: & {{ texbold(employer) }} \\
+      Mitarbeiter: & {{ texbold(employee) }} \\
+      Aufzeichnung für: & \textbf{KW {{ date_start.strftime("%V/%Y") }} } {\small ({{ date_start.strftime("%d.%m.%Y") }} -- {{ date_end.strftime("%d.%m.%Y") }})}
+    \end{tabular}
+  }
+}
+\
+**Wichtig:** Die Aufzeichnungen sind wöchentlich zu führen. Dabei sind der Beginn, das Ende und die
+Dauer der täglichen Arbeitszeit spätestens bis zum Ablauf des siebten auf den Tag der
+Arbeitsleistung folgenden Kalendertages aufzuzeichnen.
 \
 
 {% if entries %}
@@ -41,21 +51,26 @@ aufzuzeichnen.
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
-Alle Stundenangaben sind auf jeweils 15 Minuten auf- oder abgerundet.\
-
-Summe Dienste: **{{ entries|length }}**\
-Summe Stunden: **{{ "%.2f"|format_locale(total_hours) }}**\
-
-{% else -%}
-Keine Dienste in diesem Zeitraum vorhanden.\
-
 {% endif %}
+
+Alle Stundenangaben sind auf jeweils 15 Minuten auf- oder abgerundet.
+\hfill
+\fcolorbox{black}{gray!5}{
+  \begin{tabular}{ll}
+    Summe Dienste: & {{ texbold(entries|length) }} \\
+    Summe Stunden: & {{ texbold("%.2f"|format_locale(total_hours)) }} \\
+  \end{tabular}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[R]{(\thepage)}
+\renewcommand{\headrulewidth}{0pt}
 {% if footer -%}
-    *Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
+  \fancyfoot[L]{\small
+    Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
     {% if hyperlink -%}
-        von [KeinPlan]({{ hyperlink }})
-        {%- if version %}
-            v{{ version }}
-        {% endif-%}
-    {%- endif-%}.*
+      von \href{{ "{" }}{{ hyperlink }}{{ "}" }}{KeinPlan} {%- if version %} v{{ version }} {%- endif-%}
+    {%- endif-%}.
+  }
 {%- endif %}

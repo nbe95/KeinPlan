@@ -6,7 +6,7 @@ from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
 from subprocess import CompletedProcess, run
-from typing import List, Tuple, Union
+from typing import Iterable, List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
@@ -33,17 +33,27 @@ class TimeSheet:
         self.date_end: date = date.max
         self.entries: List[TimeEntry] = []
 
-    def _convert_md_to_pdf(self, md_input: str, pdf_file: Path) -> bool:
-        """Convert preprocessed Markdown input to a PDF file using pandoc."""
+    def _run_pandoc(
+        self,
+        input_str: str,
+        input_type: str,
+        output_file: Path,
+        output_type: str,
+        input_params: None | Iterable[str] = None,
+        output_params: None | Iterable[str] = None,
+    ) -> bool:
+        """Convert preprocessed input to a document using pandoc."""
         cmd: Tuple[str, ...] = (
             "pandoc",
+            "-f",
+            "".join((input_type, *(input_params or []))),
             "-t",
-            "pdf",
+            "".join((output_type, *(output_params or []))),
             "-o",
-            str(pdf_file.absolute()),
+            str(output_file.absolute()),
         )
-        result: CompletedProcess = run(
-            cmd, check=True, input=md_input, text=True
+        result: CompletedProcess[str] = run(
+            cmd, check=True, input=input_str, text=True
         )
         return result.returncode == 0
 
@@ -66,14 +76,14 @@ class WeeklyTimeSheet(TimeSheet):
         self, target_file: Union[Path, str], footer: bool = True
     ) -> bool:
         """Generate a PDF time sheet from the given data."""
-        target_path: Path = (
+        target_pdf: Path = (
             target_file if isinstance(target_file, Path) else Path(target_file)
         )
 
         logger.info(
             "Generating weekly time sheet with %d entries at '%s'.",
             len(self.entries),
-            target_path,
+            target_pdf,
         )
 
         template_file: str = "weekly.jinja.md"
@@ -84,7 +94,7 @@ class WeeklyTimeSheet(TimeSheet):
         template: Template = jinja_env.get_template(template_file)
 
         self.entries.sort(key=lambda e: e.time_span.begin)
-        rendered: str = template.render(
+        md_rendered: str = template.render(
             employer=self.employer,
             employee=self.employee,
             entries=self.entries,
@@ -96,4 +106,4 @@ class WeeklyTimeSheet(TimeSheet):
             hyperlink=KEINPLAN_LINK,
             version=VERSION,
         )
-        return self._convert_md_to_pdf(rendered, target_path)
+        return self._run_pandoc(md_rendered, "markdown", target_pdf, "pdf")
