@@ -79,22 +79,22 @@ class TimeSheetApi(Resource):
             return (f'Invalid file format "{file_format}"', 400)
 
     def _parse_date(self, item: Dict[str, Any]) -> TimeEntry:
-        item_time: Dict[str, str] = item.get("time", {})
-        item_break: Dict[str, str] = item.get("break", {})
+        item_time: Dict[str, str] = item.get("time") or {}
+        item_break: Dict[str, str] = item.get("break") or {}
         entry: TimeEntry = TimeEntry(
             item.get("title", ""),
             item.get("role", ""),
             item.get("location", ""),
             TimeSpan(
-                datetime.fromisoformat(item_time.get("begin", "")),
-                datetime.fromisoformat(item_time.get("end", "")),
+                datetime.fromisoformat(item_time.get("begin") or ""),
+                datetime.fromisoformat(item_time.get("end") or ""),
             ),
             (
                 TimeSpan(
-                    datetime.fromisoformat(item_break.get("begin", "")),
-                    datetime.fromisoformat(item_break.get("end", "")),
+                    datetime.fromisoformat(item_break.get("begin") or ""),
+                    datetime.fromisoformat(item_break.get("end") or ""),
                 )
-                if all(key in item_break for key in ("begin", "end"))
+                if all(item_break.get(key) is not None for key in ("begin", "end"))
                 else None
             ),
         )

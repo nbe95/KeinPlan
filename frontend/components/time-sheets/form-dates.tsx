@@ -8,6 +8,7 @@ import strftime from "strftime";
 import { b64_encode } from "../../utils/base64";
 import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../utils/dates";
+import { ClientError } from "../../utils/network";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
@@ -44,17 +45,28 @@ const FormDates = (props: FormDatesProps) => {
     queryFn: async () => {
       const startDate = getMonday(props.timeSheetParams?.targetDate);
       const endDate = addDaysToDate(startDate, 6);
-      const response = await axios.get(API_ENDPOINT_KAPLAN, {
-        params: {
-          from: getDateStr(startDate),
-          to: getDateStr(endDate),
-        },
-        headers: {
-          [KAPLAN_ICS_HEADER]: b64_encode(props.timeSheetParams?.kaPlanIcs),
-        },
-      });
-      return response.data;
+      return axios
+        .get(API_ENDPOINT_KAPLAN, {
+          params: {
+            from: getDateStr(startDate),
+            to: getDateStr(endDate),
+          },
+          headers: {
+            [KAPLAN_ICS_HEADER]: b64_encode(props.timeSheetParams?.kaPlanIcs),
+          },
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+          const msg: string =
+            error.response.data ??
+            `The backend query returned status code ${error.response.status}.`;
+          if (error.response.status >= 400 && error.response.status < 500) {
+            throw new ClientError(msg);
+          }
+          throw Error(msg);
+        });
     },
+    retry: (failureCount, error) => !(error instanceof ClientError || failureCount >= 4),
     select: (data: any): TimeSheetDate[] =>
       data.dates?.map((date: any): TimeSheetDate => {
         return {
@@ -67,6 +79,7 @@ const FormDates = (props: FormDatesProps) => {
           },
         };
       }),
+    refetchOnWindowFocus: false,
     enabled: false, // Trigger query only manually using refetch()
   });
 
@@ -184,6 +197,8 @@ const FormDates = (props: FormDatesProps) => {
           <Row className="py-3">
             <MsgBox type="error" trace={error.message}>
               Fehler bei Anfrage ans Backend. 🤨
+              <br />
+              Stimmt dein KaPlan-Abonnement-String?
             </MsgBox>
           </Row>
         )}

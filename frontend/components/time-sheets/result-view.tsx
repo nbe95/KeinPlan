@@ -14,6 +14,7 @@ import {
 } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
 import { MailProps, createMailToLink } from "../../utils/mail";
+import { ClientError } from "../../utils/network";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
@@ -54,46 +55,59 @@ const ResultView = (props: ResultViewProps) => {
   } = useQuery({
     queryKey: [TIME_SHEET_QUERY_KEY, props.timeSheetParams, props.userData],
     queryFn: async () => {
-      const response = await axios.post(
-        getEndpointUrl(),
-        {
-          employer: props.userData.employer,
-          employee: `${props.userData.lastName}, ${props.userData.firstName}`,
-          year: props.timeSheetParams.targetDate.getFullYear(),
-          week: getWeek(props.timeSheetParams.targetDate),
-          dates: props.dateList.map((date) => ({
-            ...date,
-            time: {
-              begin: toIsoTime(date.time.begin),
-              end: toIsoTime(date.time.end),
-            },
-            break: date.break
-              ? {
-                  begin: toIsoTime(date.break.begin),
-                  end: toIsoTime(date.break.end),
-                }
-              : null,
-          })),
-        },
-        {
-          headers: {
-            "Content-type": "application/json",
+      return await axios
+        .post(
+          getEndpointUrl(),
+          {
+            employer: props.userData.employer,
+            employee: `${props.userData.lastName}, ${props.userData.firstName}`,
+            year: props.timeSheetParams.targetDate.getFullYear(),
+            week: getWeek(props.timeSheetParams.targetDate),
+            dates: props.dateList.map((date) => ({
+              ...date,
+              time: {
+                begin: toIsoTime(date.time.begin),
+                end: toIsoTime(date.time.end),
+              },
+              break: date.break
+                ? {
+                    begin: toIsoTime(date.break.begin),
+                    end: toIsoTime(date.break.end),
+                  }
+                : null,
+            })),
           },
-          responseType: "blob",
-        },
-      );
-      // Store the result as blob object and return its URL
-      const data = await response.data;
-      const url = URL.createObjectURL(new Blob([data]));
-      return {
-        fileName: getTimeSheetName(),
-        blobUrl: url,
-        size: data.size,
-      };
+          {
+            headers: {
+              "Content-type": "application/json",
+            },
+            responseType: "blob",
+          },
+        )
+        .then((response) => {
+          // Store the result as blob object and return its URL
+          const url = URL.createObjectURL(new Blob([response.data]));
+          return {
+            fileName: getTimeSheetName(),
+            blobUrl: url,
+            size: response.data.size,
+          };
+        })
+        .catch((error) => {
+          const msg: string =
+            error.response.data ??
+            `The backend query returned status code ${error.response.status}.`;
+          if (error.response.status >= 400 && error.response.status < 500) {
+            throw new ClientError(msg);
+          }
+          throw Error(msg);
+        });
     },
+    retry: (failureCount, error) => !(error instanceof ClientError || failureCount >= 4),
     // Fetch only once
     staleTime: Infinity,
     gcTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 
   const mailParams = useMemo((): MailProps => {
@@ -111,9 +125,9 @@ const ResultView = (props: ResultViewProps) => {
       <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
       {isError ? (
         <Row>
-          <Col>
+          <Col className="py-3">
             <MsgBox type="error" trace={error.message}>
-              Oh no, das hat nicht geklappt! Die Stundenliste konnte nicht erstellt werden. 😭
+              Oh no, da hat was nicht geklappt! Deine Stundenliste konnte nicht erstellt werden. 😭
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
@@ -128,8 +142,8 @@ const ResultView = (props: ResultViewProps) => {
         </Row>
       ) : (
         <Row className="align-items-center">
-          <Col sm={12} md={6}>
-            <div className="text-center m-4 py-4 bg-light rounded">
+          <Col sm={12} md={7}>
+            <div className="text-center m-4 p-4 bg-light rounded">
               {isLoading ? (
                 <div className="my-4">
                   <LoadingSpinner message="Working hard..." />
@@ -149,11 +163,11 @@ const ResultView = (props: ResultViewProps) => {
               )}
             </div>
           </Col>
-          <Col sm={12} md={6}>
+          <Col sm={12} md={5}>
             <p className="lead">Wie geht&apos;s jetzt weiter?</p>
             <p>
-              Lade deine Stundenliste runter. Sende sie dann dem zuständigen Pfarrbüro per E-Mail,
-              z.B. mit der folgenden Vorlage.
+              Lade deine Stundenliste runter. Sende sie anschließend an das zuständige Pfarrbüro per
+              E-Mail, z.B. mit der folgenden Vorlage.
             </p>
             <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
             <Button

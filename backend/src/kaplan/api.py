@@ -28,7 +28,7 @@ class KaPlanApi(Resource):
             ics_url: str = b64decode(ics_url_b64).decode("ascii")
             normalized_url: str = URL.from_text(ics_url).normalize().to_text()
         except (Error, UnicodeDecodeError) as e:
-            return {"message": f"The ICS string was not properly encoded: {e}"}, 400
+            return f"The ICS string was not properly encoded: {e}", 400
 
         try:
             date_from: date = datetime.strptime(
@@ -39,4 +39,4 @@ class KaPlanApi(Resource):
             ).date()
             return self.kaplan_interface.get_events(normalized_url, date_from, date_to)
         except KaPlanInterfaceError as e:
-            return {"message": f"Could not import KaPlan data: {e}"}, 500
+            return f"Could not import KaPlan data: {e}", 400
