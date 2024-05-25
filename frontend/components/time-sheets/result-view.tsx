@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useCallback, useContext, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
+import strftime from "strftime";
 import { BackendInfoContext } from "../../utils/backend-info";
 import {
   API_ENDPOINT_TIME_SHEET,
@@ -43,6 +44,8 @@ const ResultView = (props: ResultViewProps) => {
     return `${basename}_${timestamp}.${format}`;
   }, [props.timeSheetParams?.targetDate, props.timeSheetParams?.format]);
 
+  const toIsoTime = (date: Date): string => strftime("%Y-%m-%dT%H:%M:%S%z", date);
+
   const {
     data: pdf,
     isLoading,
@@ -58,7 +61,19 @@ const ResultView = (props: ResultViewProps) => {
           employee: `${props.userData.lastName}, ${props.userData.firstName}`,
           year: props.timeSheetParams.targetDate.getFullYear(),
           week: getWeek(props.timeSheetParams.targetDate),
-          dates: props.dateList,
+          dates: props.dateList.map((date) => ({
+            ...date,
+            time: {
+              begin: toIsoTime(date.time.begin),
+              end: toIsoTime(date.time.end),
+            },
+            break: date.break
+              ? {
+                  begin: toIsoTime(date.break.begin),
+                  end: toIsoTime(date.break.end),
+                }
+              : null,
+          })),
         },
         {
           headers: {

@@ -34,13 +34,10 @@ class KaPlanIcs:
 
     timeout_s: int = 20
     user_agent: str = (
-        f"Mozilla/5.0 ({uname().sysname} {uname().release}) "
-        f"KeinPlan/{VERSION or 'beta'} (JSON)"
+        f"Mozilla/5.0 ({uname().sysname} {uname().release}) " f"KeinPlan/{VERSION or 'beta'} (JSON)"
     )
 
-    def get_events(
-        self, url: str, date_from: date, date_to: date
-    ) -> Dict[str, Any]:
+    def get_events(self, url: str, date_from: date, date_to: date) -> Dict[str, Any]:
         """Call the KaPlan endpoint and return all available dates."""
         if not self._validate_url(url):
             raise KaPlanInterfaceError(
@@ -81,11 +78,11 @@ class KaPlanIcs:
         if not response.ok:
             logger.error(
                 "Server returned status %d: %s",
-                response.status,
+                response.status_code,
                 response.reason,
             )
             raise KaPlanInterfaceError(
-                f"Got an error from KaPlan server with code {response.status}."
+                f"Got an error from KaPlan server with code {response.status_code}."
             )
 
         content: str = response.content.decode(KAPLAN_ICS_ENCODING)
@@ -107,35 +104,28 @@ class KaPlanIcs:
         host: Optional[str] = None
         internal: Optional[str] = None
         matcher: Optional[Match[str]] = fullmatch(
-            r"(?:\[(.+)\] )?"
-            r"(.*?)"
-            r"(?: Leitung: (.*?))?"
-            r"(?: Interne Info: (.*?))?",
+            r"(?:\[(.+)\] )?" r"(.*?)" r"(?: Leitung: (.*?))?" r"(?: Interne Info: (.*?))?",
             event.description or "",
         )
         if matcher:
             role, _, host, internal = matcher.groups()
 
-        location_matcher: Optional[Match[str]] = fullmatch(
-            r"(.+), \d{5} .+", event.location or ""
-        )
+        location_matcher: Optional[Match[str]] = fullmatch(r"(.+), \d{5} .+", event.location or "")
         short_location: Optional[str] = (
-            event.location
-            if not location_matcher
-            else location_matcher.group(1)
+            event.location if not location_matcher else location_matcher.group(1)
         )
 
         return {
             "uid": event.uid,
-            "title": event.name or "",
-            "internal": internal or "",
-            "role": role or "",
-            "host": host or "",
-            "location": event.location or "",
-            "location_short": short_location or "",
+            "title": event.name,
+            "internal": internal,
+            "role": role,
+            "host": host,
+            "location": event.location,
+            "location_short": short_location,
             "begin": event.begin.for_json(),
             "end": event.end.for_json(),
-            "modified": event.last_modified.for_json(),
+            "modified": event.last_modified.for_json() if event.last_modified else None,
         }
 
     @staticmethod
@@ -146,24 +136,18 @@ class KaPlanIcs:
 
         # Extract host and workgroup from URL
         host: str = url.netloc
-        workgroup: Optional[str] = next(
-            iter(query.get("Arbeitsgruppe", [])), None
-        )
+        workgroup: Optional[str] = next(iter(query.get("Arbeitsgruppe", [])), None)
 
         if all(x is None for x in (host, workgroup)):
             logger.warning("Invalid URL without host or workgroup provided.")
             return False
 
         if host not in KAPLAN_ALLOWED_SERVERS:
-            logger.warning(
-                "'%s' is not within the allowed KaPlan hosts.", host
-            )
+            logger.warning("'%s' is not within the allowed KaPlan hosts.", host)
             return False
 
         if workgroup not in KAPLAN_ALLOWED_WORKGROUPS:
-            logger.warning(
-                "'%s' is not within the allowed KaPlan workgroups.", workgroup
-            )
+            logger.warning("'%s' is not within the allowed KaPlan workgroups.", workgroup)
             return False
 
         return True
