@@ -1,5 +1,5 @@
 [tool.black]
-line-length = 79
+line-length = 100
 
 [tool.pylint.DESIGN]
 max-args = 10
@@ -9,11 +9,13 @@ max-attributes = 10
 disable = [
     "too-few-public-methods",
     "cell-var-from-loop",
-    "fixme"
+    "broad-exception-caught",
+    "fixme",
 ]
 
 [tool.flake8]
 ignore = "E203, W503"
+max-line-length = 100
 
 [tool.pydocstyle]
 ignore = "D105, D107, D203, D213"

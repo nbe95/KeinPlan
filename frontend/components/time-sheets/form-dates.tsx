@@ -79,10 +79,10 @@ const FormDates = (props: FormDatesProps) => {
           title: date.title ?? "",
           role: date.role ?? "",
           location: date.location_short ?? "",
-          begin: parseDateStr(date.begin),
-          end: parseDateStr(date.end),
-          breakBegin: parseDateStr(date.breakBegin),
-          breakEnd: parseDateStr(date.breakEnd),
+          time: {
+            begin: parseDateStr(date.begin),
+            end: parseDateStr(date.end),
+          }
         };
       }),
     enabled: false, // Trigger query only manually using refetch()
