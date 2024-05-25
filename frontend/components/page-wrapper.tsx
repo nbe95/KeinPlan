@@ -14,10 +14,11 @@ type PageProps = {
 };
 
 const PageWrapper = (props: PropsWithChildren<PageProps>) => {
+  const title: string = `KeinPlan${props.title ? ` | ${props.title}` : ""}`;
   return (
     <BackendInfoContext.Provider value={props.backendInfo}>
       <Head>
-        <title>{"KeinPlan" + (props.title && ` | ${props.title}`)}</title>
+        <title>{title}</title>
         <link rel="icon" href="/icon" sizes="any" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="shortcut icon" href="/favicon.ico" />
