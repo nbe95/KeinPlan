@@ -58,10 +58,12 @@ const ResultView = (props: ResultViewProps) => {
         }),
       });
       // Store the result as blob object and return its URL
-      const url = URL.createObjectURL(new Blob([await response.blob()]));
+      const data = await response.blob();
+      const url = URL.createObjectURL(new Blob([data]));
       return {
         fileName: getTimeSheetName(),
         blobUrl: url,
+        size: data.size,
       };
     },
     // Fetch only once
@@ -109,8 +111,8 @@ const ResultView = (props: ResultViewProps) => {
         </Row>
       ) : (
         <Row className="align-items-center">
-          <Col>
-            <div className="text-center m-4 py-3 bg-light rounded">
+          <Col sm={12} md={6}>
+            <div className="text-center m-4 py-4 bg-light rounded">
               {isLoading ? (
                 <div className="my-4">
                   <LoadingSpinner message="Working hard..." />
@@ -122,6 +124,7 @@ const ResultView = (props: ResultViewProps) => {
                     fileName={pdf.fileName}
                     url={pdf.blobUrl}
                     text="Download als PDF"
+                    size={pdf.size}
                     faIcon={faFileArrowDown}
                     isPrimary={true}
                   />
@@ -131,7 +134,11 @@ const ResultView = (props: ResultViewProps) => {
           </Col>
           <Col sm={12} md={6}>
             <p className="lead">Wie geht&apos;s jetzt weiter?</p>
-            <p>Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine E-Mail.</p>
+            <p>
+              Lade deine Stundenliste runter. Sende sie dann dem zuständigen Pfarrbüro per E-Mail,
+              z.B. mit der folgenden Vorlage.
+            </p>
+            <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
             <Button
               type="button"
               variant="primary"
