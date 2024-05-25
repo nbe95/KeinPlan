@@ -7,6 +7,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { BackendInfoContext } from "../../utils/backend-info";
 import { API_ENDPOINT_TIME_SHEET, TIME_SHEET_QUERY_KEY } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
+import { MailProps, createMailToLink } from "../../utils/mail";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
@@ -21,12 +22,14 @@ type ResultViewProps = {
 };
 
 const ResultView = (props: ResultViewProps) => {
+  const info: any = useContext(BackendInfoContext);
+
   const getEndpointUrl = useCallback((): URL => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
       window.location.href,
     );
-  }, [props.timeSheetParams?.type, props.timeSheetParams?.format]);
+  }, [props.timeSheetParams]);
 
   const getTimeSheetName = useCallback((): string => {
     const basename: string = "Arbeitszeit";
@@ -38,11 +41,10 @@ const ResultView = (props: ResultViewProps) => {
   const {
     data: pdf,
     isLoading,
-    isSuccess,
     isError,
     error,
   } = useQuery({
-    queryKey: [TIME_SHEET_QUERY_KEY],
+    queryKey: [TIME_SHEET_QUERY_KEY, props.timeSheetParams, props.userData],
     queryFn: async () => {
       const response = await fetch(getEndpointUrl(), {
         method: "POST",
@@ -72,23 +74,15 @@ const ResultView = (props: ResultViewProps) => {
   });
 
   // ToDo(Niklas): Create an interface etc.?
-  const mailParams = useMemo(() => {
-    return {
+  const mailParams = useMemo(
+    (): MailProps => ({
       // ToDo(Niklas): Use correct recipient by env var
       recipient: "test@test.test",
       subject: `Arbeitszeit ${props.userData.lastName}, ${props.userData.firstName} - KW ${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`,
       body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner wöchentlichen Arbeitszeit für die vergangenen Kalenderwoche.\n\nViele Grüße\n${props.userData.firstName} ${props.userData.lastName}`,
-    };
-  }, [props.userData, props.timeSheetParams]);
-
-  const createMailToLink = (props: {
-    recipient: string;
-    subject?: string;
-    body?: string;
-  }): string =>
-    `mailto:${props.recipient}?subject=${encodeURIComponent(props.subject)}&body=${encodeURIComponent(props.body)}`;
-
-  const info: any = useContext(BackendInfoContext);
+    }),
+    [props.userData, props.timeSheetParams],
+  );
 
   return (
     <>
@@ -99,7 +93,8 @@ const ResultView = (props: ResultViewProps) => {
             <MsgBox type="error" trace={error.message}>
               Oh no, das hat nicht geklappt! Die Stundenliste konnte nicht erstellt werden. 😭
               <br />
-              Probier's später nochmal. Falls das Problem weiterhin besteht, melde dich bitte beim{" "}
+              Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
+              beim{" "}
               {info.env?.AdminMail ? (
                 <Link href={`mailto:${info.env.AdminMail}`}>Admin</Link>
               ) : (

@@ -55,7 +55,7 @@ const FormDates = (props: FormDatesProps) => {
   }, [props.timeSheetParams?.targetDate]);
 
   const { data, refetch, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: [KAPLAN_QUERY_KEY],
+    queryKey: [KAPLAN_QUERY_KEY, props.timeSheetParams],
     queryFn: async () => {
       const response: Response = await fetch(getEndpointUrl(), {
         method: "GET",
