@@ -1,7 +1,10 @@
-import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelopeOpenText, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useMemo } from "react";
+import Link from "next/link";
+import { useCallback, useContext, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
+import { BackendInfoContext } from "../../utils/backend-info";
 import { API_ENDPOINT_TIME_SHEET, TIME_SHEET_QUERY_KEY } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
 import LoadingSpinner from "../loading";
@@ -83,54 +86,75 @@ const ResultView = (props: ResultViewProps) => {
   }): string =>
     `mailto:${props.recipient}?subject=${encodeURIComponent(props.subject)}&body=${encodeURIComponent(props.body)}`;
 
+  const info: any = useContext(BackendInfoContext);
+
   return (
     <>
       <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
-      <Row>
-        <Col sm={12} md={6} className="my-3">
-          {isLoading ? (
-            <LoadingSpinner message="Working hard..." />
-          ) : isSuccess ? (
-            <div className="text-center">
-              <p>
-                <strong>Deine Stundenliste ist fertig! 🎉</strong>
-              </p>
-              <DownloadButton
-                fileName={pdf.fileName}
-                url={pdf.blobUrl}
-                text="Download als PDF"
-                faIcon={faFileArrowDown}
-                isPrimary={true}
-              />
-            </div>
-          ) : (
+      {isError ? (
+        <Row>
+          <Col>
             <MsgBox type="error" trace={error.message}>
-              Oh no! Die Stundenliste konnte nicht erstellt werden. 😭
+              Oh no, das hat nicht geklappt! Die Stundenliste konnte nicht erstellt werden. 😭
+              <br />
+              Probier's später nochmal. Falls das Problem weiterhin besteht, melde dich bitte beim{" "}
+              {info.env?.AdminMail ? (
+                <Link href={`mailto:${info.env.AdminMail}`}>Admin</Link>
+              ) : (
+                <span>Admin</span>
+              )}
+              .
             </MsgBox>
-          )}
-        </Col>
-        <Col sm={12} md={6} className="my-3 border-start">
-          <p className="lead">Wie geht&apos;s jetzt weiter?</p>
-          <p>Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine E-Mail.</p>
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => {
-              window.location.href = createMailToLink(mailParams);
-            }}
-          >
-            Mail-Vorlage öffnen
-          </Button>
-        </Col>
-      </Row>
-      <Row className="my-2">
-        <Col>
-          <MsgBox type="info">
-            {/* ToDo(Niklas): Implement link */}
-            Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller geht...
-          </MsgBox>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      ) : (
+        <Row className="align-items-center">
+          <Col>
+            <div className="text-center m-4 py-3 bg-light rounded">
+              {isLoading ? (
+                <div className="my-4">
+                  <LoadingSpinner message="Working hard..." />
+                </div>
+              ) : (
+                <>
+                  <h5>Deine Stundenliste ist fertig! 🎉</h5>
+                  <DownloadButton
+                    fileName={pdf.fileName}
+                    url={pdf.blobUrl}
+                    text="Download als PDF"
+                    faIcon={faFileArrowDown}
+                    isPrimary={true}
+                  />
+                </>
+              )}
+            </div>
+          </Col>
+          <Col sm={12} md={6}>
+            <p className="lead">Wie geht&apos;s jetzt weiter?</p>
+            <p>Überprüfe vorher nochmal alle Daten. Sende dem Pfarrbüro eine E-Mail.</p>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => {
+                window.location.href = createMailToLink(mailParams);
+              }}
+            >
+              <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+              Mail-Vorlage öffnen
+            </Button>
+          </Col>
+        </Row>
+      )}
+      {!isError && (
+        <Row className="my-2">
+          <Col>
+            <MsgBox type="info">
+              {/* ToDo(Niklas): Implement link */}
+              Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller geht...
+            </MsgBox>
+          </Col>
+        </Row>
+      )}
       <Row>
         <Col className="d-flex justify-content-start">
           <PrevButton callback={props.prevStep} />

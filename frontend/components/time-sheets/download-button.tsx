@@ -17,7 +17,7 @@ const DownloadButton = (props: PropsWithChildren<DownloadButtonProps>) => {
   return (
     <Button
       variant={props.isPrimary ? "success" : "secondary"}
-      className="m-2"
+      className="bg-gradient m-2"
       onClick={() => {
         ref.current?.click();
       }}
