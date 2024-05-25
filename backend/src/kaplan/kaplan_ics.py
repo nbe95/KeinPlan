@@ -104,7 +104,7 @@ class KaPlanIcs:
         host: Optional[str] = None
         internal: Optional[str] = None
         matcher: Optional[Match[str]] = fullmatch(
-            r"(?:\[(.+)\] )?" r"(.*?)" r"(?: Leitung: (.*?))?" r"(?: Interne Info: (.*?))?",
+            r"(?:\[(.+)\] )?(.*?)(?: Leitung: (.*?))?(?: Interne Info: (.*?))?",
             event.description or "",
         )
         if matcher:
