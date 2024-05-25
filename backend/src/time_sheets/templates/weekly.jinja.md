@@ -56,6 +56,6 @@ Keine Dienste in diesem Zeitraum vorhanden.\
         von [KeinPlan]({{ hyperlink }})
         {%- if version %}
             v{{ version }}
-        {% endif-%}
+        {%- endif-%}
     {%- endif-%}.*
 {%- endif %}
