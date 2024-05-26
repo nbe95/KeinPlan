@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import strftime from "strftime";
-import { BackendInfoContext } from "../../utils/backend-info";
 import {
+  ADMIN_MAIL,
   API_ENDPOINT_TIME_SHEET,
-  TIME_SHEET_DEFAULT_MAIL,
+  TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
 } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
@@ -29,8 +29,6 @@ type ResultViewProps = {
 };
 
 const ResultView = (props: ResultViewProps) => {
-  const info: any = useContext(BackendInfoContext);
-
   const getEndpointUrl = useCallback((): string => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
@@ -114,7 +112,7 @@ const ResultView = (props: ResultViewProps) => {
     const name: string = `${props.userData.firstName} ${props.userData.lastName}`;
     const week: string = `${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`;
     return {
-      recipient: TIME_SHEET_DEFAULT_MAIL ?? "",
+      recipient: TIME_SHEET_MAIL ?? "",
       subject: `Arbeitszeit ${name} - KW ${week}`,
       body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${name}`,
     };
@@ -131,12 +129,7 @@ const ResultView = (props: ResultViewProps) => {
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
-              {info.env?.AdminMail ? (
-                <Link href={`mailto:${info.env.AdminMail}`}>Admin</Link>
-              ) : (
-                <span>Admin</span>
-              )}
-              .
+              {ADMIN_MAIL ? <Link href={`mailto:${ADMIN_MAIL}`}>Admin</Link> : <span>Admin</span>}.
             </MsgBox>
           </Col>
         </Row>
@@ -150,7 +143,10 @@ const ResultView = (props: ResultViewProps) => {
                 </div>
               ) : (
                 <>
-                  <h5>Deine Stundenliste ist fertig! 🎉</h5>
+                  <h5>
+                    Deine Stundenliste für KW {getWeek(props.timeSheetParams?.targetDate)} ist
+                    fertig! 🎉
+                  </h5>
                   <DownloadButton
                     fileName={pdf.fileName}
                     url={pdf.blobUrl}

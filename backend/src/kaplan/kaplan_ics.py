@@ -11,7 +11,7 @@ from urllib.parse import ParseResult, parse_qs, urlparse
 from ics import Calendar, Event
 from requests import Response, get
 
-from src.constants import LOG_LEVEL, VERSION
+from src.constants import LOG_LEVEL, VERSION_BACKEND
 
 from .constants import (
     KAPLAN_ALLOWED_SERVERS,
@@ -34,7 +34,7 @@ class KaPlanIcs:
 
     timeout_s: int = 20
     user_agent: str = (
-        f"Mozilla/5.0 ({uname().sysname} {uname().release}) " f"KeinPlan/{VERSION or 'beta'} (JSON)"
+        f"Mozilla/5.0 ({uname().sysname} {uname().release}) " f"KeinPlan/{VERSION_BACKEND or 'beta'} (JSON)"
     )
 
     def get_events(self, url: str, date_from: date, date_to: date) -> Dict[str, Any]:

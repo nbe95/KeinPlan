@@ -2,7 +2,6 @@ import { config, dom } from "@fortawesome/fontawesome-svg-core";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
 import { PropsWithChildren } from "react";
-import { BackendInfoContext } from "../utils/backend-info";
 import Footer from "./footer";
 import Navigation from "./navigation";
 
@@ -10,13 +9,12 @@ config.autoAddCss = false;
 
 type PageProps = {
   title?: string;
-  backendInfo: any;
 };
 
 const PageWrapper = (props: PropsWithChildren<PageProps>) => {
   const title: string = `KeinPlan${props.title ? ` | ${props.title}` : ""}`;
   return (
-    <BackendInfoContext.Provider value={props.backendInfo}>
+    <>
       <Head>
         <title>{title}</title>
         <link rel="icon" href="/icon" sizes="any" />
@@ -28,7 +26,7 @@ const PageWrapper = (props: PropsWithChildren<PageProps>) => {
       <Navigation />
       <div className="py-4">{props.children}</div>
       <Footer />
-    </BackendInfoContext.Provider>
+    </>
   );
 };
 

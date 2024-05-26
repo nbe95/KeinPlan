@@ -1,17 +1,20 @@
-// Environment variables and backend info
+import { env } from "next-runtime-env";
+
+// Environment variables (fixed at build-time)
 export const PROD: boolean = process.env.NODE_ENV == "production";
-export const VERSION: string | null = process.env.NEXT_PUBLIC_KEINPLAN_VERSION;
-export const TIME_SHEET_DEFAULT_MAIL: string | null =
-  process.env.NEXT_PUBLIC_TIME_SHEET_DEFAULT_MAIL;
-
+export const VERSION_FRONTEND: string = process.env.NEXT_PUBLIC_VERSION_FRONTEND || "";
+export const GITHUB_LINK: string = process.env.NEXT_PUBLIC_GITHUB_LINK || "";
 export const API_BASE_URL: string = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-export const API_BASE_URL_SERVER: string = process.env.SERVER_API_BASE_URL || "";
 
+// Environment variables (dynamic at runtime)
+export const ADMIN_MAIL: string = env("NEXT_PUBLIC_ADMIN_MAIL") || "";
+export const TIME_SHEET_MAIL: string = env("NEXT_PUBLIC_TIME_SHEET_MAIL") || "";
+export const KAPLAN_LINK: string = env("NEXT_PUBLIC_KAPLAN_LINK") || "";
+
+// API endpoints
+export const API_ENDPOINT_VERSION: string = `${API_BASE_URL}/version`;
 export const API_ENDPOINT_KAPLAN: string = `${API_BASE_URL}/kaplan`;
 export const API_ENDPOINT_TIME_SHEET: string = `${API_BASE_URL}/time-sheet`;
-export const API_ENDPOINT_INFO: string = `${API_BASE_URL_SERVER}/info`;
-
-export const BACKEND_INFO_CACHE_TIME: number = 60 * 60 * 24;
 
 // Query keys
 export const KAPLAN_QUERY_KEY: string = "kaplan";
@@ -19,4 +22,3 @@ export const TIME_SHEET_QUERY_KEY: string = "time-sheet";
 
 // Miscellaneous
 export const KAPLAN_ICS_HEADER: string = "X-KaPlan-ICS";
-export const KEINPLAN_USER_COOKIE: string = "userData";

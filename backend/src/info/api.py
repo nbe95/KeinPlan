@@ -3,7 +3,7 @@
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
 
-from ..constants import ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION
+from ..constants import ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_BACKEND
 
 
 class InfoApi(Resource):
@@ -13,7 +13,7 @@ class InfoApi(Resource):
         """Handle GET requests."""
         return {
             "version": {
-                "KeinPlanBackend": VERSION,
+                "KeinPlanBackend": VERSION_BACKEND,
             },
             "env": {
                 "GithubLink": GITHUB_LINK,

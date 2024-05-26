@@ -2,24 +2,15 @@ import { NextPage } from "next";
 import MsgBox from "../components/msg-box";
 import PageSection from "../components/page-section";
 import PageWrapper from "../components/page-wrapper";
-import { PageProps, getBackendInfo } from "../utils/backend-info";
 
-const Page: NextPage = (pageProps: PageProps) => {
+const Page: NextPage = () => {
   return (
-    <PageWrapper backendInfo={pageProps.backendInfo} title="Datenschutz">
+    <PageWrapper title="Datenschutz">
       <PageSection headline="Datenschutz">
         <MsgBox type="info">Seite noch im Aufbau.</MsgBox>
       </PageSection>
     </PageWrapper>
   );
-};
-
-export const getServerSideProps = async ({ req, res }) => {
-  return {
-    props: {
-      backendInfo: await getBackendInfo(res),
-    },
-  };
 };
 
 export default Page;

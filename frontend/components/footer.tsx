@@ -2,25 +2,13 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Container, Stack } from "react-bootstrap";
-
-import { useContext } from "react";
-import { BackendInfoContext } from "../utils/backend-info";
-import { PROD, VERSION } from "../utils/constants";
-import MsgBox from "./msg-box";
+import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../utils/constants";
 
 const Footer = () => {
-  const versionFrontend: string = VERSION;
-  const info: any = useContext(BackendInfoContext);
-
   return (
     <footer className="bg-light">
       <Container className="bg-light text-muted">
-        {PROD && info.error && (
-          <MsgBox type="warning" trace={info.error}>
-            Backend-Informationen konnten nicht abgerufen werden.
-          </MsgBox>
-        )}
-        {versionFrontend &&
+        {/* {versionFrontend &&
           info.version?.KeinPlanBackend &&
           info.version?.KeinPlanBackend != versionFrontend && (
             <MsgBox type="error">
@@ -29,12 +17,12 @@ const Footer = () => {
               <br />
               Bitte aktualisiere die Software bzw. Docker Images!
             </MsgBox>
-          )}
+          )} */}
         <Stack direction="horizontal" gap={3}>
-          {info.env?.GithubLink && (
+          {GITHUB_LINK && (
             <div>
               <Link
-                href={info.env.GithubLink}
+                href={GITHUB_LINK}
                 className="text-muted"
                 title="KeinPlan auf Github"
                 target="_blank"
@@ -44,12 +32,12 @@ const Footer = () => {
             </div>
           )}
           <div className="me-auto">
-            KeinPlan {versionFrontend ? `v${versionFrontend}` : "(unbekannte Version)"}
+            KeinPlan {VERSION_FRONTEND ? `v${VERSION_FRONTEND}` : "(unbekannte Version)"}
           </div>
           <Stack direction="horizontal" gap={3}>
-            {info.env?.KaPlanLink && (
+            {KAPLAN_LINK && (
               <Link
-                href={info.env.KaPlanLink}
+                href={KAPLAN_LINK}
                 className="text-muted link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
                 title="KaPlan Web öffnen"
                 target="_blank"
@@ -57,9 +45,9 @@ const Footer = () => {
                 KaPlan Web
               </Link>
             )}
-            {info.env?.AdminMail && (
+            {ADMIN_MAIL && (
               <Link
-                href={`mailto:${info.env.AdminMail}`}
+                href={`mailto:${ADMIN_MAIL}`}
                 className="text-muted link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
                 title="E-Mail an den Administrator"
                 target="_blank"

@@ -58,9 +58,9 @@ const FormDates = (props: FormDatesProps) => {
         .then((response) => response.data)
         .catch((error) => {
           const msg: string =
-            error.response.data ??
-            `The backend query returned status code ${error.response.status}.`;
-          if (isClientError(error.response.status)) {
+            error.response?.data ??
+            `The backend query returned status code ${error.response?.status}.`;
+          if (isClientError(error.response?.status)) {
             throw new ClientError(msg);
           }
           throw Error(msg);

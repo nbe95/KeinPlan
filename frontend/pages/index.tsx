@@ -6,12 +6,11 @@ import { Button, Col, Row } from "react-bootstrap";
 import { FaqContainer, FaqItem } from "../components/faq";
 import PageSection from "../components/page-section";
 import PageWrapper from "../components/page-wrapper";
-import { PageProps, getBackendInfo } from "../utils/backend-info";
+import { ADMIN_MAIL, GITHUB_LINK } from "../utils/constants";
 
-const Page: NextPage = (pageProps: PageProps) => {
-  const info = pageProps.backendInfo;
+const Page: NextPage = () => {
   return (
-    <PageWrapper backendInfo={pageProps.backendInfo}>
+    <PageWrapper>
       <PageSection headline="Worum geht's?">
         <Row>
           <Col md={6} lg={4}>
@@ -46,45 +45,41 @@ const Page: NextPage = (pageProps: PageProps) => {
       </PageSection>
 
       <PageSection headline="FAQ">
-        <FaqContainer>
-          <FaqItem question="Ist das hier offiziell?">
-            Nein. Dieses Tool hat nichts mit <em>KaPlan</em>, der Kirchengemeinde usw. zu tun. Daher
-            alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro sendest!
-          </FaqItem>
+        <Row className="d-flex justify-content-center">
+          <Col lg={8}>
+            <FaqContainer>
+              <FaqItem question="Ist das hier offiziell?">
+                Nein. Dieses Tool hat nichts mit <em>KaPlan</em>, der Kirchengemeinde usw. zu tun.
+                Daher alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro sendest!
+              </FaqItem>
 
-          <FaqItem question="Meine Stundenliste ist fehlerhaft!?">
-            Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit gefunden zu haben, erstelle
-            gerne{" "}
-            {info.env?.GithubLink ? (
-              <Link href={`${info.env.GithubLink}/issues`} target="_blank">
-                ein Ticket
-              </Link>
-            ) : (
-              <>ein Ticket</>
-            )}{" "}
-            mit genauer Beschreibung des Fehlers oder melde dich direkt beim KeinPlan-Administrator
-            deines Vertrauens
-            {info.env?.AdminMail && (
-              <>
-                , z.B. <Link href={`mailto:${info.env.AdminMail}`}>per Mail</Link>
-              </>
-            )}
-            .
-          </FaqItem>
+              <FaqItem question="Meine Stundenliste ist fehlerhaft!?">
+                Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit gefunden zu haben,
+                erstelle gerne{" "}
+                {GITHUB_LINK ? (
+                  <Link href={`${GITHUB_LINK}/issues`} target="_blank">
+                    ein Ticket
+                  </Link>
+                ) : (
+                  <>ein Ticket</>
+                )}{" "}
+                mit genauer Beschreibung des Fehlers oder melde dich direkt beim
+                KeinPlan-Administrator deines Vertrauens
+                {ADMIN_MAIL && (
+                  <>
+                    , z.B. <Link href={`mailto:${ADMIN_MAIL}`}>per Mail</Link>
+                  </>
+                )}
+                .
+              </FaqItem>
 
-          <FaqItem question="Ist das alles den Aufwand wert?">Ja. Allein aus Prinzip.</FaqItem>
-        </FaqContainer>
+              <FaqItem question="Ist das alles den Aufwand wert?">Ja. Allein aus Prinzip.</FaqItem>
+            </FaqContainer>
+          </Col>
+        </Row>
       </PageSection>
     </PageWrapper>
   );
-};
-
-export const getServerSideProps = async ({ req, res }) => {
-  return {
-    props: {
-      backendInfo: await getBackendInfo(res),
-    },
-  };
 };
 
 export default Page;

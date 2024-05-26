@@ -10,7 +10,7 @@ from typing import Iterable, List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import KEINPLAN_LINK, LOG_LEVEL, VERSION
+from src.constants import KEINPLAN_LINK, LOG_LEVEL, VERSION_BACKEND
 
 from .constants import TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from .entry import TimeEntry
@@ -96,6 +96,6 @@ class WeeklyTimeSheet(TimeSheet):
             generation_time=datetime.now(),
             footer=footer,
             hyperlink=KEINPLAN_LINK,
-            version=VERSION,
+            version=VERSION_BACKEND,
         )
         return self._run_pandoc(md_rendered, "markdown", target_pdf, "pdf")
