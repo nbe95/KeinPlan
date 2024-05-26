@@ -8,7 +8,7 @@ import strftime from "strftime";
 import { b64_encode } from "../../utils/base64";
 import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../utils/dates";
-import { ClientError } from "../../utils/network";
+import { ClientError, isClientError, retryUnlessClientError } from "../../utils/network";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
@@ -60,13 +60,13 @@ const FormDates = (props: FormDatesProps) => {
           const msg: string =
             error.response.data ??
             `The backend query returned status code ${error.response.status}.`;
-          if (error.response.status >= 400 && error.response.status < 500) {
+          if (isClientError(error.response.status)) {
             throw new ClientError(msg);
           }
           throw Error(msg);
         });
     },
-    retry: (failureCount, error) => !(error instanceof ClientError || failureCount >= 4),
+    retry: (count, error) => retryUnlessClientError(error, count, 5),
     select: (data: any): TimeSheetDate[] =>
       data.dates?.map((date: any): TimeSheetDate => {
         return {

@@ -14,7 +14,7 @@ import {
 } from "../../utils/constants";
 import { getWeek } from "../../utils/dates";
 import { MailProps, createMailToLink } from "../../utils/mail";
-import { ClientError } from "../../utils/network";
+import { ClientError, isClientError, retryUnlessClientError } from "../../utils/network";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
@@ -97,13 +97,13 @@ const ResultView = (props: ResultViewProps) => {
           const msg: string =
             error.response.data ??
             `The backend query returned status code ${error.response.status}.`;
-          if (error.response.status >= 400 && error.response.status < 500) {
+          if (isClientError(error.response.status)) {
             throw new ClientError(msg);
           }
           throw Error(msg);
         });
     },
-    retry: (failureCount, error) => !(error instanceof ClientError || failureCount >= 4),
+    retry: (count, error) => retryUnlessClientError(error, count, 5),
     // Fetch only once
     staleTime: Infinity,
     gcTime: Infinity,
