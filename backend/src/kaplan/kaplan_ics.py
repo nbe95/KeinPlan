@@ -34,15 +34,16 @@ class KaPlanIcs:
 
     timeout_s: int = 20
     user_agent: str = (
-        f"Mozilla/5.0 ({uname().sysname} {uname().release}) " f"KeinPlan/{VERSION_BACKEND or 'beta'} (JSON)"
+        f"Mozilla/5.0 ({uname().sysname} {uname().release}) "
+        f"KeinPlan/{VERSION_BACKEND or 'beta'} (JSON)"
     )
 
     def get_events(self, url: str, date_from: date, date_to: date) -> Dict[str, Any]:
         """Call the KaPlan endpoint and return all available dates."""
         if not self._validate_url(url):
             raise KaPlanInterfaceError(
-                "The specified URL is either invalid or does not meet the "
-                "requirements of this server."
+                "The specified URL is either invalid or does not meet the requirements of this "
+                "server."
             )
 
         ics: str
@@ -69,28 +70,17 @@ class KaPlanIcs:
 
         Returns the ICS payload and a fetch date.
         """
-        logger.info(
-            "Fetching data from KaPlan with user-agent '%s'.",
-            self.user_agent,
-        )
+        logger.info("Fetching data from KaPlan with user-agent '%s'.", self.user_agent)
         headers: Dict[str, str] = {"User-Agent": self.user_agent}
         response: Response = get(url, timeout=self.timeout_s, headers=headers)
         if not response.ok:
-            logger.error(
-                "Server returned status %d: %s",
-                response.status_code,
-                response.reason,
-            )
+            logger.error("Server returned status %d: %s", response.status_code, response.reason)
             raise KaPlanInterfaceError(
                 f"Got an error from KaPlan server with code {response.status_code}."
             )
 
         content: str = response.content.decode(KAPLAN_ICS_ENCODING)
-        logger.info(
-            "Fetched %d bytes in %fs.",
-            len(content),
-            response.elapsed.total_seconds(),
-        )
+        logger.info("Fetched %d bytes in %fs.", len(content), response.elapsed.total_seconds())
         return content, datetime.now()
 
     @staticmethod
@@ -166,11 +156,7 @@ class KaPlanIcsCached(KaPlanIcs):
         url_hash: bytes = self._get_hash(url)
         cached: Optional[Tuple[str, datetime]] = self.cache.get(url_hash)
         if cached and cached[1] + self.ttl >= datetime.now():
-            logger.info(
-                "Using cached query %s from %s.",
-                url_hash.hex(),
-                cached[1],
-            )
+            logger.info("Using cached query %s from %s.", url_hash.hex(), cached[1])
         else:
             self.cache[url_hash] = super().fetch_ics_data(url)
         return self.cache[url_hash]

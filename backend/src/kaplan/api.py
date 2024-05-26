@@ -14,7 +14,7 @@ from .constants import KAPLAN_ICS_HEADER
 from .kaplan_ics import KaPlanIcs, KaPlanIcsCached, KaPlanInterfaceError
 
 
-class KaPlanApi(Resource):
+class KaPlanEndpoint(Resource):
     """Restful API for the KaPlan interface."""
 
     kaplan_interface: KaPlanIcs = KaPlanIcsCached()
