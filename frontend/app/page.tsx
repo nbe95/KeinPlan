@@ -1,16 +1,20 @@
 import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NextPage } from "next";
+import { Metadata } from "next";
 import Link from "next/link";
 import { Button, Col, Row } from "react-bootstrap";
-import { FaqContainer, FaqItem } from "../components/faq";
-import PageSection from "../components/page-section";
-import PageWrapper from "../components/page-wrapper";
-import { ADMIN_MAIL, GITHUB_LINK } from "../utils/constants";
+import { FaqContainer, FaqItem } from "./components/faq";
+import PageSection from "./components/page-section";
+import { ADMIN_MAIL, GITHUB_LINK } from "./utils/constants";
 
-const Page: NextPage = () => {
+export const metadata: Metadata = {
+  title: "My Page Title",
+  description: "Foo",
+};
+
+export const Page = () => {
   return (
-    <PageWrapper>
+    <>
       <PageSection headline="Worum geht's?">
         <Row>
           <Col md={6} lg={4}>
@@ -78,7 +82,7 @@ const Page: NextPage = () => {
           </Col>
         </Row>
       </PageSection>
-    </PageWrapper>
+      </>
   );
 };
 

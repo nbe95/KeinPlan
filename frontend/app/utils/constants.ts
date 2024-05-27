@@ -1,4 +1,5 @@
-import { env } from "next-runtime-env";
+// import { env } from "next-runtime-env";
+const env = (_) => "";
 
 // Environment variables (fixed at build-time)
 export const PROD: boolean = process.env.NODE_ENV == "production";

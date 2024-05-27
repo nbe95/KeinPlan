@@ -1,11 +1,12 @@
+"use client";
+
 import { faChurch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { usePathname } from "next/navigation";
+import { Container, Nav, NavLink, Navbar, NavbarBrand, NavbarCollapse, NavbarToggle } from "react-bootstrap";
 
-const Navigation: NextPage = () => {
-  const router = useRouter();
+const NavBar = () => {
+  const pathname = usePathname();
 
   const pages: Record<string, string> = {
     "/time-sheet": "Stundenliste",
@@ -15,23 +16,23 @@ const Navigation: NextPage = () => {
   return (
     <Navbar bg="dark" data-bs-theme="dark" expand="md">
       <Container>
-        <Navbar.Brand href="/">
+        <NavbarBrand href="/">
           <FontAwesomeIcon icon={faChurch} className="me-2 text-warning" />
           KeinPlan
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        </NavbarBrand>
+        <NavbarToggle aria-controls="basic-navbar-nav" />
+        <NavbarCollapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {Object.entries(pages).map((page) => (
-              <Nav.Link active={router.pathname == page[0]} key={page[0]} href={page[0]}>
+              <NavLink active={pathname == page[0]} key={page[0]} href={page[0]}>
                 {page[1]}
-              </Nav.Link>
+              </NavLink>
             ))}
           </Nav>
-        </Navbar.Collapse>
+        </NavbarCollapse>
       </Container>
     </Navbar>
   );
 };
 
-export default Navigation;
+export default NavBar;
