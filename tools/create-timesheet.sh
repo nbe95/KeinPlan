@@ -25,8 +25,8 @@ ts_json="$(jq \
     "{
         employer: \$employer,
         employee: \$employee,
-	year: \$year|tonumber,
-	week: \$week|tonumber,
+        year: \$year|tonumber,
+        week: \$week|tonumber,
         dates: [.dates[] | {
             title: .title,
        	    role: .role,
