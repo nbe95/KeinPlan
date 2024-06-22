@@ -2,7 +2,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Col, Row } from "react-bootstrap";
 import Footer from "./components/footer";
 import Header from "./components/header";
-import { ReactQueryClientProvider } from "./components/react-query-client-provider";
+import { ReactQueryClientProvider } from "./components/query-client-provider";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
