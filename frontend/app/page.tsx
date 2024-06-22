@@ -1,89 +1,80 @@
-import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Metadata } from "next";
 import Link from "next/link";
-import { Button, Col, Row } from "react-bootstrap";
-import { FaqContainer, FaqItem } from "./components/faq";
-import PageSection from "./components/page-section";
-import { ADMIN_MAIL, GITHUB_LINK } from "./utils/constants";
-
-export const metadata: Metadata = {
-  title: "My Page Title",
-  description: "Foo",
-};
+import { Col, Row } from "react-bootstrap";
 
 export const Page = () => {
   return (
     <>
-      <PageSection headline="Worum geht's?">
-        <Row>
-          <Col md={6} lg={4}>
-            <blockquote className="blockquote text-center p-3 mx-3 mb-5 m-auto bg-light shadow rounded">
-              <p>
-                Warum Stundenzettel von Hand ausfüllen, wenn doch alle meine Dienste mit Datum und
-                Uhrzeit schon offiziell in <em>KaPlan</em> stehen?
-              </p>
-              <p>
-                – <strong>KeinPlan</strong>!
-              </p>
-            </blockquote>
-          </Col>
-          <Col md={6} lg={8}>
-            <p className="lead">
-              Wenn du dir diese Frage auch schonmal gestellt hast, bist du hier genau richtig.
-            </p>
-            <p>
-              Dieses Online-Tool exportiert vollautomatisch Stundenlisten aus deinen in{" "}
-              <em>KaPlan</em> hinterlegten Diensten.
-            </p>
-            <p>
-              Mit nur ein paar Klicks erstellt es Auflistungen deiner Arbeitszeit, die als PDF
-              herunterladen und anschließend direkt ans Pfarrbüro versendet werden können.
-            </p>
-            <Button variant="primary" className="mx-auto" href="/time-sheet">
-              <FontAwesomeIcon icon={faCalendarCheck} className="me-2" />
-              Stundenliste erstellen
-            </Button>
-          </Col>
-        </Row>
-      </PageSection>
+      <h1 className="text-body-emphasis">Get started with Bootstrap</h1>
+      <p className="fs-5 col-md-8">Quickly and easily get started with Bootstrap's compiled, production-ready files with this barebones example featuring some basic HTML and helpful links. Download all our examples to get started.</p>
 
-      <PageSection headline="FAQ">
-        <Row className="d-flex justify-content-center">
-          <Col lg={8}>
-            <FaqContainer>
-              <FaqItem question="Ist das hier offiziell?">
-                Nein. Dieses Tool hat nichts mit <em>KaPlan</em>, der Kirchengemeinde usw. zu tun.
-                Daher alles ohne Gewähr. Überprüfe alles, was du ans Pfarrbüro sendest!
-              </FaqItem>
+      <div className="mb-5">
+        <Link href="/docs/5.3/examples/" className="btn btn-primary btn-lg px-4">Download examples</Link>
+      </div>
 
-              <FaqItem question="Meine Stundenliste ist fehlerhaft!?">
-                Rechne nochmal nach. Wenn du sicher bist, eine Unstimmigkeit gefunden zu haben,
-                erstelle gerne{" "}
-                {GITHUB_LINK ? (
-                  <Link href={`${GITHUB_LINK}/issues`} target="_blank">
-                    ein Ticket
-                  </Link>
-                ) : (
-                  <>ein Ticket</>
-                )}{" "}
-                mit genauer Beschreibung des Fehlers oder melde dich direkt beim
-                KeinPlan-Administrator deines Vertrauens
-                {ADMIN_MAIL && (
-                  <>
-                    , z.B. <Link href={`mailto:${ADMIN_MAIL}`}>per Mail</Link>
-                  </>
-                )}
-                .
-              </FaqItem>
+      <hr className="col-3 col-md-2 mb-5" />
 
-              <FaqItem question="Ist das alles den Aufwand wert?">Ja. Allein aus Prinzip.</FaqItem>
-            </FaqContainer>
-          </Col>
-        </Row>
-      </PageSection>
-      </>
+      <Row gap={5}>
+        <Col md={6}>
+          <h2 className="text-body-emphasis">Starter projects</h2>
+          <p>Ready to go beyond the starter template? Check out these open source projects that you can quickly duplicate to a new GitHub repository.</p>
+          <ul className="list-unstyled ps-0">
+            <li>
+              <Link className="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/icons-font" rel="noopener" target="_blank">
+                Bootstrap npm starter
+              </Link>
+            </li>
+            <li>
+              <Link className="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/parcel" rel="noopener" target="_blank">
+                Bootstrap Parcel starter
+              </Link>
+            </li>
+            <li>
+              <Link className="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/vite" rel="noopener" target="_blank">
+                Bootstrap Vite starter
+              </Link>
+            </li>
+            <li>
+              <Link className="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/webpack" rel="noopener" target="_blank">
+                Bootstrap Webpack starter
+              </Link>
+            </li>
+          </ul>
+        </Col>
+
+        <Col md={6}>
+          <h2 className="text-body-emphasis">Guides</h2>
+          <p>Read more detailed instructions and documentation on using or contributing to Bootstrap.</p>
+          <ul className="list-unstyled ps-0">
+            <li>
+              <Link className="icon-link mb-1" href="/docs/5.3/getting-started/introduction/">
+                Bootstrap quick start guide
+              </Link>
+            </li>
+            <li>
+              <Link className="icon-link mb-1" href="/docs/5.3/getting-started/webpack/">
+                Bootstrap Webpack guide
+              </Link>
+            </li>
+            <li>
+              <Link className="icon-link mb-1" href="/docs/5.3/getting-started/parcel/">
+                Bootstrap Parcel guide
+              </Link>
+            </li>
+            <li>
+              <Link className="icon-link mb-1" href="/docs/5.3/getting-started/vite/">
+                Bootstrap Vite guide
+              </Link>
+            </li>
+            <li>
+              <Link className="icon-link mb-1" href="/docs/5.3/getting-started/contribute/">
+                Contributing to Bootstrap
+              </Link>
+            </li>
+          </ul>
+        </Col>
+      </Row>
+    </>
   );
-};
+}
 
 export default Page;
