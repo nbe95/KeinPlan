@@ -1,18 +1,16 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ReactQueryClientProvider } from "./components/react-query-client-provider";
 import { Col, Row } from "react-bootstrap";
-import Header from "./components/header";
 import Footer from "./components/footer";
+import Header from "./components/header";
+import { ReactQueryClientProvider } from "./components/react-query-client-provider";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-svg-core/styles.css';
-import { config } from '@fortawesome/fontawesome-svg-core';
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 config.autoAddCss = false;
 
-
-
-export const RootLayout = ({ children }: { children: React.ReactNode; }) => {
+export const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactQueryClientProvider>
       <html lang="en">
@@ -27,9 +25,7 @@ export const RootLayout = ({ children }: { children: React.ReactNode; }) => {
           <Row>
             <Col lg={8} className="mx-auto p-4 py-md-5">
               <Header />
-              <main>
-                {children}
-              </main>
+              <main>{children}</main>
               <Footer />
             </Col>
           </Row>
@@ -37,6 +33,6 @@ export const RootLayout = ({ children }: { children: React.ReactNode; }) => {
       </html>
     </ReactQueryClientProvider>
   );
-}
+};
 
 export default RootLayout;

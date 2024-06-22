@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboardQuestion } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 export const Header = () => {
-
   return (
     <header className="d-flex align-items-center pb-3 mb-5 border-bottom">
       <Link href="/" className="d-flex align-items-center text-body-emphasis text-decoration-none">
@@ -12,6 +11,6 @@ export const Header = () => {
       </Link>
     </header>
   );
-}
+};
 
 export default Header;

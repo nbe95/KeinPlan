@@ -1,9 +1,3 @@
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
-import { Container, Stack } from "react-bootstrap";
-import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../utils/constants";
-
 const Footer = () => {
   return (
     <footer className="pt-5 my-5 text-muted border-top">
