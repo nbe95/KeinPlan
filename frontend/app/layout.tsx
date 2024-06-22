@@ -1,5 +1,4 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Col, Row } from "react-bootstrap";
 import Footer from "./components/footer";
 import Header from "./components/header";
 import { ReactQueryClientProvider } from "./components/query-client-provider";
@@ -22,13 +21,11 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
         </head>
         <body>
           <ReactQueryDevtools initialIsOpen={false} />
-          <Row>
-            <Col lg={8} className="mx-auto p-4 py-md-5">
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </Col>
-          </Row>
+          <div className="py-4 py-md-5">
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </div>
         </body>
       </html>
     </ReactQueryClientProvider>

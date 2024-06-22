@@ -1,8 +1,12 @@
+import Container from "./container";
+
 const Footer = () => {
   return (
-    <footer className="pt-5 my-5 text-muted border-top">
-      Created by the Bootstrap team &middot; &copy; 2024
-    </footer>
+    <Container>
+      <footer className="pt-5 my-5 text-muted border-top">
+        Created by the Bootstrap team &middot; &copy; 2024
+      </footer>
+    </Container>
 
     // <footer className="bg-light">
     //   <Container className="bg-light text-muted">
