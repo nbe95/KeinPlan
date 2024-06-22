@@ -21,7 +21,7 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
         </head>
         <body>
           <ReactQueryDevtools initialIsOpen={false} />
-          <div className="py-4 py-md-5">
+          <div className="py-1 py-md-2">
             <Header />
             <main>{children}</main>
             <Footer />

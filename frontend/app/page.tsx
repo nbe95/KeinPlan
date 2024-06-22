@@ -12,8 +12,6 @@ export const Page = () => {
           production-ready files with this barebones example featuring some basic HTML and helpful
           links. Download all our examples to get started.
         </p>
-
-        <hr className="col-3 col-md-2 mb-5" />
       </Container>
 
       <Container className="bg-light p-5">FOO</Container>
@@ -21,7 +19,7 @@ export const Page = () => {
       <Container>
         <Row gap={5}>
           <Col md={6}>
-            <h2 className="text-body-emphasis">Starter projects</h2>
+            <h2 className="text-body-emphasis">Mail-Vorlage</h2>
             <p>
               Ready to go beyond the starter template? Check out these open source projects that you
               can quickly duplicate to a new GitHub repository.
@@ -71,7 +69,7 @@ export const Page = () => {
           </Col>
 
           <Col md={6}>
-            <h2 className="text-body-emphasis">Guides</h2>
+            <h2 className="text-body-emphasis">Datenschutz</h2>
             <p>
               Read more detailed instructions and documentation on using or contributing to
               Bootstrap.
