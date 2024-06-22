@@ -7,6 +7,8 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import "../scss/stepper.scss";
+
 config.autoAddCss = false;
 
 export const RootLayout = ({ children }: { children: React.ReactNode }) => {

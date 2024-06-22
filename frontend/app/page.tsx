@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import Container from "./components/container";
+import TimeSheetGenerator from "./components/time-sheet/generator";
 
 export const Page = () => {
   return (
@@ -14,7 +15,9 @@ export const Page = () => {
         </p>
       </Container>
 
-      <Container className="bg-light p-5">FOO</Container>
+      <Container className="bg-light">
+        <TimeSheetGenerator />
+      </Container>
 
       <Container>
         <Row gap={5}>

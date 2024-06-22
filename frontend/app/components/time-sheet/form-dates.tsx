@@ -109,113 +109,110 @@ const FormDates = (props: FormDatesProps) => {
   }, [isFetching, isSuccess, data, setDateListRef]);
 
   return (
-    <>
-      <h3 className="mb-4 mt-5">Schritt 2: Termine aus KaPlan abholen</h3>
-      <form name="time_sheet_data_form" onSubmit={(event) => handleSubmit(event)}>
-        <Row>
-          <Col lg={6} md={12}>
-            <Form.Group className="mb-4">
-              <Form.Label>
-                Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
-              </Form.Label>
-              <InputGroup className="px-auto">
-                <Form.Control
-                  type="date"
-                  name="target_date"
-                  placeholder="Datum"
-                  value={getDateStr(targetDate)}
-                  onChange={(event) => {
-                    const date = (event.target as HTMLInputElement).valueAsDate;
-                    if (date) {
-                      setTargetDate(date);
-                    }
-                  }}
-                  required
-                />
-                <InputGroup.Text>
-                  <Button variant="none" className="py-0" onClick={prevWeek}>
-                    <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
-                  </Button>
-                  {getCalWeekLabel()}
-                  <Button variant="none" className="py-0" onClick={nextWeek}>
-                    <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
-                  </Button>
-                </InputGroup.Text>
-              </InputGroup>
-              <Form.Text>
-                Wähle irgendein Datum aus, das in der gewünschten Kalenderwoche liegt.
-              </Form.Text>
-            </Form.Group>
-          </Col>
-          <Col lg={6} md={12}>
-            <Form.Group className="mb-4">
-              <Form.Label>Persönlicher KaPlan-Abonnement-String</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  type="text"
-                  name="kaplan_ics"
-                  placeholder="KaPlan ICS-Link"
-                  defaultValue={props.timeSheetParams?.kaPlanIcs}
-                  required
-                />
-                <Button variant="primary" type="submit" className="float-end" disabled={isFetching}>
-                  Termine laden
+    <form name="time_sheet_data_form" onSubmit={(event) => handleSubmit(event)}>
+      <Row>
+        <Col lg={6} md={12}>
+          <Form.Group className="mb-4">
+            <Form.Label>
+              Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
+            </Form.Label>
+            <InputGroup className="px-auto">
+              <Form.Control
+                type="date"
+                name="target_date"
+                placeholder="Datum"
+                value={getDateStr(targetDate)}
+                onChange={(event) => {
+                  const date = (event.target as HTMLInputElement).valueAsDate;
+                  if (date) {
+                    setTargetDate(date);
+                  }
+                }}
+                required
+              />
+              <InputGroup.Text>
+                <Button variant="none" className="py-0" onClick={prevWeek}>
+                  <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
                 </Button>
-              </InputGroup>
-              <Form.Text>
-                Bitte lies unbedingt, wie dein persönlicher KaPlan-Link verarbeitet wird.
-              </Form.Text>
-            </Form.Group>
-          </Col>
+                {getCalWeekLabel()}
+                <Button variant="none" className="py-0" onClick={nextWeek}>
+                  <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
+                </Button>
+              </InputGroup.Text>
+            </InputGroup>
+            <Form.Text>
+              Wähle irgendein Datum aus, das in der gewünschten Kalenderwoche liegt.
+            </Form.Text>
+          </Form.Group>
+        </Col>
+        <Col lg={6} md={12}>
+          <Form.Group className="mb-4">
+            <Form.Label>Persönlicher KaPlan-Abonnement-String</Form.Label>
+            <InputGroup>
+              <Form.Control
+                type="text"
+                name="kaplan_ics"
+                placeholder="KaPlan ICS-Link"
+                defaultValue={props.timeSheetParams?.kaPlanIcs}
+                required
+              />
+              <Button variant="primary" type="submit" className="float-end" disabled={isFetching}>
+                Termine laden
+              </Button>
+            </InputGroup>
+            <Form.Text>
+              Bitte lies unbedingt, wie dein persönlicher KaPlan-Link verarbeitet wird.
+            </Form.Text>
+          </Form.Group>
+        </Col>
+      </Row>
+
+      <hr />
+
+      {!isError &&
+        !isFetching &&
+        (props.dateList ? (
+          <>
+            Folgende Daten kamen zurück:
+            <Row className="my-4">
+              {props.dateList.map((entry: TimeSheetDate, index: number) => (
+                <Col key={index} sm={12} md={8} lg={6} xl={4}>
+                  <DateCard date={entry} />
+                </Col>
+              ))}
+            </Row>
+          </>
+        ) : (
+          <p>Bitte erst oben die Felder ausfüllen.</p>
+        ))}
+
+      {isFetching && (
+        <Row className="py-4">
+          <LoadingSpinner message="KaPlan-Server wird kontaktiert…" />
         </Row>
-
-        <hr />
-
-        {!isError &&
-          !isFetching &&
-          (props.dateList ? (
-            <>
-              Folgende Daten kamen zurück:
-              <Row className="my-4">
-                {props.dateList.map((entry: TimeSheetDate, index: number) => (
-                  <Col key={index} sm={12} md={8} lg={6} xl={4}>
-                    <DateCard date={entry} />
-                  </Col>
-                ))}
-              </Row>
-            </>
-          ) : (
-            <p>Bitte erst oben die Felder ausfüllen.</p>
-          ))}
-
-        {isFetching && (
-          <Row className="py-4">
-            <LoadingSpinner message="KaPlan-Server wird kontaktiert…" />
-          </Row>
-        )}
-        {isError && (
-          <Row className="py-3">
-            <MsgBox type="error" trace={error.message}>
-              Fehler bei Anfrage ans Backend. 🤨
-              <br />
-              Stimmt dein KaPlan-Abonnement-String?
-            </MsgBox>
-          </Row>
-        )}
-
-        <Row>
-          <Col className="d-flex justify-content-start">
-            <PrevButton callback={props.prevStep} />
-          </Col>
-          <Col className="d-flex justify-content-end">
-            <NextButton
-              disabled={!props.dateList || isError || isFetching}
-              callback={props.nextStep}
-            />
-          </Col>
+      )}
+      {isError && (
+        <Row className="py-3">
+          <MsgBox type="error" trace={error.message}>
+            Fehler bei Anfrage ans Backend. 🤨
+            <br />
+            Stimmt dein KaPlan-Abonnement-String?
+          </MsgBox>
         </Row>
-      </form>
-    </>
+      )}
+
+      <Row>
+        <Col className="d-flex justify-content-start">
+          <PrevButton callback={props.prevStep} />
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <NextButton
+            disabled={!props.dateList || isError || isFetching}
+            callback={props.nextStep}
+          />
+        </Col>
+      </Row>
+    </form>
   );
 };
 

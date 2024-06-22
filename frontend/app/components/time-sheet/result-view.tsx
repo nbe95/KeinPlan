@@ -120,7 +120,6 @@ const ResultView = (props: ResultViewProps) => {
 
   return (
     <>
-      <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
       {isError ? (
         <Row>
           <Col className="py-3">
