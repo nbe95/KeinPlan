@@ -16,7 +16,11 @@ export const Stepper = (props: StepperProps) => {
     const isPassed = props.active > step.key;
     const isActive = props.active == step.key;
     return (
-      <li className={isActive && "active"} key={index}>
+      <li
+        className={isActive && "active"}
+        title={`${index + 1}. Schritt: ${step.name}`}
+        key={index}
+      >
         <div className="fw-bold fs-6">
           <div
             className={`rounded-circle p-1 ${isActive || isPassed ? "bg-primary text-white" : "border bg-light text-muted"}`}

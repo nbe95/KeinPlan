@@ -15,11 +15,11 @@ import {
 import { getWeek } from "../../utils/dates";
 import { MailProps, createMailToLink } from "../../utils/mail";
 import { ClientError, isClientError, retryUnlessClientError } from "../../utils/network";
+import DownloadButton from "../download-button";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
-import { TimeSheetDate, TimeSheetParams, UserData } from "./generator";
-import DownloadButton from "../download-button";
 import { PrevButton } from "../process-button";
+import { TimeSheetDate, TimeSheetParams, UserData } from "./generator";
 
 type ResultViewProps = {
   userData: UserData;
