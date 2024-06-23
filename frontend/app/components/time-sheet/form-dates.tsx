@@ -176,7 +176,7 @@ const FormDates = (props: FormDatesProps) => {
             Folgende Daten kamen zurück:
             <Row className="my-4">
               {props.dateList.map((entry: TimeSheetDate, index: number) => (
-                <Col key={index} sm={12} md={8} lg={6} xl={4}>
+                <Col key={index} sm={12} md={6}>
                   <DateCard date={entry} />
                 </Col>
               ))}
