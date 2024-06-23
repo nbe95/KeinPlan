@@ -32,6 +32,7 @@ const FormUserData = (props: FormUserDataProps) => {
                 name="first_name"
                 placeholder="Vorname"
                 defaultValue={props.userData?.firstName}
+                autoFocus={true}
                 required
               />
               <Form.Control
