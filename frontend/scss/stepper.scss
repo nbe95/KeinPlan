@@ -25,9 +25,9 @@
       order: -1;
     }
 
-    &.active {
+    &.passed {
       &::before {
-        background-color: var(--bs-dark);
+        background-color: var(--bs-blue);
       }
     }
   }
