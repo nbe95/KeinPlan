@@ -1,33 +1,37 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import NavBar from "./components/nav-bar";
-import Footer from "./components/footer";
-import { ReactQueryClientProvider } from "./components/ReactQueryClientProvider";
-import { dom } from "@fortawesome/fontawesome-svg-core";
+import Footer from "./components/layout/footer";
+import Header from "./components/layout/header";
+import { ReactQueryClientProvider } from "./components/query-client-provider";
 
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-export const RootLayout = ({ children }: { children: React.ReactNode; }) => {
+import "../scss/stepper.scss";
+
+config.autoAddCss = false;
+
+export const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactQueryClientProvider>
-      <html lang="en">
+      <html lang="de">
         <head>
-          <title>foooo</title>
+          <title>KeinPlan</title>
           <link rel="icon" href="/favicon.ico" sizes="any" />
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/favicon.ico" />
-          <link rel="stylesheet" type="text/css" href="/style.css" />
-          <style>{dom.css()}</style>
         </head>
         <body>
           <ReactQueryDevtools initialIsOpen={false} />
-          <NavBar />
-          <div className="py-4">
-            {children}
+          <div className="py-1 py-md-2">
+            <Header />
+            <main>{children}</main>
+            <Footer />
           </div>
-          <Footer />
         </body>
       </html>
     </ReactQueryClientProvider>
   );
-}
+};
 
 export default RootLayout;

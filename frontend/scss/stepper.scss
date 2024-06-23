@@ -1,0 +1,31 @@
+.stepper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.stepper li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+
+  &:not(:last-child) {
+    flex: 1;
+  }
+
+  &:not(:last-child) {
+    &::after {
+      content: "";
+      flex: 1;
+      height: 2px;
+      background-color: #e0e0e0;
+      margin-inline-end: 0.5rem;
+    }
+
+    &:has(~ .active) {
+      &::after {
+        background-color: var(--bs-blue);
+      }
+    }
+  }
+}

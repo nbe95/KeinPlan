@@ -15,11 +15,11 @@ import {
 import { getWeek } from "../../utils/dates";
 import { MailProps, createMailToLink } from "../../utils/mail";
 import { ClientError, isClientError, retryUnlessClientError } from "../../utils/network";
+import DownloadButton from "../download-button";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
-import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
-import DownloadButton from "./download-button";
-import { PrevButton } from "./process-button";
+import { PrevButton } from "../process-button";
+import { TimeSheetDate, TimeSheetParams, UserData } from "./generator";
 
 type ResultViewProps = {
   userData: UserData;
@@ -120,7 +120,6 @@ const ResultView = (props: ResultViewProps) => {
 
   return (
     <>
-      <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
       {isError ? (
         <Row>
           <Col className="py-3">
