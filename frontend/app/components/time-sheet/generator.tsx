@@ -1,11 +1,16 @@
-'use client'
+"use client";
 
+import {
+  faCalendarDay,
+  faCheck,
+  faClipboardUser,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import Stepper from "../stepper";
 import FormDates from "./form-dates";
 import FormUserData from "./form-user-data";
 import ResultView from "./result-view";
-import Stepper from "../stepper";
-import { faBars, faCalendarDay, faCalendarDays, faCheck, faClipboardUser, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export interface UserData {
   firstName: string;
@@ -46,13 +51,14 @@ const TimeSheetGenerator = () => {
   return (
     <>
       <div className="mb-4 border-bottom">
-        <Stepper steps={[
-          { key: Steps.FORM_USER_DATA, name: "Allgemeines", icon: faClipboardUser  },
-          { key: Steps.FORM_DATES, name: "Termine", icon: faCalendarDay },
-          { key: Steps.FORM_DATES, name: "Prüfen", icon: faMagnifyingGlass },
-          { key: Steps.RESULT_VIEW, name: "Fertig", icon: faCheck }
-        ]}
-        active={step}
+        <Stepper
+          steps={[
+            { key: Steps.FORM_USER_DATA, name: "Allgemeines", icon: faClipboardUser },
+            { key: Steps.FORM_DATES, name: "Termine", icon: faCalendarDay },
+            { key: Steps.FORM_DATES, name: "Prüfen", icon: faMagnifyingGlass },
+            { key: Steps.RESULT_VIEW, name: "Fertig", icon: faCheck },
+          ]}
+          active={step}
         />
       </div>
 

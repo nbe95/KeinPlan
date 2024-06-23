@@ -1,32 +1,29 @@
-:root {
-  --circle-size: 2.6rem;
-  --spacing: clamp(0.25rem, 2vw, 0.5rem);
-}
-
 .stepper {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .stepper li {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  align-items: center;
+  gap: 0.5rem;
   text-align: center;
 
-  &:not(:first-child) {
-    &::before {
+  &:not(:last-child) {
+    flex: 1;
+  }
+
+  &:not(:last-child) {
+    &::after {
       content: "";
-      position: relative;
-      top: calc(var(--circle-size) / 2);
-      width: calc(100% - var(--circle-size) - calc(var(--spacing) * 2));
-      left: calc(-50% + calc(var(--circle-size) / 2 + var(--spacing)));
+      flex: 1;
       height: 2px;
       background-color: #e0e0e0;
-      order: -1;
+      margin-inline-end: 0.5rem;
     }
 
-    &.passed {
-      &::before {
+    &:has(~ .active) {
+      &::after {
         background-color: var(--bs-blue);
       }
     }
