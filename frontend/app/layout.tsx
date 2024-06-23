@@ -1,6 +1,6 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Footer from "./components/page/footer";
-import Header from "./components/page/header";
+import Footer from "./components/layout/footer";
+import Header from "./components/layout/header";
 import { ReactQueryClientProvider } from "./components/query-client-provider";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -14,7 +14,7 @@ config.autoAddCss = false;
 export const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactQueryClientProvider>
-      <html lang="en">
+      <html lang="de">
         <head>
           <title>KeinPlan</title>
           <link rel="icon" href="/favicon.ico" sizes="any" />
