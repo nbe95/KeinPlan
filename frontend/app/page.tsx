@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
-import Container from "./components/container";
+import Container from "./components/page/container";
 import TimeSheetGenerator from "./components/time-sheet/generator";
 
 export const Page = () => {

@@ -1,6 +1,6 @@
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { UserData } from "./common";
-import { NextButton } from "./process-button";
+import { NextButton } from "../process-button";
 
 type FormUserDataProps = {
   userData: UserData;

@@ -1,6 +1,6 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Footer from "./components/footer";
-import Header from "./components/header";
+import Footer from "./components/page/footer";
+import Header from "./components/page/header";
 import { ReactQueryClientProvider } from "./components/query-client-provider";
 
 import { config } from "@fortawesome/fontawesome-svg-core";

@@ -12,8 +12,8 @@ import { ClientError, isClientError, retryUnlessClientError } from "../../utils/
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
 import { TimeSheetDate, TimeSheetParams } from "./common";
-import DateCard from "./date-card";
-import { NextButton, PrevButton } from "./process-button";
+import DateCard from "../date-card";
+import { NextButton, PrevButton } from "../process-button";
 
 type FormDatesProps = {
   timeSheetParams: TimeSheetParams;

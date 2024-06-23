@@ -2,8 +2,8 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Stack } from "react-bootstrap";
-import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../utils/constants";
-import Container from "./container";
+import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../../utils/constants";
+import Container from "../page/container";
 
 const Footer = () => {
   return (

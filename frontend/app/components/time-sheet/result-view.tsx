@@ -17,9 +17,9 @@ import { MailProps, createMailToLink } from "../../utils/mail";
 import { ClientError, isClientError, retryUnlessClientError } from "../../utils/network";
 import LoadingSpinner from "../loading";
 import MsgBox from "../msg-box";
-import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
-import DownloadButton from "./download-button";
-import { PrevButton } from "./process-button";
+import { TimeSheetDate, TimeSheetParams, UserData } from "./generator";
+import DownloadButton from "../download-button";
+import { PrevButton } from "../process-button";
 
 type ResultViewProps = {
   userData: UserData;
