@@ -11,24 +11,24 @@ import {
   API_ENDPOINT_TIME_SHEET,
   TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
-} from "../../utils/constants";
-import { getWeek } from "../../utils/dates";
-import { MailProps, createMailToLink } from "../../utils/mail";
-import { ClientError, isClientError, retryUnlessClientError } from "../../utils/network";
-import DownloadButton from "../download-button";
-import LoadingSpinner from "../loading";
-import MsgBox from "../msg-box";
-import { PrevButton } from "../process-button";
-import { TimeSheetDate, TimeSheetParams, UserData } from "./generator";
+} from "../../../utils/constants";
+import { getWeek } from "../../../utils/dates";
+import { MailProps, createMailToLink } from "../../../utils/mail";
+import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
+import DownloadButton from "../../download-button";
+import LoadingSpinner from "../../loading";
+import MsgBox from "../../msg-box";
+import { PrevButton } from "../../process-button";
+import { TimeSheetDate, TimeSheetParams, UserData } from "../generator";
 
-type ResultViewProps = {
+type ResultProps = {
   userData: UserData;
   timeSheetParams: TimeSheetParams;
   dateList: TimeSheetDate[];
   prevStep: () => void;
 };
 
-const ResultView = (props: ResultViewProps) => {
+const ResultStep = (props: ResultProps) => {
   const getEndpointUrl = useCallback((): string => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
@@ -196,4 +196,4 @@ const ResultView = (props: ResultViewProps) => {
   );
 };
 
-export default ResultView;
+export default ResultStep;

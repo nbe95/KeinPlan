@@ -7,10 +7,11 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import Container from "../layout/container";
 import Stepper from "../stepper";
-import FormDates from "./form-dates";
-import FormUserData from "./form-user-data";
-import ResultView from "./result-view";
+import DatesStep from "./steps/dates";
+import ResultView from "./steps/result";
+import FormUserData from "./steps/user-data";
 
 export interface UserData {
   firstName: string;
@@ -50,7 +51,7 @@ const TimeSheetGenerator = () => {
 
   return (
     <>
-      <div className="mb-4 border-bottom">
+      <Container className="bg-light">
         <Stepper
           steps={[
             { key: Steps.FORM_USER_DATA, name: "Allgemeines", icon: faClipboardUser },
@@ -60,42 +61,44 @@ const TimeSheetGenerator = () => {
           ]}
           active={step}
         />
-      </div>
+      </Container>
 
-      {step == Steps.FORM_USER_DATA && (
-        <FormUserData
-          userData={userData}
-          setUserData={setUserData}
-          nextStep={() => {
-            setStep(Steps.FORM_DATES);
-          }}
-        />
-      )}
+      <Container>
+        {step == Steps.FORM_USER_DATA && (
+          <FormUserData
+            userData={userData}
+            setUserData={setUserData}
+            nextStep={() => {
+              setStep(Steps.FORM_DATES);
+            }}
+          />
+        )}
 
-      {step == Steps.FORM_DATES && (
-        <FormDates
-          timeSheetParams={timeSheetParams}
-          setTimeSheetParams={setTimeSheetParams}
-          dateList={dateList}
-          setDateList={setDateList}
-          prevStep={() => {
-            setStep(Steps.FORM_USER_DATA);
-          }}
-          nextStep={() => {
-            setStep(Steps.RESULT_VIEW);
-          }}
-        />
-      )}
-      {step == Steps.RESULT_VIEW && (
-        <ResultView
-          userData={userData}
-          timeSheetParams={timeSheetParams}
-          dateList={dateList}
-          prevStep={() => {
-            setStep(Steps.FORM_DATES);
-          }}
-        />
-      )}
+        {step == Steps.FORM_DATES && (
+          <DatesStep
+            timeSheetParams={timeSheetParams}
+            setTimeSheetParams={setTimeSheetParams}
+            dateList={dateList}
+            setDateList={setDateList}
+            prevStep={() => {
+              setStep(Steps.FORM_USER_DATA);
+            }}
+            nextStep={() => {
+              setStep(Steps.RESULT_VIEW);
+            }}
+          />
+        )}
+        {step == Steps.RESULT_VIEW && (
+          <ResultView
+            userData={userData}
+            timeSheetParams={timeSheetParams}
+            dateList={dateList}
+            prevStep={() => {
+              setStep(Steps.FORM_DATES);
+            }}
+          />
+        )}
+      </Container>
     </>
   );
 };

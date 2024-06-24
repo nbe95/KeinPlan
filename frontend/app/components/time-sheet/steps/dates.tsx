@@ -5,17 +5,17 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import strftime from "strftime";
-import { b64_encode } from "../../utils/base64";
-import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../utils/constants";
-import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../utils/dates";
-import { ClientError, isClientError, retryUnlessClientError } from "../../utils/network";
-import DateCard from "../date-card";
-import LoadingSpinner from "../loading";
-import MsgBox from "../msg-box";
-import { NextButton, PrevButton } from "../process-button";
-import { TimeSheetDate, TimeSheetParams } from "./common";
+import { b64_encode } from "../../../utils/base64";
+import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../../utils/constants";
+import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
+import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
+import DateCard from "../../date-card";
+import LoadingSpinner from "../../loading";
+import MsgBox from "../../msg-box";
+import { NextButton, PrevButton } from "../../process-button";
+import { TimeSheetDate, TimeSheetParams } from "../generator";
 
-type FormDatesProps = {
+type DatesProps = {
   timeSheetParams: TimeSheetParams;
   setTimeSheetParams: (data: TimeSheetParams) => void;
   dateList: TimeSheetDate[];
@@ -24,7 +24,7 @@ type FormDatesProps = {
   nextStep: () => void;
 };
 
-const FormDates = (props: FormDatesProps) => {
+const DatesStep = (props: DatesProps) => {
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
   const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo));
   const getCalWeekLabel = useCallback(
@@ -216,4 +216,4 @@ const FormDates = (props: FormDatesProps) => {
   );
 };
 
-export default FormDates;
+export default DatesStep;

@@ -1,14 +1,14 @@
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
-import { NextButton } from "../process-button";
-import { UserData } from "./common";
+import { NextButton } from "../../process-button";
+import { UserData } from "../common";
 
-type FormUserDataProps = {
+type UserDataProps = {
   userData: UserData;
   setUserData: (data: UserData) => void;
   nextStep: () => void;
 };
 
-const FormUserData = (props: FormUserDataProps) => {
+const UserDataStep = (props: UserDataProps) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.setUserData({
@@ -71,4 +71,4 @@ const FormUserData = (props: FormUserDataProps) => {
   );
 };
 
-export default FormUserData;
+export default UserDataStep;
