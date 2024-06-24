@@ -17,7 +17,7 @@ export const Stepper = (props: StepperProps) => {
     const isActive = props.active == step.key;
     return (
       <li
-        className={isActive && "active"}
+        className={isActive ? "active" : ""}
         title={`${index + 1}. Schritt: ${step.name}`}
         key={index}
       >
@@ -39,7 +39,7 @@ export const Stepper = (props: StepperProps) => {
   };
 
   return (
-    <ol className="stepper py0 px-5 m-0">
+    <ol className="stepper p-0 m-0 mx-md-5">
       {props.steps.map((step, index) => renderStep(step, index))}
     </ol>
   );
