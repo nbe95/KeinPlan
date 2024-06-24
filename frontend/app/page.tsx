@@ -19,11 +19,10 @@ export const Page = () => {
         </p>
       </Container>
 
-      <Container className="bg-light">
-        <TimeSheetGenerator />
-      </Container>
+      <TimeSheetGenerator />
 
       <Container>
+        <hr className="col-3 col-md-2 mb-5" />
         <Row gap={5}>
           <Col md={6}>
             <h2 className="text-body-emphasis">Mail-Vorlage</h2>

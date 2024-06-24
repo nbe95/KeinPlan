@@ -23,7 +23,7 @@ export const Stepper = (props: StepperProps) => {
       >
         <div className="fw-bold fs-6">
           <div
-            className={`rounded-circle p-1 ${isActive || isPassed ? "bg-primary text-white" : "border bg-light text-muted"}`}
+            className={`rounded-circle border p-1 ${isActive || isPassed ? "bg-primary text-white" : "bg-white text-muted"}`}
             style={{ width: "2.1rem", height: "2.1rem" }}
           >
             {step.icon ? <FontAwesomeIcon icon={step.icon} size="1x" /> : <>{index + 1}</>}
@@ -39,7 +39,7 @@ export const Stepper = (props: StepperProps) => {
   };
 
   return (
-    <ol className="stepper py-3 px-5">
+    <ol className="stepper py0 px-5 m-0">
       {props.steps.map((step, index) => renderStep(step, index))}
     </ol>
   );
