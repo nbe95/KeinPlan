@@ -1,10 +1,10 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { Stack } from "react-bootstrap";
 import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../../utils/constants";
 import Container from "./container";
-import { unstable_noStore as noStore } from "next/cache";
 
 const Footer = () => {
   // Do not cache this component as it is required to fetch environment values at runtime
