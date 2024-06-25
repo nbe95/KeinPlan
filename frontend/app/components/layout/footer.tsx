@@ -4,8 +4,12 @@ import Link from "next/link";
 import { Stack } from "react-bootstrap";
 import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../../utils/constants";
 import Container from "./container";
+import { unstable_noStore as noStore } from "next/cache";
 
 const Footer = () => {
+  // Do not cache this component as it is required to fetch environment values at runtime
+  noStore();
+
   return (
     <Container>
       <footer className="pt-3 my-3 text-muted border-top">

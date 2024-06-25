@@ -1,8 +1,8 @@
 // Environment variables (fixed at build-time)
 export const PROD: boolean = process.env.NODE_ENV == "production";
-export const VERSION_FRONTEND: string = process.env.VERSION_FRONTEND || "";
-export const GITHUB_LINK: string = process.env.GITHUB_LINK || "";
-export const API_BASE_URL: string = process.env.API_BASE_URL || "";
+export const VERSION_FRONTEND: string = process.env.NEXT_PUBLIC_VERSION_FRONTEND || "";
+export const GITHUB_LINK: string = process.env.NEXT_PUBLIC_GITHUB_LINK || "";
+export const API_BASE_URL: string = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 // Environment variables (dynamic at runtime)
 export const ADMIN_MAIL: string = process.env.ADMIN_MAIL || "";
