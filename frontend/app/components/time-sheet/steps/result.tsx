@@ -168,15 +168,6 @@ const ResultStep = (props: ResultProps) => {
           </Col>
         </Row>
       )}
-      {!isError && (
-        <Row className="my-2">
-          <Col>
-            <MsgBox type="info">
-              Nimm doch diesen Link beim nächsten Mal, damit&apos;s schneller geht...
-            </MsgBox>
-          </Col>
-        </Row>
-      )}
       <Row>
         <Col className="d-flex justify-content-start">
           <PrevButton callback={props.prevStep} />

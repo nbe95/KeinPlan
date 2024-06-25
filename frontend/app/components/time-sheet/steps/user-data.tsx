@@ -23,9 +23,9 @@ const UserDataStep = (props: UserDataProps) => {
   return (
     <form name="user_data_form" onSubmit={(event) => handleSubmit(event)}>
       <Row>
-        <Col lg={6} md={12}>
-          <Form.Group className="mb-4">
-            <Form.Label>Wer bist du?</Form.Label>
+        <Col lg={6} md={12} className="mb-4">
+          <Form.Group>
+            <Form.Label>Wie heißt du?</Form.Label>
             <InputGroup>
               <Form.Control
                 type="text"
@@ -42,11 +42,13 @@ const UserDataStep = (props: UserDataProps) => {
                 required
               />
             </InputGroup>
-            <Form.Text>Dein Name, der als Dienstnehmer auf der Stundenliste steht.</Form.Text>
+            <Form.Text>
+              Trage deinen Namen ein, der als Dienstnehmer auf der Stundenliste stehen wird.
+            </Form.Text>
           </Form.Group>
         </Col>
-        <Col lg={6} md={12}>
-          <Form.Group className="mb-4">
+        <Col lg={6} md={12} className="mb-4">
+          <Form.Group>
             <Form.Label>Für welche Gemeinde arbeitest du?</Form.Label>
             <Form.Control
               type="text"
@@ -56,7 +58,8 @@ const UserDataStep = (props: UserDataProps) => {
               required
             />
             <Form.Text>
-              Deine Gemeinde, die als Dienstgeber auf der Stundenliste auftaucht.
+              Trage den Namen der Pfarrgemeinde ein, der als Dienstgeber auf der Stundenliste
+              auftauchen wird.
             </Form.Text>
           </Form.Group>
         </Col>

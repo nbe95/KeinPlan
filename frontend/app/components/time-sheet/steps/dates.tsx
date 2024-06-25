@@ -111,8 +111,8 @@ const DatesStep = (props: DatesProps) => {
   return (
     <form name="time_sheet_data_form" onSubmit={(event) => handleSubmit(event)}>
       <Row>
-        <Col lg={6} md={12}>
-          <Form.Group className="mb-4">
+        <Col lg={9} md={12} className="mb-4">
+          <Form.Group>
             <Form.Label>
               Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
             </Form.Label>
@@ -141,33 +141,45 @@ const DatesStep = (props: DatesProps) => {
               </InputGroup.Text>
             </InputGroup>
             <Form.Text>
-              Wähle irgendein Datum aus, das in der gewünschten Kalenderwoche liegt.
+              Wähle ein beliebiges Datum aus, das innerhalb in der gewünschten Kalenderwoche liegt.
             </Form.Text>
           </Form.Group>
         </Col>
-        <Col lg={6} md={12}>
-          <Form.Group className="mb-4">
-            <Form.Label>Persönlicher KaPlan-Abonnement-String</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="text"
-                name="kaplan_ics"
-                placeholder="KaPlan ICS-Link"
-                defaultValue={props.timeSheetParams?.kaPlanIcs}
-                required
-              />
-              <Button variant="primary" type="submit" className="float-end" disabled={isFetching}>
-                Termine laden
-              </Button>
-            </InputGroup>
+        <Col md={12} className="mb-4">
+          <Form.Group>
+            <Form.Label>Dein persönlicher KaPlan-Abonnement-String</Form.Label>
+            <Form.Control
+              type="text"
+              name="kaplan_ics"
+              placeholder="siehe KaPlan &rarr; Hilfe/Info/Einstellungen &rarr; Kalenderintegration"
+              defaultValue={props.timeSheetParams?.kaPlanIcs}
+              required
+            />
             <Form.Text>
-              Bitte lies unbedingt, wie dein persönlicher KaPlan-Link verarbeitet wird.
+              Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
+              Abonnement-String notwendig. Wie du unten lesen kannst, wird er niemals gespeichert
+              und nur einmalig zur Erstellung der Stundenliste verwendet.
             </Form.Text>
           </Form.Group>
         </Col>
       </Row>
-
-      <hr />
+      <Row>
+        <Col className="mb-4">
+          <Form.Check
+            type="switch"
+            id="confirm"
+            label="Speichere meine Eingaben im Browser als Cookie, damit's beim nächsten Mal noch schneller geht."
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col className="d-flex justify-content-start">
+          <PrevButton callback={props.prevStep} />
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <NextButton callback={props.nextStep} />
+        </Col>
+      </Row>
 
       {!isError &&
         !isFetching &&
@@ -200,18 +212,6 @@ const DatesStep = (props: DatesProps) => {
           </MsgBox>
         </Row>
       )}
-
-      <Row>
-        <Col className="d-flex justify-content-start">
-          <PrevButton callback={props.prevStep} />
-        </Col>
-        <Col className="d-flex justify-content-end">
-          <NextButton
-            disabled={!props.dateList || isError || isFetching}
-            callback={props.nextStep}
-          />
-        </Col>
-      </Row>
     </form>
   );
 };
