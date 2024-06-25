@@ -2,8 +2,7 @@ name: Create and publish release
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 env:
   BACKEND_IMAGE_NAME: nbe95/keinplan-backend

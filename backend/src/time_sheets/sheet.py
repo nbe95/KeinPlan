@@ -10,9 +10,9 @@ from typing import Iterable, List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import KEINPLAN_LINK, LOG_LEVEL, VERSION
+from src.constants import LOG_LEVEL, VERSION_BACKEND
 
-from .constants import TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
+from .constants import KEINPLAN_LINK, TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from .entry import TimeEntry
 
 logging.basicConfig(level=logging.WARNING)
@@ -73,9 +73,7 @@ class WeeklyTimeSheet(TimeSheet):
         target_pdf: Path = target_file if isinstance(target_file, Path) else Path(target_file)
 
         logger.info(
-            "Generating weekly time sheet with %d entries at '%s'.",
-            len(self.entries),
-            target_pdf,
+            "Generating weekly time sheet with %d entries at '%s'.", len(self.entries), target_pdf
         )
 
         template_file: str = "weekly.jinja.md"
@@ -96,6 +94,6 @@ class WeeklyTimeSheet(TimeSheet):
             generation_time=datetime.now(),
             footer=footer,
             hyperlink=KEINPLAN_LINK,
-            version=VERSION,
+            version=VERSION_BACKEND,
         )
         return self._run_pandoc(md_rendered, "markdown", target_pdf, "pdf")

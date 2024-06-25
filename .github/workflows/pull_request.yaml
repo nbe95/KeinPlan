@@ -47,6 +47,7 @@ jobs:
   validate-release:
     name: Validate release label and notes
     runs-on: ubuntu-latest
+    if: github.base_ref == 'main'
     steps:
       - uses: actions/checkout@v4
       - uses: jefflinse/pr-semver-bump@v1.7.0

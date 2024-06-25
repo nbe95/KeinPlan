@@ -13,7 +13,7 @@ from .sheet import TimeSheet, WeeklyTimeSheet
 from .span import TimeSpan
 
 
-class TimeSheetApi(Resource):
+class TimeSheetEndpoint(Resource):
     """Restful API for generating time sheets."""
 
     def post(self, ts_type: str, file_format: str) -> ResponseReturnValue:
@@ -27,17 +27,10 @@ class TimeSheetApi(Resource):
             try:
                 # Fetch general data
                 start_date: date = date.fromisocalendar(
-                    int(data.get("year", 0)),
-                    int(data.get("week", 0)),
-                    1,
+                    int(data.get("year", 0)), int(data.get("week", 0)), 1
                 )
                 year, week, _ = start_date.isocalendar()
-                ts = WeeklyTimeSheet(
-                    data.get("employer", ""),
-                    data.get("employee", ""),
-                    year,
-                    week,
-                )
+                ts = WeeklyTimeSheet(data.get("employer", ""), data.get("employee", ""), year, week)
                 file_name += f"_{ts.date_start.strftime('%Y-%V')}"
 
                 # Collect and sort all entries
@@ -53,15 +46,15 @@ class TimeSheetApi(Resource):
                 ]
                 if outside_range:
                     return (
-                        f"{len(outside_range)} of {len(ts.entries)} time entries "
-                        f"are outside the calendar week's range: {outside_range}",
+                        f"{len(outside_range)} of {len(ts.entries)} time entries are outside the "
+                        f"calendar week's range: {outside_range}",
                         400,
                     )
             except Exception as e:
                 return f"Error while parsing of time sheet data: {str(e)}", 400
 
         else:
-            return (f'Invalid time sheet type "{ts_type}"', 400)
+            return f'Invalid time sheet type "{ts_type}"', 400
 
         # Create and download file
         if file_format.lower() == "pdf":
@@ -70,13 +63,9 @@ class TimeSheetApi(Resource):
                 if not ts.generate(fh.name, footer):
                     return ("Could not generate time sheet file.", 500)
 
-                return send_file(
-                    fh.name,
-                    as_attachment=True,
-                    download_name=f"{file_name}.pdf",
-                )
+                return send_file(fh.name, as_attachment=True, download_name=f"{file_name}.pdf")
         else:
-            return (f'Invalid file format "{file_format}"', 400)
+            return f'Invalid file format "{file_format}"', 400
 
     def _parse_date(self, item: Dict[str, Any]) -> TimeEntry:
         item_time: Dict[str, str] = item.get("time") or {}

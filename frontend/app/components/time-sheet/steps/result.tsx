@@ -3,34 +3,31 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import strftime from "strftime";
-import { BackendInfoContext } from "../../utils/backend-info";
 import {
+  ADMIN_MAIL,
   API_ENDPOINT_TIME_SHEET,
-  TIME_SHEET_DEFAULT_MAIL,
+  TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
-} from "../../utils/constants";
-import { getWeek } from "../../utils/dates";
-import { MailProps, createMailToLink } from "../../utils/mail";
-import { ClientError } from "../../utils/network";
-import LoadingSpinner from "../loading";
-import MsgBox from "../msg-box";
-import { TimeSheetDate, TimeSheetParams, UserData } from "./common";
-import DownloadButton from "./download-button";
-import { PrevButton } from "./process-button";
+} from "../../../utils/constants";
+import { convertDatesToIsoString, getWeek } from "../../../utils/dates";
+import { MailProps, createMailToLink } from "../../../utils/mail";
+import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
+import DownloadButton from "../../download-button";
+import LoadingSpinner from "../../loading";
+import MsgBox from "../../msg-box";
+import { PrevButton } from "../../process-button";
+import { TimeSheetDate, TimeSheetFormat, TimeSheetParams, UserData } from "../generator";
 
-type ResultViewProps = {
+type ResultProps = {
   userData: UserData;
   timeSheetParams: TimeSheetParams;
   dateList: TimeSheetDate[];
   prevStep: () => void;
 };
 
-const ResultView = (props: ResultViewProps) => {
-  const info: any = useContext(BackendInfoContext);
-
+const ResultStep = (props: ResultProps) => {
   const getEndpointUrl = useCallback((): string => {
     return new URL(
       `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
@@ -39,13 +36,13 @@ const ResultView = (props: ResultViewProps) => {
   }, [props.timeSheetParams]);
 
   const getTimeSheetName = useCallback((): string => {
-    const basename: string = "Arbeitszeit";
-    const timestamp: string = `${props.timeSheetParams?.targetDate.getFullYear()}-${getWeek(props.timeSheetParams?.targetDate)}`;
-    const format: string = props.timeSheetParams?.format.toLocaleLowerCase();
-    return `${basename}_${timestamp}.${format}`;
-  }, [props.timeSheetParams?.targetDate, props.timeSheetParams?.format]);
+    const targetDate: Date = props.timeSheetParams.targetDate;
+    const format: TimeSheetFormat = props.timeSheetParams.format;
 
-  const toIsoTime = (date: Date): string => strftime("%Y-%m-%dT%H:%M:%S%z", date);
+    const basename: string = "Arbeitszeit";
+    const timestamp: string = `${targetDate.getFullYear()}-${getWeek(targetDate)}`;
+    return `${basename}_${timestamp}.${format.toLowerCase()}`;
+  }, [props.timeSheetParams.targetDate, props.timeSheetParams.format]);
 
   const {
     data: pdf,
@@ -63,19 +60,7 @@ const ResultView = (props: ResultViewProps) => {
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
             year: props.timeSheetParams.targetDate.getFullYear(),
             week: getWeek(props.timeSheetParams.targetDate),
-            dates: props.dateList.map((date) => ({
-              ...date,
-              time: {
-                begin: toIsoTime(date.time.begin),
-                end: toIsoTime(date.time.end),
-              },
-              break: date.break
-                ? {
-                    begin: toIsoTime(date.break.begin),
-                    end: toIsoTime(date.break.end),
-                  }
-                : null,
-            })),
+            dates: convertDatesToIsoString(props.dateList),
           },
           {
             headers: {
@@ -97,13 +82,13 @@ const ResultView = (props: ResultViewProps) => {
           const msg: string =
             error.response.data ??
             `The backend query returned status code ${error.response.status}.`;
-          if (error.response.status >= 400 && error.response.status < 500) {
+          if (isClientError(error.response.status)) {
             throw new ClientError(msg);
           }
           throw Error(msg);
         });
     },
-    retry: (failureCount, error) => !(error instanceof ClientError || failureCount >= 4),
+    retry: (count, error) => retryUnlessClientError(error, count, 5),
     // Fetch only once
     staleTime: Infinity,
     gcTime: Infinity,
@@ -111,10 +96,13 @@ const ResultView = (props: ResultViewProps) => {
   });
 
   const mailParams = useMemo((): MailProps => {
-    const name: string = `${props.userData.firstName} ${props.userData.lastName}`;
-    const week: string = `${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`;
+    const user: UserData = props.userData;
+    const targetDate: Date = props.timeSheetParams.targetDate;
+
+    const name: string = `${user?.firstName} ${user?.lastName}`;
+    const week: string = `${getWeek(targetDate)}/${targetDate.getFullYear()}`;
     return {
-      recipient: TIME_SHEET_DEFAULT_MAIL ?? "",
+      recipient: TIME_SHEET_MAIL ?? "",
       subject: `Arbeitszeit ${name} - KW ${week}`,
       body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${name}`,
     };
@@ -122,7 +110,6 @@ const ResultView = (props: ResultViewProps) => {
 
   return (
     <>
-      <h3 className="mb-4 mt-5">Schritt 3: Fertig!</h3>
       {isError ? (
         <Row>
           <Col className="py-3">
@@ -131,12 +118,7 @@ const ResultView = (props: ResultViewProps) => {
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
-              {info.env?.AdminMail ? (
-                <Link href={`mailto:${info.env.AdminMail}`}>Admin</Link>
-              ) : (
-                <span>Admin</span>
-              )}
-              .
+              {ADMIN_MAIL ? <Link href={`mailto:${ADMIN_MAIL}`}>Admin</Link> : <span>Admin</span>}.
             </MsgBox>
           </Col>
         </Row>
@@ -150,12 +132,15 @@ const ResultView = (props: ResultViewProps) => {
                 </div>
               ) : (
                 <>
-                  <h5>Deine Stundenliste ist fertig! 🎉</h5>
+                  <h5>
+                    Deine Stundenliste für KW {getWeek(props.timeSheetParams.targetDate)} ist
+                    fertig! 🎉
+                  </h5>
                   <DownloadButton
-                    fileName={pdf.fileName}
-                    url={pdf.blobUrl}
+                    fileName={pdf?.fileName ?? ""}
+                    url={pdf?.blobUrl ?? ""}
                     text="Download als PDF"
-                    size={pdf.size}
+                    size={pdf?.size}
                     faIcon={faFileArrowDown}
                     isPrimary={true}
                   />
@@ -201,4 +186,4 @@ const ResultView = (props: ResultViewProps) => {
   );
 };
 
-export default ResultView;
+export default ResultStep;
