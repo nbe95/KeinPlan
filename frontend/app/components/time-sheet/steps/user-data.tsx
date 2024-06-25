@@ -32,7 +32,6 @@ const UserDataStep = (props: UserDataProps) => {
                 name="first_name"
                 placeholder="Vorname"
                 defaultValue={props.userData.firstName}
-                autoFocus={true}
                 required
               />
               <Form.Control
