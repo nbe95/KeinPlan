@@ -23,14 +23,14 @@ export const Stepper = (props: StepperProps) => {
       >
         <div className="fw-bold fs-6">
           <div
-            className={`rounded-circle border p-1 ${isActive || isPassed ? "bg-primary text-white" : "bg-white text-muted"}`}
-            style={{ width: "2.1rem", height: "2.1rem" }}
+            className={`rounded-circle border p-1 ${isActive ? "bg-primary text-white" : (isPassed ? "bg-dark text-white" : "bg-white text-muted")}`}
+            style={{ width: "2.2rem", height: "2.2rem" }}
           >
             {step.icon ? <FontAwesomeIcon icon={step.icon} size="1x" /> : <>{index + 1}</>}
           </div>
         </div>
         <span
-          className={`d-none d-sm-block small ${isActive ? "text-primary fw-bold" : isPassed ? "text-primary" : "text-secondary"}`}
+          className={`d-none d-sm-block small ${isActive ? "text-primary fw-bold" : isPassed ? "text-dark" : "text-secondary"}`}
         >
           {step.name}
         </span>
