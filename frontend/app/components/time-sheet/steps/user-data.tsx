@@ -1,6 +1,6 @@
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { NextButton } from "../../process-button";
-import { UserData } from "../common";
+import { UserData } from "../generator";
 
 type UserDataProps = {
   userData: UserData;
@@ -12,10 +12,10 @@ const UserDataStep = (props: UserDataProps) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.setUserData({
+      ...props.userData,
       firstName: event.target.first_name.value,
       lastName: event.target.last_name.value,
       employer: event.target.employer.value,
-      ...props.userData,
     });
     props.nextStep();
   };
@@ -31,7 +31,7 @@ const UserDataStep = (props: UserDataProps) => {
                 type="text"
                 name="first_name"
                 placeholder="Vorname"
-                defaultValue={props.userData?.firstName}
+                defaultValue={props.userData.firstName}
                 autoFocus={true}
                 required
               />
@@ -39,7 +39,7 @@ const UserDataStep = (props: UserDataProps) => {
                 type="text"
                 name="last_name"
                 placeholder="Nachname"
-                defaultValue={props.userData?.lastName}
+                defaultValue={props.userData.lastName}
                 required
               />
             </InputGroup>
@@ -53,7 +53,7 @@ const UserDataStep = (props: UserDataProps) => {
               type="text"
               name="employer"
               placeholder="Dienstgeber"
-              defaultValue={props.userData?.employer}
+              defaultValue={props.userData.employer}
               required
             />
             <Form.Text>

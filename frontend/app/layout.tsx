@@ -11,7 +11,7 @@ import "../scss/stepper.scss";
 
 config.autoAddCss = false;
 
-export const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ReactQueryClientProvider>
       <html lang="de">
@@ -32,6 +32,4 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
       </html>
     </ReactQueryClientProvider>
   );
-};
-
-export default RootLayout;
+}

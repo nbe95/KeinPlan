@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import Container from "./components/layout/container";
 import TimeSheetGenerator from "./components/time-sheet/generator";
 
-export const Page = () => {
+export default function Page() {
   return (
     <>
       <Container>
@@ -112,6 +112,4 @@ export const Page = () => {
       </Container>
     </>
   );
-};
-
-export default Page;
+}

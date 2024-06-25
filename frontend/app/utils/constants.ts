@@ -1,16 +1,13 @@
-// import { env } from "next-runtime-env";
-const env = (_) => "";
-
 // Environment variables (fixed at build-time)
 export const PROD: boolean = process.env.NODE_ENV == "production";
-export const VERSION_FRONTEND: string = process.env.NEXT_PUBLIC_VERSION_FRONTEND || "";
-export const GITHUB_LINK: string = process.env.NEXT_PUBLIC_GITHUB_LINK || "";
-export const API_BASE_URL: string = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+export const VERSION_FRONTEND: string = process.env.VERSION_FRONTEND || "";
+export const GITHUB_LINK: string = process.env.GITHUB_LINK || "";
+export const API_BASE_URL: string = process.env.API_BASE_URL || "";
 
 // Environment variables (dynamic at runtime)
-export const ADMIN_MAIL: string = env("NEXT_PUBLIC_ADMIN_MAIL") || "";
-export const TIME_SHEET_MAIL: string = env("NEXT_PUBLIC_TIME_SHEET_MAIL") || "";
-export const KAPLAN_LINK: string = env("NEXT_PUBLIC_KAPLAN_LINK") || "";
+export const ADMIN_MAIL: string = process.env.ADMIN_MAIL || "";
+export const TIME_SHEET_MAIL: string = process.env.TIME_SHEET_MAIL || "";
+export const KAPLAN_LINK: string = process.env.KAPLAN_LINK || "";
 
 // API endpoints
 export const API_ENDPOINT_VERSION: string = `${API_BASE_URL}/version`;

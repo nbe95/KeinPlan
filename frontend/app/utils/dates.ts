@@ -1,5 +1,7 @@
-export const getMonday = (dateInWeek: Date): Date => {
-  const date: Date = new Date(dateInWeek);
+import strftime from "strftime";
+
+export const getMonday = (dateInWeek: Date | undefined): Date => {
+  const date: Date = dateInWeek ? new Date(dateInWeek) : new Date();
   date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
   return date;
 };
@@ -10,12 +12,10 @@ export const addDaysToDate = (refDate: Date, daysToAdd: number): Date => {
   return result;
 };
 
-export const parseDateStr = (date: string): Date | null => {
-  let result: Date | null = new Date();
+export const parseDateStr = (date: string): Date => {
+  let result: Date = new Date(0);
   let parsed = Date.parse(date);
-  if (isNaN(parsed)) return null;
-
-  result.setTime(Date.parse(date));
+  if (!isNaN(parsed)) result.setTime(parsed);
   return result;
 };
 
@@ -42,4 +42,18 @@ export const getWeek = (date: Date): number => {
 export const getWeekYear = (date: Date): number => {
   date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
   return date.getFullYear();
+};
+
+// Recursively convert all Date objects in a dictionary to ISO strings while keeping their timezone
+export const convertDatesToIsoString = (dict: { [key: string]: any }): { [key: string]: any } => {
+  Object.keys(dict).forEach((key) => {
+    const value = dict[key];
+    if (value.constructor == Object) {
+      // check for sub-dictionaries
+      dict[key] = convertDatesToIsoString(value);
+    } else if (value instanceof Date) {
+      dict[key] = strftime("%Y-%m-%dT%H:%M:%S%z", dict[key]);
+    }
+  });
+  return dict;
 };

@@ -38,25 +38,31 @@ export interface TimeSheetDate {
 }
 
 const TimeSheetGenerator = () => {
-  const [userData, setUserData] = useState<UserData>();
-  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>();
-  const [dateList, setDateList] = useState<TimeSheetDate[]>();
+  const [userData, setUserData] = useState<UserData>({ firstName: "", lastName: "", employer: "" });
+  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>({
+    kaPlanIcs: "",
+    targetDate: new Date(0),
+    type: "weekly",
+    format: "pdf",
+  });
+  const [dateList, setDateList] = useState<TimeSheetDate[]>([]);
 
   enum Steps {
-    FORM_USER_DATA,
-    FORM_DATES,
+    USER_DATA,
+    TIME_SHEET_DATA,
+    DATE_CHECK,
     RESULT_VIEW,
   }
-  const [step, setStep] = useState<Steps>(Steps.FORM_USER_DATA);
+  const [step, setStep] = useState<Steps>(Steps.USER_DATA);
 
   return (
     <>
       <Container className="bg-light">
         <Stepper
           steps={[
-            { key: Steps.FORM_USER_DATA, name: "Allgemeines", icon: faClipboardUser },
-            { key: Steps.FORM_DATES, name: "Termine", icon: faCalendarDay },
-            { key: Steps.FORM_DATES, name: "Prüfen", icon: faMagnifyingGlass },
+            { key: Steps.USER_DATA, name: "Allgemeines", icon: faClipboardUser },
+            { key: Steps.TIME_SHEET_DATA, name: "Termine", icon: faCalendarDay },
+            { key: Steps.DATE_CHECK, name: "Prüfen", icon: faMagnifyingGlass },
             { key: Steps.RESULT_VIEW, name: "Fertig", icon: faCheck },
           ]}
           active={step}
@@ -64,24 +70,24 @@ const TimeSheetGenerator = () => {
       </Container>
 
       <Container>
-        {step == Steps.FORM_USER_DATA && (
+        {step == Steps.USER_DATA && (
           <FormUserData
             userData={userData}
             setUserData={setUserData}
             nextStep={() => {
-              setStep(Steps.FORM_DATES);
+              setStep(Steps.TIME_SHEET_DATA);
             }}
           />
         )}
 
-        {step == Steps.FORM_DATES && (
+        {step == Steps.TIME_SHEET_DATA && (
           <DatesStep
             timeSheetParams={timeSheetParams}
             setTimeSheetParams={setTimeSheetParams}
             dateList={dateList}
             setDateList={setDateList}
             prevStep={() => {
-              setStep(Steps.FORM_USER_DATA);
+              setStep(Steps.USER_DATA);
             }}
             nextStep={() => {
               setStep(Steps.RESULT_VIEW);
@@ -94,7 +100,7 @@ const TimeSheetGenerator = () => {
             timeSheetParams={timeSheetParams}
             dateList={dateList}
             prevStep={() => {
-              setStep(Steps.FORM_DATES);
+              setStep(Steps.TIME_SHEET_DATA);
             }}
           />
         )}

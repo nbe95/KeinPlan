@@ -5,21 +5,20 @@ import axios from "axios";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import strftime from "strftime";
 import {
   ADMIN_MAIL,
   API_ENDPOINT_TIME_SHEET,
   TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
 } from "../../../utils/constants";
-import { getWeek } from "../../../utils/dates";
+import { convertDatesToIsoString, getWeek } from "../../../utils/dates";
 import { MailProps, createMailToLink } from "../../../utils/mail";
 import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
 import { PrevButton } from "../../process-button";
-import { TimeSheetDate, TimeSheetParams, UserData } from "../generator";
+import { TimeSheetDate, TimeSheetFormat, TimeSheetParams, UserData } from "../generator";
 
 type ResultProps = {
   userData: UserData;
@@ -37,13 +36,13 @@ const ResultStep = (props: ResultProps) => {
   }, [props.timeSheetParams]);
 
   const getTimeSheetName = useCallback((): string => {
-    const basename: string = "Arbeitszeit";
-    const timestamp: string = `${props.timeSheetParams?.targetDate.getFullYear()}-${getWeek(props.timeSheetParams?.targetDate)}`;
-    const format: string = props.timeSheetParams?.format.toLocaleLowerCase();
-    return `${basename}_${timestamp}.${format}`;
-  }, [props.timeSheetParams?.targetDate, props.timeSheetParams?.format]);
+    const targetDate: Date = props.timeSheetParams.targetDate;
+    const format: TimeSheetFormat = props.timeSheetParams.format;
 
-  const toIsoTime = (date: Date): string => strftime("%Y-%m-%dT%H:%M:%S%z", date);
+    const basename: string = "Arbeitszeit";
+    const timestamp: string = `${targetDate.getFullYear()}-${getWeek(targetDate)}`;
+    return `${basename}_${timestamp}.${format.toLowerCase()}`;
+  }, [props.timeSheetParams.targetDate, props.timeSheetParams.format]);
 
   const {
     data: pdf,
@@ -61,19 +60,7 @@ const ResultStep = (props: ResultProps) => {
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
             year: props.timeSheetParams.targetDate.getFullYear(),
             week: getWeek(props.timeSheetParams.targetDate),
-            dates: props.dateList.map((date) => ({
-              ...date,
-              time: {
-                begin: toIsoTime(date.time.begin),
-                end: toIsoTime(date.time.end),
-              },
-              break: date.break
-                ? {
-                    begin: toIsoTime(date.break.begin),
-                    end: toIsoTime(date.break.end),
-                  }
-                : null,
-            })),
+            dates: convertDatesToIsoString(props.dateList),
           },
           {
             headers: {
@@ -109,8 +96,11 @@ const ResultStep = (props: ResultProps) => {
   });
 
   const mailParams = useMemo((): MailProps => {
-    const name: string = `${props.userData.firstName} ${props.userData.lastName}`;
-    const week: string = `${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`;
+    const user: UserData = props.userData;
+    const targetDate: Date = props.timeSheetParams.targetDate;
+
+    const name: string = `${user?.firstName} ${user?.lastName}`;
+    const week: string = `${getWeek(targetDate)}/${targetDate.getFullYear()}`;
     return {
       recipient: TIME_SHEET_MAIL ?? "",
       subject: `Arbeitszeit ${name} - KW ${week}`,
@@ -143,14 +133,14 @@ const ResultStep = (props: ResultProps) => {
               ) : (
                 <>
                   <h5>
-                    Deine Stundenliste für KW {getWeek(props.timeSheetParams?.targetDate)} ist
+                    Deine Stundenliste für KW {getWeek(props.timeSheetParams.targetDate)} ist
                     fertig! 🎉
                   </h5>
                   <DownloadButton
-                    fileName={pdf.fileName}
-                    url={pdf.blobUrl}
+                    fileName={pdf?.fileName ?? ""}
+                    url={pdf?.blobUrl ?? ""}
                     text="Download als PDF"
-                    size={pdf.size}
+                    size={pdf?.size}
                     faIcon={faFileArrowDown}
                     isPrimary={true}
                   />
