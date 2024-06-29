@@ -92,23 +92,23 @@ const TimeSheetGenerator = () => {
 
         {step == Steps.DATE_CHECK && (
           <CheckStep
-            dateList={dateList ?? []}
+            dateList={dateList!}
             prevStep={() => {
-              setStep(Steps.USER_DATA);
+              setStep(Steps.TIME_SHEET_DATA);
             }}
             nextStep={() => {
-              setStep(Steps.DATE_CHECK);
+              setStep(Steps.RESULT_VIEW);
             }}
           />
         )}
 
         {step == Steps.RESULT_VIEW && (
           <ResultView
-            userData={userData}
-            timeSheetParams={timeSheetParams}
-            dateList={dateList}
+            userData={userData!}
+            timeSheetParams={timeSheetParams!}
+            dateList={dateList!}
             prevStep={() => {
-              setStep(Steps.TIME_SHEET_DATA);
+              setStep(Steps.DATE_CHECK);
             }}
           />
         )}

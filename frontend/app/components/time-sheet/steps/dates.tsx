@@ -41,10 +41,11 @@ const DatesStep = (props: DatesProps) => {
   };
   const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
 
-  const { data, refetch, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: [KAPLAN_QUERY_KEY, props.timeSheetParams],
+  const [queryParams, setQueryParams] = useState<TimeSheetParams>();
+  const { data, isFetching, isSuccess, isError, error } = useQuery({
+    queryKey: [KAPLAN_QUERY_KEY, queryParams],
     queryFn: async () => {
-      const startDate = getMonday(props.timeSheetParams?.targetDate ?? new Date());
+      const startDate = getMonday(queryParams!.targetDate);
       const endDate = addDaysToDate(startDate, 6);
       return axios
         .get(API_ENDPOINT_KAPLAN, {
@@ -53,7 +54,7 @@ const DatesStep = (props: DatesProps) => {
             to: getDateStr(endDate),
           },
           headers: {
-            [KAPLAN_ICS_HEADER]: b64_encode(props.timeSheetParams?.kaPlanIcs ?? ""),
+            [KAPLAN_ICS_HEADER]: b64_encode(queryParams!.kaPlanIcs),
           },
         })
         .then((response) => response.data)
@@ -80,20 +81,22 @@ const DatesStep = (props: DatesProps) => {
           },
         };
       }),
+    gcTime: 0,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!props.timeSheetParams,
+    enabled: !!queryParams,
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.setTimeSheetParams({
+    const params: TimeSheetParams = {
       type: "weekly",
       format: "pdf",
       targetDate: targetDate,
       kaPlanIcs: event.target.kaplan_ics.value,
-    });
-    refetch();
+    };
+    props.setTimeSheetParams(params);
+    setQueryParams(params);
   };
 
   const kaPlanToast = useRef<Id | undefined>(undefined);
@@ -120,7 +123,6 @@ const DatesStep = (props: DatesProps) => {
         ),
         {
           autoClose: false,
-          className: "wideToast",
         },
       );
     }
@@ -132,7 +134,7 @@ const DatesStep = (props: DatesProps) => {
       props.setDateList(data);
       props.nextStep();
     }
-  }, [isSuccess, data, props.setDateList]);
+  }, [isSuccess]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
