@@ -1,0 +1,3 @@
+.Toastify__toast-container:has(div.wideToast) {
+  width: 640px;
+}
