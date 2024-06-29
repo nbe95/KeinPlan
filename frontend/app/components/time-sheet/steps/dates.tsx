@@ -60,6 +60,7 @@ const DatesStep = (props: DatesProps) => {
         .then((response) => response.data)
         .catch((error) => {
           const msg: string =
+            error.response?.data?.message ??
             error.response?.data ??
             `The backend query returned status code ${error.response?.status}.`;
           if (isClientError(error.response?.status)) {
@@ -126,7 +127,6 @@ const DatesStep = (props: DatesProps) => {
         ),
         {
           autoClose: false,
-          delay: 200,
         },
       );
     }
