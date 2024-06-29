@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <>
       <Container>
-        <h1 className="text-body-emphasis">Stundenliste in 1 Minute</h1>
+        <h1>Stundenliste in 1 Minute</h1>
         <p className="fs-5 col-md-10">
           Erstelle mit nur ein paar Klicks Auflistungen deiner Arbeitszeit auf Basis deiner in{" "}
           <em>KaPlan</em> hinterlegten Termine. Lade sie als PDF herunter und sende sie direkt ans
@@ -25,7 +25,7 @@ export default function Page() {
         <hr className="col-3 col-md-2 mb-5" />
         <Row gap={5}>
           <Col md={6}>
-            <h2 className="text-body-emphasis">Mail-Vorlage</h2>
+            <h2>Mail-Vorlage</h2>
             <p>
               Ready to go beyond the starter template? Check out these open source projects that you
               can quickly duplicate to a new GitHub repository.
@@ -75,7 +75,7 @@ export default function Page() {
           </Col>
 
           <Col md={6}>
-            <h2 className="text-body-emphasis">Datenschutz</h2>
+            <h2>Datenschutz</h2>
             <p>
               Read more detailed instructions and documentation on using or contributing to
               Bootstrap.

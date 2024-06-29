@@ -1,24 +1,25 @@
-import { faCircleChevronLeft, faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleChevronLeft,
+  faCircleChevronRight,
+  faCircleInfo,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Id, toast } from "react-toastify";
 import strftime from "strftime";
 import { b64_encode } from "../../../utils/base64";
 import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
-import LoadingSpinner from "../../loading";
-import MsgBox from "../../msg-box";
 import { NextButton, PrevButton } from "../../process-button";
-import DateCard from "../date-card";
 import { TimeSheetDate, TimeSheetParams } from "../generator";
 
 type DatesProps = {
-  timeSheetParams: TimeSheetParams;
+  timeSheetParams?: TimeSheetParams;
   setTimeSheetParams: (data: TimeSheetParams) => void;
-  dateList: TimeSheetDate[];
   setDateList: (data: TimeSheetDate[]) => void;
   prevStep: () => void;
   nextStep: () => void;
@@ -26,7 +27,9 @@ type DatesProps = {
 
 const DatesStep = (props: DatesProps) => {
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
-  const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo));
+  const [targetDate, setTargetDate] = useState(
+    props.timeSheetParams?.targetDate ?? getMonday(fiveDaysAgo),
+  );
   const getCalWeekLabel = useCallback(
     (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
     [targetDate],
@@ -40,10 +43,11 @@ const DatesStep = (props: DatesProps) => {
   };
   const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
 
-  const { data, refetch, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: [KAPLAN_QUERY_KEY, props.timeSheetParams],
+  const [queryParams, setQueryParams] = useState<TimeSheetParams>();
+  const { data, isFetching, isSuccess, isError, error } = useQuery({
+    queryKey: [KAPLAN_QUERY_KEY, queryParams],
     queryFn: async () => {
-      const startDate = getMonday(props.timeSheetParams?.targetDate);
+      const startDate = getMonday(queryParams!.targetDate);
       const endDate = addDaysToDate(startDate, 6);
       return axios
         .get(API_ENDPOINT_KAPLAN, {
@@ -52,12 +56,13 @@ const DatesStep = (props: DatesProps) => {
             to: getDateStr(endDate),
           },
           headers: {
-            [KAPLAN_ICS_HEADER]: b64_encode(props.timeSheetParams?.kaPlanIcs),
+            [KAPLAN_ICS_HEADER]: b64_encode(queryParams!.kaPlanIcs),
           },
         })
         .then((response) => response.data)
         .catch((error) => {
           const msg: string =
+            error.response?.data?.message ??
             error.response?.data ??
             `The backend query returned status code ${error.response?.status}.`;
           if (isClientError(error.response?.status)) {
@@ -79,40 +84,70 @@ const DatesStep = (props: DatesProps) => {
           },
         };
       }),
+    gcTime: 0,
     refetchOnWindowFocus: false,
-    enabled: false, // Trigger query only manually using refetch()
+    refetchOnMount: false,
+    enabled: !!queryParams,
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.setTimeSheetParams({
+    const params: TimeSheetParams = {
       type: "weekly",
       format: "pdf",
       targetDate: targetDate,
       kaPlanIcs: event.target.kaplan_ics.value,
-    });
+    };
+    props.setTimeSheetParams(params);
+    setQueryParams(params);
   };
 
-  // Trigger backend request as soon as time sheet data has been stored
+  const kaPlanToast = useRef<Id | undefined>(undefined);
   useEffect(() => {
-    if (props.timeSheetParams) {
-      refetch();
+    if (isFetching) {
+      toast.dismiss(kaPlanToast.current);
+      kaPlanToast.current = toast.loading("KaPlan-Server wird kontaktiert…", {
+        className: "bg-secondary text-white",
+      });
     }
-  }, [props.timeSheetParams, refetch]);
+  }, [isFetching]);
 
-  // Save local date list upon successful backend request
-  const setDateListRef = props.setDateList;
+  useEffect(() => {
+    if (isError) {
+      setQueryParams(undefined);
+      toast.dismiss(kaPlanToast.current);
+      kaPlanToast.current = toast.error(
+        () => (
+          <div>
+            <p className="mb-0">
+              Fehler bei Anfrage ans Backend. Stimmt dein Abonnement-String? 🤨
+            </p>
+            <code className="text-white">
+              <small>{error.message}</small>
+            </code>
+          </div>
+        ),
+        {
+          autoClose: false,
+        },
+      );
+    }
+  }, [isError]);
+
   useEffect(() => {
     if (isSuccess) {
-      setDateListRef(data);
+      toast.dismiss(kaPlanToast.current);
+      props.setDateList(data);
+      props.nextStep();
     }
-  }, [isFetching, isSuccess, data, setDateListRef]);
+  }, [isSuccess]);
 
   return (
-    <form name="time_sheet_data_form" onSubmit={(event) => handleSubmit(event)}>
+    <form onSubmit={(event) => handleSubmit(event)}>
+      <p className="lead">Als nächstes rufen wir deine Termine vom KaPlan-Server ab.</p>
       <Row>
-        <Col lg={6} md={12}>
-          <Form.Group className="mb-4">
+        <Col lg={9} md={12} className="mb-4">
+          <Form.Group>
             <Form.Label>
               Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
             </Form.Label>
@@ -128,88 +163,66 @@ const DatesStep = (props: DatesProps) => {
                     setTargetDate(date);
                   }
                 }}
+                disabled={isFetching}
                 required
               />
               <InputGroup.Text>
-                <Button variant="none" className="py-0" onClick={prevWeek}>
+                <Button
+                  variant="none"
+                  className="py-0 border-0"
+                  onClick={prevWeek}
+                  disabled={isFetching}
+                >
                   <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
                 </Button>
                 {getCalWeekLabel()}
-                <Button variant="none" className="py-0" onClick={nextWeek}>
+                <Button
+                  variant="none"
+                  className="py-0 border-0"
+                  onClick={nextWeek}
+                  disabled={isFetching}
+                >
                   <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
                 </Button>
               </InputGroup.Text>
             </InputGroup>
             <Form.Text>
-              Wähle irgendein Datum aus, das in der gewünschten Kalenderwoche liegt.
+              Wähle ein beliebiges Datum aus, das innerhalb in der gewünschten Kalenderwoche liegt.
             </Form.Text>
           </Form.Group>
         </Col>
-        <Col lg={6} md={12}>
-          <Form.Group className="mb-4">
-            <Form.Label>Persönlicher KaPlan-Abonnement-String</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="text"
-                name="kaplan_ics"
-                placeholder="KaPlan ICS-Link"
-                defaultValue={props.timeSheetParams?.kaPlanIcs}
-                required
-              />
-              <Button variant="primary" type="submit" className="float-end" disabled={isFetching}>
-                Termine laden
-              </Button>
-            </InputGroup>
+        <Col md={12} className="mb-4">
+          <Form.Group>
+            <Form.Label>Dein persönlicher KaPlan-Abonnement-String</Form.Label>
+            <Form.Control
+              type="text"
+              name="kaplan_ics"
+              placeholder=""
+              defaultValue={props.timeSheetParams?.kaPlanIcs}
+              disabled={isFetching}
+              required
+            />
             <Form.Text>
-              Bitte lies unbedingt, wie dein persönlicher KaPlan-Link verarbeitet wird.
+              <p>
+                <FontAwesomeIcon icon={faCircleInfo} size="lg" className="me-1" />
+                Du findest deinen Abonnement-String in KaPlan unter{" "}
+                <b>Hilfe/Info/Einstellungen &rarr; Kalenderintegration</b>.
+              </p>
             </Form.Text>
           </Form.Group>
+          <p className="mb-0 col-xl-10">
+            Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
+            Abonnement-String notwendig. Wie unten beschrieben, wird er niemals gespeichert und nur
+            einmalig zur Erstellung der Stundenliste verwendet.
+          </p>
         </Col>
       </Row>
-
-      <hr />
-
-      {!isError &&
-        !isFetching &&
-        (props.dateList ? (
-          <>
-            Folgende Daten kamen zurück:
-            <Row className="my-4">
-              {props.dateList.map((entry: TimeSheetDate, index: number) => (
-                <Col key={index} sm={12} md={6}>
-                  <DateCard date={entry} />
-                </Col>
-              ))}
-            </Row>
-          </>
-        ) : (
-          <p>Bitte erst oben die Felder ausfüllen.</p>
-        ))}
-
-      {isFetching && (
-        <Row className="py-4">
-          <LoadingSpinner message="KaPlan-Server wird kontaktiert…" />
-        </Row>
-      )}
-      {isError && (
-        <Row className="py-3">
-          <MsgBox type="error" trace={error.message}>
-            Fehler bei Anfrage ans Backend. 🤨
-            <br />
-            Stimmt dein KaPlan-Abonnement-String?
-          </MsgBox>
-        </Row>
-      )}
-
       <Row>
         <Col className="d-flex justify-content-start">
-          <PrevButton callback={props.prevStep} />
+          <PrevButton callback={props.prevStep} disabled={isFetching} />
         </Col>
         <Col className="d-flex justify-content-end">
-          <NextButton
-            disabled={!props.dateList || isError || isFetching}
-            callback={props.nextStep}
-          />
+          <NextButton submit disabled={isFetching} />
         </Col>
       </Row>
     </form>

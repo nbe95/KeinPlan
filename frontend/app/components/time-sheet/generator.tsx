@@ -2,13 +2,14 @@
 
 import {
   faCalendarDay,
-  faCheck,
-  faClipboardUser,
+  faEnvelopeCircleCheck,
   faMagnifyingGlass,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import Container from "../layout/container";
 import Stepper from "../stepper";
+import CheckStep from "./steps/check";
 import DatesStep from "./steps/dates";
 import ResultView from "./steps/result";
 import FormUserData from "./steps/user-data";
@@ -38,14 +39,9 @@ export interface TimeSheetDate {
 }
 
 const TimeSheetGenerator = () => {
-  const [userData, setUserData] = useState<UserData>({ firstName: "", lastName: "", employer: "" });
-  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>({
-    kaPlanIcs: "",
-    targetDate: new Date(0),
-    type: "weekly",
-    format: "pdf",
-  });
-  const [dateList, setDateList] = useState<TimeSheetDate[]>([]);
+  const [userData, setUserData] = useState<UserData>();
+  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>();
+  const [dateList, setDateList] = useState<TimeSheetDate[]>();
 
   enum Steps {
     USER_DATA,
@@ -60,10 +56,10 @@ const TimeSheetGenerator = () => {
       <Container className="bg-light">
         <Stepper
           steps={[
-            { key: Steps.USER_DATA, name: "Allgemeines", icon: faClipboardUser },
+            { key: Steps.USER_DATA, name: "Allgemeines", icon: faUser },
             { key: Steps.TIME_SHEET_DATA, name: "Termine", icon: faCalendarDay },
             { key: Steps.DATE_CHECK, name: "Prüfen", icon: faMagnifyingGlass },
-            { key: Steps.RESULT_VIEW, name: "Fertig", icon: faCheck },
+            { key: Steps.RESULT_VIEW, name: "Verschicken", icon: faEnvelopeCircleCheck },
           ]}
           active={step}
         />
@@ -84,23 +80,35 @@ const TimeSheetGenerator = () => {
           <DatesStep
             timeSheetParams={timeSheetParams}
             setTimeSheetParams={setTimeSheetParams}
-            dateList={dateList}
             setDateList={setDateList}
             prevStep={() => {
               setStep(Steps.USER_DATA);
+            }}
+            nextStep={() => {
+              setStep(Steps.DATE_CHECK);
+            }}
+          />
+        )}
+
+        {step == Steps.DATE_CHECK && (
+          <CheckStep
+            dateList={dateList!}
+            prevStep={() => {
+              setStep(Steps.TIME_SHEET_DATA);
             }}
             nextStep={() => {
               setStep(Steps.RESULT_VIEW);
             }}
           />
         )}
+
         {step == Steps.RESULT_VIEW && (
           <ResultView
-            userData={userData}
-            timeSheetParams={timeSheetParams}
-            dateList={dateList}
+            userData={userData!}
+            timeSheetParams={timeSheetParams!}
+            dateList={dateList!}
             prevStep={() => {
-              setStep(Steps.TIME_SHEET_DATA);
+              setStep(Steps.DATE_CHECK);
             }}
           />
         )}
