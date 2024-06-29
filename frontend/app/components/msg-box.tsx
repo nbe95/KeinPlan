@@ -23,9 +23,9 @@ const MsgBox = (props: PropsWithChildren<MsgBoxProps>) => {
   };
 
   return (
-    <Alert variant={styling[props.type].bsVariant} className="my-4">
-      <Stack direction="horizontal" gap={4}>
-        <FontAwesomeIcon icon={styling[props.type].faIcon} size="3x" />
+    <Alert variant={styling[props.type].bsVariant} className="my-2">
+      <Stack direction="horizontal" gap={3}>
+        <FontAwesomeIcon icon={styling[props.type].faIcon} size="2x" />
         <div>
           {props.children}
           {props.trace && (

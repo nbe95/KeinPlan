@@ -1,5 +1,6 @@
 import { Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import MsgBox from "../../msg-box";
 import { NextButton, PrevButton } from "../../process-button";
 import DateCard from "../date-card";
 import { TimeSheetDate } from "../generator";
@@ -18,11 +19,20 @@ const CheckStep = (props: CheckProps) => {
         Wenn alles so stimmt, klicke auf <q>Weiter</q>.
       </p>
       <Row className="my-4">
-        {props.dateList.map((entry: TimeSheetDate, index: number) => (
-          <Col key={index} sm={12} md={6}>
-            <DateCard date={entry} />
-          </Col>
-        ))}
+        {props.dateList.length ? (
+          props.dateList.map((entry: TimeSheetDate, index: number) => (
+            <Col key={index} sm={12} md={6}>
+              <DateCard date={entry} />
+            </Col>
+          ))
+        ) : (
+          <MsgBox type="info">
+            <p className="mb-0">Nanu &ndash; hier sind ja gar keine Termine?!</p>
+            <p className="mb-0">
+              Macht nichts. Du kannst auch pro forma eine leere Stundenliste erstellen.
+            </p>
+          </MsgBox>
+        )}
       </Row>
       <Row>
         <Col className="mb-4">
@@ -31,14 +41,14 @@ const CheckStep = (props: CheckProps) => {
             <Form.Check
               type="switch"
               id="confirm"
-              label="Eingaben speichern, damit's beim nächsten Mal noch schneller geht."
+              label="Eingaben speichern und beim nächsten Mal direkt hier beginnen."
               onClick={() => {
                 toast.info("Nice.");
               }}
             />
             <Form.Text>
-              Speichert deine bisherigen Eingaben als Cookie in deinem Browser. Deine Daten sind
-              sicher und bleiben ausschließlich bei dir.
+              Speichert deine Daten als Cookie im Browser, damit du sie nicht nochmal eintippen
+              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
             </Form.Text>
           </Form.Group>
         </Col>
