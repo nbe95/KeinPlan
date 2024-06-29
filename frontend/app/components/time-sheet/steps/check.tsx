@@ -1,4 +1,5 @@
-import { Col, Row } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { NextButton, PrevButton } from "../../process-button";
 import DateCard from "../date-card";
 import { TimeSheetDate } from "../generator";
@@ -22,6 +23,25 @@ const CheckStep = (props: CheckProps) => {
             <DateCard date={entry} />
           </Col>
         ))}
+      </Row>
+      <Row>
+        <Col className="mb-4">
+          <hr className="col-3 col-md-2 mb-" />
+          <Form.Group>
+            <Form.Check
+              type="switch"
+              id="confirm"
+              label="Eingaben speichern, damit's beim nächsten Mal noch schneller geht."
+              onClick={() => {
+                toast.info("Nice.");
+              }}
+            />
+            <Form.Text>
+              Speichert deine bisherigen Eingaben als Cookie in deinem Browser. Deine Daten sind
+              sicher und bleiben ausschließlich bei dir.
+            </Form.Text>
+          </Form.Group>
+        </Col>
       </Row>
       <Row>
         <Col className="d-flex justify-content-start">

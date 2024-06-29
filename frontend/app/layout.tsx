@@ -1,6 +1,6 @@
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Bounce, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
 import { ReactQueryClientProvider } from "./components/query-client-provider";
@@ -32,8 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ToastContainer
             theme="colored"
             position="bottom-center"
-            transition={Bounce}
-            style={{ width: "640px" }}
+            transition={Slide}
+            style={{ width: "660px", maxWidth: "100%" }}
           />
         </body>
       </html>

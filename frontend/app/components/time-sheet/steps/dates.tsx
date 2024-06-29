@@ -103,12 +103,15 @@ const DatesStep = (props: DatesProps) => {
   useEffect(() => {
     if (isFetching) {
       toast.dismiss(kaPlanToast.current);
-      kaPlanToast.current = toast.loading("KaPlan-Server wird kontaktiert…");
+      kaPlanToast.current = toast.loading("KaPlan-Server wird kontaktiert…", {
+        className: "bg-secondary text-white",
+      });
     }
   }, [isFetching]);
 
   useEffect(() => {
     if (isError) {
+      setQueryParams(undefined);
       toast.dismiss(kaPlanToast.current);
       kaPlanToast.current = toast.error(
         () => (
@@ -123,6 +126,7 @@ const DatesStep = (props: DatesProps) => {
         ),
         {
           autoClose: false,
+          delay: 200,
         },
       );
     }
@@ -202,32 +206,13 @@ const DatesStep = (props: DatesProps) => {
                 Du findest deinen Abonnement-String in KaPlan unter{" "}
                 <b>Hilfe/Info/Einstellungen &rarr; Kalenderintegration</b>.
               </p>
-              <p className="mb-0 col-md-10">
-                Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
-                Abonnement-String notwendig. Wie unten beschrieben, wird er niemals gespeichert und
-                nur einmalig zur Erstellung der Stundenliste verwendet.
-              </p>
             </Form.Text>
           </Form.Group>
-        </Col>
-      </Row>
-      <Row>
-        <Col className="mb-4">
-          <hr className="col-3 col-md-2 mb-" />
-          <Form.Group>
-            <Form.Check
-              type="switch"
-              id="confirm"
-              label="Eingaben speichern, damit's beim nächsten Mal noch schneller geht."
-              onClick={() => {
-                toast("Huhu!");
-              }}
-            />
-            <Form.Text>
-              Deine Daten werden als Cookie in deinem Browser gespeichert. Sie sind sicher und
-              bleiben ausschließlich bei dir.
-            </Form.Text>
-          </Form.Group>
+          <p className="mb-0 col-xl-10">
+            Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
+            Abonnement-String notwendig. Wie unten beschrieben, wird er niemals gespeichert und nur
+            einmalig zur Erstellung der Stundenliste verwendet.
+          </p>
         </Col>
       </Row>
       <Row>
