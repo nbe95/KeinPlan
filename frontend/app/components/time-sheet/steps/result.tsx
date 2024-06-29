@@ -1,4 +1,4 @@
-import { faEnvelopeOpenText, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelopeOpenText, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -123,50 +123,50 @@ const ResultStep = (props: ResultProps) => {
           </Col>
         </Row>
       ) : (
-        <Row className="align-items-center">
-          <Col sm={12} md={7}>
-            <div className="text-center m-4 p-4 bg-light rounded">
-              {isLoading ? (
-                <div className="my-4">
-                  <LoadingSpinner message="Working hard..." />
-                </div>
-              ) : (
-                <>
-                  <h5>
-                    Deine Stundenliste für KW {getWeek(props.timeSheetParams.targetDate)} ist
-                    fertig! 🎉
-                  </h5>
-                  <DownloadButton
-                    fileName={pdf?.fileName ?? ""}
-                    url={pdf?.blobUrl ?? ""}
-                    text="Download als PDF"
-                    size={pdf?.size}
-                    faIcon={faFileArrowDown}
-                    isPrimary={true}
-                  />
-                </>
-              )}
-            </div>
-          </Col>
-          <Col sm={12} md={5}>
-            <p className="lead">Wie geht&apos;s jetzt weiter?</p>
-            <p>
-              Lade deine Stundenliste runter. Sende sie anschließend an das zuständige Pfarrbüro per
-              E-Mail, z.B. mit der folgenden Vorlage.
-            </p>
-            <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => {
-                window.location.href = createMailToLink(mailParams);
-              }}
-            >
-              <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
-              Mail-Vorlage öffnen
-            </Button>
-          </Col>
-        </Row>
+        <>
+          <p className="lead">Das war&apos;s schon! 🎉</p>
+          <Row className="align-items-center">
+            <Col sm={12} md={6}>
+              <div className="text-center m-4 p-4 bg-light rounded">
+                {isLoading ? (
+                  <div className="my-4">
+                    <LoadingSpinner message="Working hard..." />
+                  </div>
+                ) : (
+                  <>
+                    <h5>Lade deine Stundenliste runter:</h5>
+                    <DownloadButton
+                      fileName={pdf!.fileName}
+                      url={pdf!.blobUrl}
+                      text={`KW ${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`}
+                      size={pdf!.size}
+                      faIcon={faFilePdf}
+                      isPrimary={true}
+                    />
+                  </>
+                )}
+              </div>
+            </Col>
+            <Col sm={12} md={6}>
+              <h2>Wie geht&apos;s jetzt weiter?</h2>
+              <p>
+                Lade deine Stundenliste runter. Sende sie anschließend an das zuständige Pfarrbüro
+                per E-Mail, z.B. mit der folgenden Vorlage.
+              </p>
+              <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => {
+                  window.location.href = createMailToLink(mailParams);
+                }}
+              >
+                <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+                Mail-Vorlage öffnen
+              </Button>
+            </Col>
+          </Row>
+        </>
       )}
       <Row>
         <Col className="d-flex justify-content-start">

@@ -24,10 +24,10 @@ const DownloadButton = (props: PropsWithChildren<DownloadButtonProps>) => {
         ref.current?.click();
       }}
     >
-      <Stack direction="vertical" gap={1}>
+      <Stack direction="vertical" className="mx-3">
         <FontAwesomeIcon icon={props.faIcon} size="4x" className="m-2" />
         <span className="fw-bold">{props.text}</span>
-        {props.size && <span className="small">({filesize(props.size, { locale: "de" })})</span>}
+        {props.size && <span className="small">{filesize(props.size, { locale: "de" })}</span>}
       </Stack>
       <a href={props.url} download={props.fileName} ref={ref} className="hidden" />
     </Button>

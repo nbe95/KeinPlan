@@ -2,9 +2,9 @@
 
 import {
   faCalendarDay,
-  faCheck,
-  faClipboardUser,
+  faEnvelopeCircleCheck,
   faMagnifyingGlass,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import Container from "../layout/container";
@@ -56,10 +56,10 @@ const TimeSheetGenerator = () => {
       <Container className="bg-light">
         <Stepper
           steps={[
-            { key: Steps.USER_DATA, name: "Allgemeines", icon: faClipboardUser },
+            { key: Steps.USER_DATA, name: "Allgemeines", icon: faUser },
             { key: Steps.TIME_SHEET_DATA, name: "Termine", icon: faCalendarDay },
             { key: Steps.DATE_CHECK, name: "Prüfen", icon: faMagnifyingGlass },
-            { key: Steps.RESULT_VIEW, name: "Fertig", icon: faCheck },
+            { key: Steps.RESULT_VIEW, name: "Verschicken", icon: faEnvelopeCircleCheck },
           ]}
           active={step}
         />
