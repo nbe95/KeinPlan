@@ -9,7 +9,6 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../style/stepper.scss";
-import "../style/toast.css";
 
 config.autoAddCss = false;
 
@@ -30,7 +29,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main>{children}</main>
             <Footer />
           </div>
-          <ToastContainer theme="colored" position="bottom-center" transition={Bounce} />
+          <ToastContainer
+            theme="colored"
+            position="bottom-center"
+            transition={Bounce}
+            style={{ width: "640px" }}
+          />
         </body>
       </html>
     </ReactQueryClientProvider>

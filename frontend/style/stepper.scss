@@ -24,7 +24,7 @@
 
     &:has(~ .active) {
       &::after {
-        background-color: var(--bs-black);
+        background-color: var(--bs-blue);
       }
     }
   }
