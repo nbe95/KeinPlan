@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import Container from "../layout/container";
 import Stepper from "../stepper";
+import CheckStep from "./steps/check";
 import DatesStep from "./steps/dates";
 import ResultView from "./steps/result";
 import FormUserData from "./steps/user-data";
@@ -38,14 +39,9 @@ export interface TimeSheetDate {
 }
 
 const TimeSheetGenerator = () => {
-  const [userData, setUserData] = useState<UserData>({ firstName: "", lastName: "", employer: "" });
-  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>({
-    kaPlanIcs: "",
-    targetDate: new Date(0),
-    type: "weekly",
-    format: "pdf",
-  });
-  const [dateList, setDateList] = useState<TimeSheetDate[]>([]);
+  const [userData, setUserData] = useState<UserData>();
+  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>();
+  const [dateList, setDateList] = useState<TimeSheetDate[]>();
 
   enum Steps {
     USER_DATA,
@@ -84,16 +80,28 @@ const TimeSheetGenerator = () => {
           <DatesStep
             timeSheetParams={timeSheetParams}
             setTimeSheetParams={setTimeSheetParams}
-            dateList={dateList}
             setDateList={setDateList}
             prevStep={() => {
               setStep(Steps.USER_DATA);
             }}
             nextStep={() => {
-              setStep(Steps.RESULT_VIEW);
+              setStep(Steps.DATE_CHECK);
             }}
           />
         )}
+
+        {step == Steps.DATE_CHECK && (
+          <CheckStep
+            dateList={dateList ?? []}
+            prevStep={() => {
+              setStep(Steps.USER_DATA);
+            }}
+            nextStep={() => {
+              setStep(Steps.DATE_CHECK);
+            }}
+          />
+        )}
+
         {step == Steps.RESULT_VIEW && (
           <ResultView
             userData={userData}

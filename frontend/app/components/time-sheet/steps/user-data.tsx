@@ -3,7 +3,7 @@ import { NextButton } from "../../process-button";
 import { UserData } from "../generator";
 
 type UserDataProps = {
-  userData: UserData;
+  userData?: UserData;
   setUserData: (data: UserData) => void;
   nextStep: () => void;
 };
@@ -12,7 +12,6 @@ const UserDataStep = (props: UserDataProps) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.setUserData({
-      ...props.userData,
       firstName: event.target.first_name.value,
       lastName: event.target.last_name.value,
       employer: event.target.employer.value,
@@ -21,7 +20,8 @@ const UserDataStep = (props: UserDataProps) => {
   };
 
   return (
-    <form name="user_data_form" onSubmit={(event) => handleSubmit(event)}>
+    <form onSubmit={(event) => handleSubmit(event)}>
+      <p className="lead">First things first &ndash; zuerst die Basics.</p>
       <Row>
         <Col lg={6} md={12} className="mb-4">
           <Form.Group>
@@ -31,14 +31,14 @@ const UserDataStep = (props: UserDataProps) => {
                 type="text"
                 name="first_name"
                 placeholder="Vorname"
-                defaultValue={props.userData.firstName}
+                defaultValue={props.userData?.firstName}
                 required
               />
               <Form.Control
                 type="text"
                 name="last_name"
                 placeholder="Nachname"
-                defaultValue={props.userData.lastName}
+                defaultValue={props.userData?.lastName}
                 required
               />
             </InputGroup>
@@ -54,7 +54,7 @@ const UserDataStep = (props: UserDataProps) => {
               type="text"
               name="employer"
               placeholder="Dienstgeber"
-              defaultValue={props.userData.employer}
+              defaultValue={props.userData?.employer}
               required
             />
             <Form.Text>
@@ -66,7 +66,7 @@ const UserDataStep = (props: UserDataProps) => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-end">
-          <NextButton type="submit" />
+          <NextButton submit />
         </Col>
       </Row>
     </form>
