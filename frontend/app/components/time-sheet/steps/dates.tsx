@@ -27,7 +27,9 @@ type DatesProps = {
 
 const DatesStep = (props: DatesProps) => {
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
-  const [targetDate, setTargetDate] = useState(getMonday(fiveDaysAgo));
+  const [targetDate, setTargetDate] = useState(
+    props.timeSheetParams?.targetDate ?? getMonday(fiveDaysAgo),
+  );
   const getCalWeekLabel = useCallback(
     (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
     [targetDate],
