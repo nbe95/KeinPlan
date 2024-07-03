@@ -80,6 +80,3 @@ jobs:
     with:
       target: ${{ matrix.target }}
       tag: ${{ needs.bump-tag-version.outputs.version }}
-    needs:
-      - bump-tag-version
-      - create-docker-images
