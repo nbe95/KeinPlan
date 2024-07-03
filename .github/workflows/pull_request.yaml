@@ -62,3 +62,18 @@ jobs:
           require-release-notes: false
           base-branch: true
           with-v: false
+
+  # ONLY FOR TESTING
+  test-deploy:
+    name: Deploy to ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - staging
+          - production
+    uses: ./.github/workflows/deploy.yaml
+    with:
+      target: ${{ matrix.target }}
+      tag: latest
+    secrets: inherit
