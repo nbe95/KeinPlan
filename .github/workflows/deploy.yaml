@@ -9,7 +9,6 @@ on:
       tag:
         type: string
         default: latest
-    secrets: inherit
 
 jobs:
   deploy:
@@ -17,7 +16,7 @@ jobs:
     environment:
       name: ${{ inputs.target}}
       url: ${{ env.DEPLOYMENT_URL }}
-    ns-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Call deployment webhook
         run: |
