@@ -72,14 +72,18 @@ jobs:
             ${{ env.FRONTEND_IMAGE_NAME }}:${{ needs.bump-tag-version.outputs.version }}
             ${{ env.FRONTEND_IMAGE_NAME }}:latest
 
-  deploy-prod:
-    name: Deploy to production
-    environment: production
+  deploy:
+    name: Deploy to ${{ matrix.target }}
     runs-on: ubuntu-latest
     needs:
       - bump-tag-version
       - create-docker-images
-    steps:
-      - name: Call deployment webhook
-        run: |
-          curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.bump-tag-version.outputs.version }}"
+    strategy:
+      matrix:
+        target:
+          - staging
+          - production
+    uses: ./.github/workflows/deploy.yaml
+    with:
+      target: ${{ matrix.target }}
+    secrets: inherit
