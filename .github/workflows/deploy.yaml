@@ -12,12 +12,12 @@ on:
     secrets: inherit
 
 jobs:
-  inner-deploy:
+  deploy:
     name: Deploy to ${{ inputs.target }}
-    # environment:
-    #   name: ${{ inputs.target}}
-    #   url: ${{ env.DEPLOYMENT_URL }}
-    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.target}}
+      url: ${{ env.DEPLOYMENT_URL }}
+    ns-on: ubuntu-latest
     steps:
       - name: Call deployment webhook
         run: |
