@@ -8,14 +8,15 @@ on:
         required: true
       tag:
         type: string
-        required: false
+        default: latest
+    secrets: inherit
 
 jobs:
-  deploy:
+  inner-deploy:
     name: Deploy to ${{ inputs.target }}
-    environment:
-      name: ${{ inputs.target}}
-      url: ${{ env.DEPLOYMENT_URL }}
+    # environment:
+    #   name: ${{ inputs.target}}
+    #   url: ${{ env.DEPLOYMENT_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: Call deployment webhook
