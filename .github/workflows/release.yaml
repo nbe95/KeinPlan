@@ -79,9 +79,7 @@ jobs:
       - create-docker-images
     strategy:
       matrix:
-        target:
-          - staging
-          - production
+        target: [staging, production]
     uses: ./.github/workflows/deploy.yaml
     with:
       target: ${{ matrix.target }}
