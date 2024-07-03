@@ -73,10 +73,6 @@ jobs:
             ${{ env.FRONTEND_IMAGE_NAME }}:latest
 
   deploy:
-    name: Deploy to ${{ matrix.target }}
-    needs:
-      - bump-tag-version
-      - create-docker-images
     strategy:
       matrix:
         target: [staging, production]
@@ -84,4 +80,7 @@ jobs:
     with:
       target: ${{ matrix.target }}
       tag: ${{ needs.bump-tag-version.outputs.version }}
+    needs:
+      - bump-tag-version
+      - create-docker-images
     secrets: inherit
