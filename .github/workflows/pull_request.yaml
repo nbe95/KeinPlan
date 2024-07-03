@@ -66,6 +66,7 @@ jobs:
   # ONLY FOR TESTING
   deploy-staging:
     name: Deploy to staging
+    runs-on: ubuntu-latest
     environment:
       name: staging
     steps:
@@ -75,6 +76,7 @@ jobs:
 
   deploy-prod:
     name: Deploy to production
+    runs-on: ubuntu-latest
     environment:
       name: production
       url: ${{ env.DEPLOYMENT_URL }}
