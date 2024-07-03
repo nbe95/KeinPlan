@@ -12,12 +12,15 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to ${{ inputs.target }}
+    name: Deploy
     environment:
       name: ${{ inputs.target}}
       url: ${{ env.DEPLOYMENT_URL }}
     runs-on: ubuntu-latest
     steps:
+      - name: Debug
+        run: |
+          echo ${{ env.DEPLOYMENT_URL }}
       - name: Call deployment webhook
         run: |
           curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ inputs.tag }}"
