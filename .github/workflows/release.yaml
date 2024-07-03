@@ -93,7 +93,7 @@ jobs:
       - create-docker-images
     environment:
       name: production
-      url: ${{ env.DEPLOYMENT_URL }}
+      url: ${{ vars.DEPLOYMENT_URL }}
     steps:
       - name: Call webhook
         run: |
