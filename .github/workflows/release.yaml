@@ -79,4 +79,3 @@ jobs:
     uses: ./.github/workflows/deploy.yaml
     with:
       target: ${{ matrix.target }}
-      tag: ${{ needs.bump-tag-version.outputs.version }}
