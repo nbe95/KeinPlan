@@ -66,17 +66,19 @@ jobs:
   # ONLY FOR TESTING
   deploy-staging:
     name: Deploy to staging
-    uses: ./.github/workflows/deploy.yaml
     environment:
       name: staging
-    secrets:
-      webhook: ${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=latest
+    steps:
+      - name: Call deployment webhook
+        run: |
+          curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=latest"
 
   deploy-prod:
     name: Deploy to production
-    uses: ./.github/workflows/deploy.yaml
     environment:
       name: production
       url: ${{ env.DEPLOYMENT_URL }}
-    secrets:
-      webhook: ${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=latest
+    steps:
+      - name: Call deployment webhook
+        run: |
+          curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=latest"
