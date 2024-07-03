@@ -2,25 +2,15 @@ name: Deploy by webhook
 
 on:
   workflow_call:
-    inputs:
-      target:
-        type: string
+    secrets:
+      webhook:
         required: true
-      tag:
-        type: string
-        default: latest
 
 jobs:
   deploy:
     name: Deploy
-    environment:
-      name: ${{ inputs.target}}
-      url: ${{ env.DEPLOYMENT_URL }}
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
-        run: |
-          echo ${{ env.DEPLOYMENT_URL }}
       - name: Call deployment webhook
         run: |
-          curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ inputs.tag }}"
+          curl -s -X POST "${{ secrets.webhook }}"
