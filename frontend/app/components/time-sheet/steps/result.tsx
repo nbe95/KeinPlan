@@ -112,9 +112,10 @@ const ResultStep = (props: ResultProps) => {
     <>
       {isError ? (
         <Row>
-          <Col className="py-3">
+          <Col className="mb-4">
             <MsgBox type="error" trace={error.message}>
-              Oh no, da hat was nicht geklappt! Deine Stundenliste konnte nicht erstellt werden. 😭
+              Oh no, da hat etwas nicht geklappt! Deine Stundenliste konnte nicht erstellt werden.
+              😭
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
@@ -125,7 +126,7 @@ const ResultStep = (props: ResultProps) => {
       ) : (
         <>
           <p className="lead">Das war&apos;s schon! 🎉</p>
-          <Row className="align-items-center">
+          <Row className="align-items-center mb-5">
             <Col sm={12} md={6}>
               <div className="text-center m-4 p-4 bg-light rounded">
                 {isLoading ? (
@@ -134,7 +135,7 @@ const ResultStep = (props: ResultProps) => {
                   </div>
                 ) : (
                   <>
-                    <h5>Lade deine Stundenliste runter:</h5>
+                    <h5>Hier ist deine Stundenliste:</h5>
                     <DownloadButton
                       fileName={pdf!.fileName}
                       url={pdf!.blobUrl}
