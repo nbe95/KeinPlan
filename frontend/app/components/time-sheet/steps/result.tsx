@@ -130,7 +130,7 @@ const ResultStep = (props: ResultProps) => {
               <div className="text-center m-4 p-4 bg-light rounded">
                 {isLoading ? (
                   <div className="my-4">
-                    <LoadingSpinner message="Working hard..." />
+                    <LoadingSpinner message="Working hard…" />
                   </div>
                 ) : (
                   <>
