@@ -12,7 +12,9 @@ export const Header = () => {
           className="d-flex align-items-center text-body-emphasis text-decoration-none"
         >
           <FontAwesomeIcon icon={faClipboardQuestion} size="2xl" className="me-3" />
-          <span className="fs-4">Kein<b>Plan</b></span>
+          <span className="fs-4">
+            Kein<b>Plan</b>
+          </span>
         </Link>
       </header>
     </Container>
