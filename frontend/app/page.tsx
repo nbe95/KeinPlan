@@ -1,9 +1,44 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import Container from "./components/layout/container";
+import MsgBox from "./components/msg-box";
 import TimeSheetGenerator from "./components/time-sheet/generator";
+import {
+  API_ENDPOINT_VERSION,
+  BACKEND_VERSION_KEY,
+  PROD,
+  VERSION_FRONTEND,
+} from "./utils/constants";
+import { ClientError, isClientError, retryUnlessClientError } from "./utils/network";
 
 export default function Page() {
+  const { data, isError, error } = useQuery({
+    queryKey: [BACKEND_VERSION_KEY],
+    queryFn: async () => {
+      return axios
+        .get(API_ENDPOINT_VERSION)
+        .then((response) => response.data)
+        .catch((error) => {
+          const msg: string =
+            error.response?.data?.message ??
+            error.response?.data ??
+            `The backend query returned status code ${error.response?.status}.`;
+          if (isClientError(error.response?.status)) {
+            throw new ClientError(msg);
+          }
+          throw Error(msg);
+        });
+    },
+    retry: (count, error) => retryUnlessClientError(error, count, 5),
+    staleTime: 1000 * 60 * 60 * 24, // 1 day
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
   return (
     <>
       <Container>
@@ -110,6 +145,25 @@ export default function Page() {
           </Col>
         </Row>
       </Container>
+
+      {!PROD && isError && (
+        <Container>
+          <MsgBox type="warning" trace={error.message}>
+            Es konnten keine Versionsangaben vom Backend abgerufen werden.
+            <br />
+            <small>(Hinweis: Diese Meldung erscheint nur auf unproduktiven Systemen.)</small>
+          </MsgBox>
+        </Container>
+      )}
+      {VERSION_FRONTEND && data?.KeinPlan_backend && data?.KeinPlan_backend != VERSION_FRONTEND && (
+        <Container>
+          <MsgBox type="error">
+            Auf diesem Server läuft das Backend mit Version{" "}
+            <strong>v{data.KeinPlan_backend}</strong>. Aktualisiere die Software bzw. Docker-Images,
+            um Fehlfunktionen zu vermeiden!
+          </MsgBox>
+        </Container>
+      )}
     </>
   );
 }
