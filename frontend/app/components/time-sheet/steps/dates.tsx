@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
 import { Id, toast } from "react-toastify";
 import strftime from "strftime";
 import { b64_encode } from "../../../utils/base64";
@@ -194,11 +194,13 @@ const DatesStep = (props: DatesProps) => {
               required
             />
             <Form.Text>
-              <p>
+              <Stack direction="horizontal" gap={1} className="mb-3">
                 <FontAwesomeIcon icon={faCircleInfo} size="lg" className="me-1" />
-                Du findest deinen Abonnement-String in KaPlan unter{" "}
-                <b>Hilfe/Info/Einstellungen &rarr; Kalenderintegration</b>.
-              </p>
+                <span>
+                  Du findest deinen Abonnement-String in KaPlan unter{" "}
+                  <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
+                </span>
+              </Stack>
             </Form.Text>
           </Form.Group>
           <p className="mb-0 col-xl-10">

@@ -15,7 +15,7 @@ const LoadingSpinner = (props: LoadingSpinnerProps) => {
         }}
       >
         <Spinner variant="primary" animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
+          <span className="visually-hidden">Loading&hellip;</span>
         </Spinner>
       </div>
       {props.message && <p className="my-3">{props.message}</p>}
