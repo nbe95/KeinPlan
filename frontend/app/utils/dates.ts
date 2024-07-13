@@ -45,15 +45,19 @@ export const getWeekYear = (date: Date): number => {
 };
 
 // Recursively convert all Date objects in a dictionary to ISO strings while keeping their timezone
-export const convertDatesToIsoString = (dict: { [key: string]: any }): { [key: string]: any } => {
-  Object.keys(dict).forEach((key) => {
-    const value = dict[key];
+export const dictConvertDatesToIsoString = (dict: {
+  [key: string]: any;
+}): { [key: string]: any } => {
+  let result: { [key: string]: any } = {}; // Create a mutable clone not manipulating the original object
+  Object.assign(result, dict);
+  Object.keys(result).forEach((key) => {
+    const value = result[key];
     if (value.constructor == Object) {
       // check for sub-dictionaries
-      dict[key] = convertDatesToIsoString(value);
+      result[key] = dictConvertDatesToIsoString(value);
     } else if (value instanceof Date) {
-      dict[key] = strftime("%Y-%m-%dT%H:%M:%S%z", dict[key]);
+      result[key] = strftime("%Y-%m-%dT%H:%M:%S%z", value);
     }
   });
-  return dict;
+  return result;
 };

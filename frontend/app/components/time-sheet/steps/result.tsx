@@ -11,7 +11,7 @@ import {
   TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
 } from "../../../utils/constants";
-import { convertDatesToIsoString, getWeek } from "../../../utils/dates";
+import { dictConvertDatesToIsoString, getWeek } from "../../../utils/dates";
 import { MailProps, createMailToLink } from "../../../utils/mail";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
@@ -60,7 +60,7 @@ const ResultStep = (props: ResultProps) => {
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
             year: props.timeSheetParams.targetDate.getFullYear(),
             week: getWeek(props.timeSheetParams.targetDate),
-            dates: convertDatesToIsoString(props.dateList),
+            dates: props.dateList.map((date) => dictConvertDatesToIsoString(date)),
           },
           {
             headers: {
