@@ -54,11 +54,11 @@ const CheckStep = (props: CheckProps) => {
         </Col>
       </Row>
       <Row>
-        <Col className="d-flex justify-content-start">
-          <PrevButton callback={props.prevStep} />
-        </Col>
-        <Col className="d-flex justify-content-end">
+        <Col className="d-flex justify-content-end order-2">
           <NextButton callback={props.nextStep} />
+        </Col>
+        <Col className="d-flex justify-content-start order-1">
+          <PrevButton callback={props.prevStep} />
         </Col>
       </Row>
     </form>

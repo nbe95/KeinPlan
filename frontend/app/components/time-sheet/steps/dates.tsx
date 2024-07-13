@@ -209,11 +209,11 @@ const DatesStep = (props: DatesProps) => {
         </Col>
       </Row>
       <Row>
-        <Col className="d-flex justify-content-start">
-          <PrevButton callback={props.prevStep} disabled={isFetching} />
-        </Col>
-        <Col className="d-flex justify-content-end">
+        <Col className="d-flex justify-content-end order-2">
           <NextButton submit disabled={isFetching} />
+        </Col>
+        <Col className="d-flex justify-content-start order-1">
+          <PrevButton callback={props.prevStep} disabled={isFetching} />
         </Col>
       </Row>
     </form>

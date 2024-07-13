@@ -29,7 +29,7 @@ const DownloadButton = (props: PropsWithChildren<DownloadButtonProps>) => {
         <span className="fw-bold">{props.text}</span>
         {props.size && <span className="small">{filesize(props.size, { locale: "de" })}</span>}
       </Stack>
-      <a href={props.url} download={props.fileName} ref={ref} className="hidden" />
+      <a href={props.url} download={props.fileName} ref={ref} className="hidden" tabIndex={-1} />
     </Button>
   );
 };

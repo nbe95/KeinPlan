@@ -161,7 +161,7 @@ const ResultStep = (props: ResultProps) => {
         </>
       )}
       <Row>
-        <Col className="d-flex justify-content-start">
+        <Col className="d-flex justify-content-start order-1">
           <PrevButton callback={props.prevStep} />
         </Col>
       </Row>
