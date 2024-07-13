@@ -11,9 +11,9 @@ import {
   TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
 } from "../../../utils/constants";
-import { convertDatesToIsoString, getWeek } from "../../../utils/dates";
+import { dictConvertDatesToIsoString, getWeek } from "../../../utils/dates";
 import { MailProps, createMailToLink } from "../../../utils/mail";
-import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
+import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
@@ -60,7 +60,7 @@ const ResultStep = (props: ResultProps) => {
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
             year: props.timeSheetParams.targetDate.getFullYear(),
             week: getWeek(props.timeSheetParams.targetDate),
-            dates: convertDatesToIsoString(props.dateList),
+            dates: props.dateList.map((date) => dictConvertDatesToIsoString(date)),
           },
           {
             headers: {
@@ -78,15 +78,7 @@ const ResultStep = (props: ResultProps) => {
             size: response.data.size,
           };
         })
-        .catch((error) => {
-          const msg: string =
-            error.response.data ??
-            `The backend query returned status code ${error.response.status}.`;
-          if (isClientError(error.response.status)) {
-            throw new ClientError(msg);
-          }
-          throw Error(msg);
-        });
+        .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
     // Fetch only once
@@ -170,7 +162,7 @@ const ResultStep = (props: ResultProps) => {
         </>
       )}
       <Row>
-        <Col className="d-flex justify-content-start">
+        <Col className="d-flex justify-content-start order-1">
           <PrevButton callback={props.prevStep} />
         </Col>
       </Row>

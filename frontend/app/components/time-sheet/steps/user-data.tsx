@@ -65,7 +65,7 @@ const UserDataStep = (props: UserDataProps) => {
         </Col>
       </Row>
       <Row>
-        <Col className="d-flex justify-content-end">
+        <Col className="d-flex justify-content-end order-1">
           <NextButton submit />
         </Col>
       </Row>

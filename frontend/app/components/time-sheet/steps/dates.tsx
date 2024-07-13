@@ -13,7 +13,7 @@ import strftime from "strftime";
 import { b64_encode } from "../../../utils/base64";
 import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
-import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
+import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { NextButton, PrevButton } from "../../process-button";
 import { TimeSheetDate, TimeSheetParams } from "../generator";
 
@@ -60,16 +60,7 @@ const DatesStep = (props: DatesProps) => {
           },
         })
         .then((response) => response.data)
-        .catch((error) => {
-          const msg: string =
-            error.response?.data?.message ??
-            error.response?.data ??
-            `The backend query returned status code ${error.response?.status}.`;
-          if (isClientError(error.response?.status)) {
-            throw new ClientError(msg);
-          }
-          throw Error(msg);
-        });
+        .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
     select: (data: any): TimeSheetDate[] =>
@@ -220,11 +211,11 @@ const DatesStep = (props: DatesProps) => {
         </Col>
       </Row>
       <Row>
-        <Col className="d-flex justify-content-start">
-          <PrevButton callback={props.prevStep} disabled={isFetching} />
-        </Col>
-        <Col className="d-flex justify-content-end">
+        <Col className="d-flex justify-content-end order-2">
           <NextButton submit disabled={isFetching} />
+        </Col>
+        <Col className="d-flex justify-content-start order-1">
+          <PrevButton callback={props.prevStep} disabled={isFetching} />
         </Col>
       </Row>
     </form>
