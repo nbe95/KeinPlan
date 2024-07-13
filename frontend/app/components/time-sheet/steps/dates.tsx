@@ -30,6 +30,7 @@ const DatesStep = (props: DatesProps) => {
   const [targetDate, setTargetDate] = useState(
     props.timeSheetParams?.targetDate ?? getMonday(fiveDaysAgo),
   );
+
   const getCalWeekLabel = useCallback(
     (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
     [targetDate],
@@ -163,6 +164,7 @@ const DatesStep = (props: DatesProps) => {
                   className="py-0 border-0"
                   onClick={prevWeek}
                   disabled={isFetching}
+                  tabIndex={-1}
                 >
                   <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
                 </Button>
@@ -172,6 +174,7 @@ const DatesStep = (props: DatesProps) => {
                   className="py-0 border-0"
                   onClick={nextWeek}
                   disabled={isFetching}
+                  tabIndex={-1}
                 >
                   <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
                 </Button>
