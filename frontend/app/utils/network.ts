@@ -14,3 +14,16 @@ export const isClientError = (status: number): boolean =>
 
 export const retryUnlessClientError = (error, count, maxRetries): boolean =>
   !(error instanceof ClientError || count >= maxRetries - 1);
+
+export const catchQueryError = (error: any) => {
+  const msg: string =
+    error.response?.data?.message ??
+    error.response?.data ??
+    (error.response?.status
+      ? `The request returned status code ${error.response?.status}`
+      : error.message ?? "Unknown error");
+  if (isClientError(error.response?.status)) {
+    throw new ClientError(msg);
+  }
+  throw Error(msg);
+};

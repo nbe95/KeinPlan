@@ -13,7 +13,7 @@ import {
 } from "../../../utils/constants";
 import { convertDatesToIsoString, getWeek } from "../../../utils/dates";
 import { MailProps, createMailToLink } from "../../../utils/mail";
-import { ClientError, isClientError, retryUnlessClientError } from "../../../utils/network";
+import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
@@ -78,15 +78,7 @@ const ResultStep = (props: ResultProps) => {
             size: response.data.size,
           };
         })
-        .catch((error) => {
-          const msg: string =
-            error.response.data ??
-            `The backend query returned status code ${error.response.status}.`;
-          if (isClientError(error.response.status)) {
-            throw new ClientError(msg);
-          }
-          throw Error(msg);
-        });
+        .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
     // Fetch only once
