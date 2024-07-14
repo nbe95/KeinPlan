@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { NextButton } from "../../process-button";
 import { UserData } from "../generator";
@@ -18,6 +19,13 @@ const UserDataStep = (props: UserDataProps) => {
     });
     props.nextStep();
   };
+
+  // Directly focus next button if input data is already present
+  useEffect(() => {
+    if (props.userData) {
+      document.getElementById("btn-next")?.focus();
+    }
+  }, [props.userData]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
@@ -66,7 +74,7 @@ const UserDataStep = (props: UserDataProps) => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-end order-1">
-          <NextButton submit />
+          <NextButton submit id="btn-next" />
         </Col>
       </Row>
     </form>

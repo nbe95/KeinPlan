@@ -14,10 +14,11 @@ export const API_ENDPOINT_VERSION: string = `${API_BASE_URL}/version`;
 export const API_ENDPOINT_KAPLAN: string = `${API_BASE_URL}/kaplan`;
 export const API_ENDPOINT_TIME_SHEET: string = `${API_BASE_URL}/time-sheet`;
 
-// Query keys
+// Functional keys
 export const BACKEND_VERSION_KEY: string = "backend-version";
 export const KAPLAN_QUERY_KEY: string = "kaplan";
 export const TIME_SHEET_QUERY_KEY: string = "time-sheet";
+export const USER_COOKIE_NAME: string = "user-cookie";
 
 // Miscellaneous
 export const KAPLAN_ICS_HEADER: string = "X-KaPlan-ICS";

@@ -133,6 +133,13 @@ const DatesStep = (props: DatesProps) => {
     }
   }, [isSuccess]);
 
+  // Directly focus next button if input data is already present
+  useEffect(() => {
+    if (props.timeSheetParams) {
+      document.getElementById("btn-next")?.focus();
+    }
+  }, [props.timeSheetParams]);
+
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
       <p className="lead">Als nächstes rufen wir deine Termine vom KaPlan-Server ab.</p>
@@ -163,6 +170,7 @@ const DatesStep = (props: DatesProps) => {
                   className="py-0 border-0"
                   onClick={prevWeek}
                   disabled={isFetching}
+                  tabIndex={-1}
                 >
                   <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
                 </Button>
@@ -172,6 +180,7 @@ const DatesStep = (props: DatesProps) => {
                   className="py-0 border-0"
                   onClick={nextWeek}
                   disabled={isFetching}
+                  tabIndex={-1}
                 >
                   <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
                 </Button>
@@ -203,16 +212,18 @@ const DatesStep = (props: DatesProps) => {
               </Stack>
             </Form.Text>
           </Form.Group>
-          <p className="mb-0 col-xl-10">
+          <p className="mt-4 mb-1 col-xl-10">
             Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
-            Abonnement-String notwendig. Wie unten beschrieben, wird er niemals gespeichert und nur
-            einmalig zur Erstellung der Stundenliste verwendet.
+            Abonnement-String notwendig. Dieser bietet lediglich Lesezugriff auf deine
+            KaPlan-Termine und ändert sich, wenn du z. B. dein Passwort änderst. Wie unten
+            beschrieben, wird er niemals gespeichert, sondern nur einmalig zur Erstellung der
+            Stundenliste verwendet.
           </p>
         </Col>
       </Row>
       <Row>
         <Col className="d-flex justify-content-end order-2">
-          <NextButton submit disabled={isFetching} />
+          <NextButton submit id="btn-next" disabled={isFetching} />
         </Col>
         <Col className="d-flex justify-content-start order-1">
           <PrevButton callback={props.prevStep} disabled={isFetching} />

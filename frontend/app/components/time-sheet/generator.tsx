@@ -6,7 +6,9 @@ import {
   faMagnifyingGlass,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { USER_COOKIE_NAME } from "../../utils/constants";
 import Container from "../layout/container";
 import Stepper from "../stepper";
 import CheckStep from "./steps/check";
@@ -30,6 +32,11 @@ export interface TimeSheetParams {
   kaPlanIcs: string;
 }
 
+export interface CookieData {
+  userData: UserData;
+  timeSheetParams: TimeSheetParams;
+}
+
 export interface TimeSheetDate {
   title: string;
   role: string;
@@ -50,6 +57,20 @@ const TimeSheetGenerator = () => {
     RESULT_VIEW,
   }
   const [step, setStep] = useState<Steps>(Steps.USER_DATA);
+
+  // Take user data from cookie upon first render, if available
+  const [cookies] = useCookies([USER_COOKIE_NAME]);
+  const userCookie = cookies[USER_COOKIE_NAME];
+  useEffect(() => {
+    if (userCookie) {
+      setUserData(userCookie.userData);
+      const params: TimeSheetParams = {
+        ...userCookie.timeSheetParams,
+        targetDate: new Date(Date.parse(userCookie.timeSheetParams.targetDate)),
+      };
+      setTimeSheetParams(params);
+    }
+  }, []);
 
   return (
     <>
@@ -92,6 +113,8 @@ const TimeSheetGenerator = () => {
 
         {step == Steps.DATE_CHECK && (
           <CheckStep
+            userData={userData!}
+            timeSheetParams={timeSheetParams!}
             dateList={dateList!}
             prevStep={() => {
               setStep(Steps.TIME_SHEET_DATA);
