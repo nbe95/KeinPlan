@@ -1,6 +1,7 @@
+import { useRef } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useCookies } from "react-cookie";
-import { toast } from "react-toastify";
+import { Id, toast } from "react-toastify";
 import { USER_COOKIE_NAME } from "../../../utils/constants";
 import MsgBox from "../../msg-box";
 import { NextButton, PrevButton } from "../../process-button";
@@ -23,15 +24,18 @@ const CheckStep = (props: CheckProps) => {
     setCookie(USER_COOKIE_NAME, cookie);
   };
 
+  const cookieToast = useRef<Id | undefined>(undefined);
   const setResetCookie = (store: boolean): void => {
     if (store) {
       updateCookie();
-      toast.success(
-        "Deine Daten sind nun in diesem Browser gespeichert. Bei deinem nächsten Aufruf sind alle Felder bereits vorausgefüllt.",
+      toast.dismiss(cookieToast.current);
+      cookieToast.current = toast.success(
+        "Deine Daten sind nun in diesem Browser gespeichert. Wenn du das nächste Mal vorbeischaust, sind alle Felder bereits ausgefüllt. 👌",
       );
     } else {
       removeCookie(USER_COOKIE_NAME);
-      toast.info("Ok! Deine gespeicherten Daten wurden entfernt.");
+      toast.dismiss(cookieToast.current);
+      cookieToast.current = toast.info("Ok! Deine gespeicherten Daten wurden entfernt.");
     }
   };
 
