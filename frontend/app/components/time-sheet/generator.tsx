@@ -70,7 +70,6 @@ const TimeSheetGenerator = () => {
       };
       setTimeSheetParams(params);
     }
-    setStep(Steps.TIME_SHEET_DATA);
   }, []);
 
   return (

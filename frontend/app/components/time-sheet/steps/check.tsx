@@ -27,7 +27,7 @@ const CheckStep = (props: CheckProps) => {
     if (store) {
       updateCookie();
       toast.success(
-        "Deine Daten sind nun in diesem Browser gespeichert. Beim nächsten Aufruf dieser Seite startest du direkt hier.",
+        "Deine Daten sind nun in diesem Browser gespeichert. Bei deinem nächsten Aufruf sind alle Felder bereits vorausgefüllt.",
       );
     } else {
       removeCookie(USER_COOKIE_NAME);
@@ -73,13 +73,13 @@ const CheckStep = (props: CheckProps) => {
             <Form.Check
               type="switch"
               id="confirm"
-              label="Eingaben speichern und beim nächsten Mal direkt hier beginnen."
+              label="Daten speichern, damit's beim nächsten Mal schneller geht."
               onClick={(event) => setResetCookie(event.currentTarget.checked)}
               checked={cookies[USER_COOKIE_NAME]}
             />
             <Form.Text>
-              Speichert deine Daten als Cookie im Browser, damit du sie nicht nochmal eintippen
-              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
+              Speichert deine bisherigen Eingaben als Cookie im Browser, damit du sie nicht nochmal
+              eintippen musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
             </Form.Text>
           </Form.Group>
         </Col>
