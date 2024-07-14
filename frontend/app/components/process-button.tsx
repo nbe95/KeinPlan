@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 interface ButtonProps {
   submit?: boolean;
   disabled?: boolean;
+  id?: string;
   callback?: () => void;
 }
 
@@ -16,9 +17,10 @@ interface ButtonPropsInt extends ButtonProps {
 const StepButton = (props: PropsWithChildren<ButtonPropsInt>) => {
   return (
     <Button
-      variant={props.variant}
       type={props.submit ? "submit" : "button"}
+      variant={props.variant}
       disabled={props.disabled}
+      id={props.id}
       onClick={() => {
         props.callback && props.callback();
       }}

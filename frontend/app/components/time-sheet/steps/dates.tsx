@@ -133,6 +133,13 @@ const DatesStep = (props: DatesProps) => {
     }
   }, [isSuccess]);
 
+  // Directly focus next button if input data is already present
+  useEffect(() => {
+    if (props.timeSheetParams) {
+      document.getElementById("btn-next")?.focus();
+    }
+  }, [props.timeSheetParams]);
+
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
       <p className="lead">Als nächstes rufen wir deine Termine vom KaPlan-Server ab.</p>
@@ -216,7 +223,7 @@ const DatesStep = (props: DatesProps) => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-end order-2">
-          <NextButton submit disabled={isFetching} />
+          <NextButton submit id="btn-next" disabled={isFetching} />
         </Col>
         <Col className="d-flex justify-content-start order-1">
           <PrevButton callback={props.prevStep} disabled={isFetching} />
