@@ -205,10 +205,12 @@ const DatesStep = (props: DatesProps) => {
               </Stack>
             </Form.Text>
           </Form.Group>
-          <p className="mb-0 col-xl-10">
+          <p className="mt-4 mb-1 col-xl-10">
             Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
-            Abonnement-String notwendig. Wie unten beschrieben, wird er niemals gespeichert und nur
-            einmalig zur Erstellung der Stundenliste verwendet.
+            Abonnement-String notwendig. Dieser bietet lediglich Lesezugriff auf deine
+            KaPlan-Termine und ändert sich, wenn du z. B. dein Passwort änderst. Wie unten
+            beschrieben, wird er niemals gespeichert, sondern nur einmalig zur Erstellung der
+            Stundenliste verwendet.
           </p>
         </Col>
       </Row>
