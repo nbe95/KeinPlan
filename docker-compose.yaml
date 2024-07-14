@@ -9,8 +9,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - KEINPLAN_LINK=https://mein-keinplan-server.tld/
-      - ALLOWED_KAPLAN_SERVERS=kommaGetrennteUpstreamServer
-      - ALLOWED_KAPLAN_WORKGROUPS=kommaGetrennteArbeitsgruppen
+      - KAPLAN_ALLOWED_SERVERS=kommaGetrennteUpstreamServer
+      - KAPLAN_ALLOWED_WORKGROUPS=kommaGetrennteArbeitsgruppen
     networks:
       - webserver
 
