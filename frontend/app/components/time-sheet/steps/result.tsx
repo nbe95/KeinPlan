@@ -2,7 +2,6 @@ import { faEnvelopeOpenText, faFilePdf } from "@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import {
@@ -15,6 +14,7 @@ import { dictConvertDatesToIsoString, getWeek } from "../../../utils/dates";
 import { MailProps, createMailToLink } from "../../../utils/mail";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
+import { CondLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
 import { PrevButton } from "../../process-button";
@@ -111,7 +111,10 @@ const ResultStep = (props: ResultProps) => {
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
-              {ADMIN_MAIL ? <Link href={`mailto:${ADMIN_MAIL}`}>Admin</Link> : <span>Admin</span>}.
+              <CondLink condition={!!ADMIN_MAIL} href={createMailToLink({ recipient: ADMIN_MAIL })}>
+                Admin
+              </CondLink>
+              .
             </MsgBox>
           </Col>
         </Row>
