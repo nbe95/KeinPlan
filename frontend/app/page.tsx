@@ -66,23 +66,23 @@ export default function Page() {
             <div className="mt-5">
               <h2>Haftungsausschluss</h2>
               <p>
-                <q>KeinPlan</q> ist ein rein privates Freizeitprojekt und steht in keinerlei
-                Verbindung mit <em>KaPlan</em> oder einer speziellen Pfarrgemeinde.
+                <q>KeinPlan</q> ist ein rein privates Projekt und steht in keinerlei Verbindung mit{" "}
+                <em>KaPlan</em> oder einer spezifischen Pfarrgemeinde.
               </p>
               <p>
                 Jegliche Nutzung, insbesondere bzgl. des Inhalts erstellter Stunden&shy;listen,
-                erfolgt auf eigene Verantwortung und <b>ohne jegliche Gewähr</b>.
+                erfolgt auf eigene Verantwortung des Nutzers und <b>ohne jegliche Gewähr</b>.
               </p>
               <p>
                 Bitte beachte, dass auf dieser Webseite nur spezielle <em>KaPlan</em>-Arbeitsgruppen
-                und -Server vom Administrator freigeschaltet sein können.
+                und/oder -Server vom Administrator freigeschaltet sein könnten.
               </p>
             </div>
 
             <div className="mt-5">
               <h2>Fragen oder Unklarheiten?</h2>
               <p>
-                Melde dich beim{" "}
+                Kommt vor. Melde dich beim{" "}
                 <CondLink
                   condition={!!ADMIN_MAIL}
                   href={createMailToLink({ recipient: ADMIN_MAIL })}
@@ -92,7 +92,7 @@ export default function Page() {
                 .
               </p>
               <p>
-                Solltest du einen Fehler finden, melde bitte auch dies und/oder{" "}
+                Solltest du einen Fehler finden, melde bitte auch dies oder{" "}
                 <CondLink condition={!!GITHUB_LINK} href={`${GITHUB_LINK}/issues`}>
                   erstelle ein Ticket
                 </CondLink>{" "}
@@ -106,7 +106,7 @@ export default function Page() {
               <h2>Datenschutz</h2>
               <p>
                 Dieses Tool verarbeitet im Zuge der Erstellung personali&shy;sierter
-                Stunden&shy;listen personen&shy;bezogene, sensible Daten. Der Code ist{" "}
+                Stunden&shy;listen personen&shy;bezogene Daten. Der Code ist{" "}
                 <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
                   komplett quelloffen
                 </CondLink>{" "}
@@ -117,15 +117,15 @@ export default function Page() {
               </p>
               <p>
                 Um unnötig wiederholte Server-Anfragen zu vermeiden, gibt es einen
-                Caching-Mechanismus, bei dem der verschlüsselte Hash-Wert jedes Abonnement-Strings
-                kurzzeitig im Backend vorgehalten wird. Die Daten&shy;integrität bleibt dabei
-                gewähr&shy;leistet: Selbst aus Server Logs oder einem Speicher&shy;abbild können
-                keine personen&shy;bezogenen Daten rekonstruiert werden.
+                Caching-Mechanismus, bei dem jeder Abonnement-String kurzzeitig verschlüsselt im
+                Backend vorgehalten wird. Die Daten&shy;integrität bleibt dabei gewähr&shy;leistet:
+                Selbst aus Server Logs oder einem Speicher&shy;abbild können zu keinem Zeitpunkt
+                sensible Daten rekon&shy;struiert werden.
               </p>
               <p>
-                Für eine einfacherer Nutzbarkeit des Tools können im 2. Schritt die Werte aller
+                Für eine einfachere Nutzbarkeit können im 2. Schritt die Werte aller
                 Eingabe&shy;felder lokal als Cookie gespeichert werden. Diese Daten verlassen die
-                aktuelle Browser-Sitzung nicht und werden in keinem Fall weiter verarbeitet.
+                aktuelle Browser-Sitzung nicht und werden zu keinem anderen Zweck weiterverarbeitet.
               </p>
             </div>
           </Col>
