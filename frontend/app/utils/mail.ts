@@ -5,9 +5,9 @@ export interface MailProps {
 }
 
 export const createMailToLink = (props: MailProps): string => {
-  return (
-    `mailto:${props.recipient}` +
-    `?subject=${encodeURIComponent(props.subject ?? "")}` +
-    `&body=${encodeURIComponent(props.body ?? "")}`
-  );
+  const args: string[] = [];
+  if (props.subject) args.push(`subject=${encodeURIComponent(props.subject)}`);
+  if (props.body) args.push(`body=${encodeURIComponent(props.body)}`);
+
+  return `mailto:${props.recipient}` + (args.length ? "?" : "") + args.join("&");
 };

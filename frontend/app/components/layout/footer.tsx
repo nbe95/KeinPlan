@@ -4,6 +4,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { Stack } from "react-bootstrap";
 import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../../utils/constants";
+import { createMailToLink } from "../../utils/mail";
 import Container from "./container";
 
 const Footer = () => {
@@ -24,7 +25,7 @@ const Footer = () => {
           </div>
           {ADMIN_MAIL && (
             <Link
-              href={`mailto:${ADMIN_MAIL}`}
+              href={createMailToLink({ recipient: ADMIN_MAIL })}
               className="text-muted link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
               title="E-Mail an den Administrator"
             >
