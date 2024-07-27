@@ -60,65 +60,74 @@ export default function Page() {
       <TimeSheetGenerator />
 
       <Container>
-        <hr className="col-3 col-md-2 mb-5" />
+        <hr className="col-3 col-md-2" />
         <Row gap={5}>
           <Col md={6}>
-            <h2>Haftungsausschluss</h2>
-            <p>
-              <q>KeinPlan</q> ist ein rein privates Freizeitprojekt und steht in keinerlei
-              Verbindung mit <em>KaPlan</em> oder einer speziellen Pfarrgemeinde.
-            </p>
-            <p>
-              Jegliche Nutzung, insbesondere bzgl. des Inhalts erstellter Stunden&shy;listen,
-              erfolgt auf eigene Verantwortung und <b>ohne jegliche Gewähr</b>.
-            </p>
-            <p>
-              Bitte beachte, dass auf dieser Webseite nur spezielle <em>KaPlan</em>-Arbeitsgruppen
-              und -Server vom Administrator freigeschaltet sein können.
-            </p>
+            <div className="mt-5">
+              <h2>Haftungsausschluss</h2>
+              <p>
+                <q>KeinPlan</q> ist ein rein privates Freizeitprojekt und steht in keinerlei
+                Verbindung mit <em>KaPlan</em> oder einer speziellen Pfarrgemeinde.
+              </p>
+              <p>
+                Jegliche Nutzung, insbesondere bzgl. des Inhalts erstellter Stunden&shy;listen,
+                erfolgt auf eigene Verantwortung und <b>ohne jegliche Gewähr</b>.
+              </p>
+              <p>
+                Bitte beachte, dass auf dieser Webseite nur spezielle <em>KaPlan</em>-Arbeitsgruppen
+                und -Server vom Administrator freigeschaltet sein können.
+              </p>
+            </div>
 
-            <h2 className="mt-5">Fragen oder Unklarheiten?</h2>
-            <p>
-              Melde dich beim{" "}
-              <CondLink condition={!!ADMIN_MAIL} href={createMailToLink({ recipient: ADMIN_MAIL })}>
-                Admin deines Vertrauens
-              </CondLink>
-              .
-            </p>
-            <p>
-              Solltest du einen Fehler finden, melde bitte auch dies und/oder{" "}
-              <CondLink condition={!!GITHUB_LINK} href={`${GITHUB_LINK}/issues`}>
-                erstelle ein Ticket
-              </CondLink>{" "}
-              auf GitHub.
-            </p>
+            <div className="mt-5">
+              <h2>Fragen oder Unklarheiten?</h2>
+              <p>
+                Melde dich beim{" "}
+                <CondLink
+                  condition={!!ADMIN_MAIL}
+                  href={createMailToLink({ recipient: ADMIN_MAIL })}
+                >
+                  Admin deines Vertrauens
+                </CondLink>
+                .
+              </p>
+              <p>
+                Solltest du einen Fehler finden, melde bitte auch dies und/oder{" "}
+                <CondLink condition={!!GITHUB_LINK} href={`${GITHUB_LINK}/issues`}>
+                  erstelle ein Ticket
+                </CondLink>{" "}
+                auf GitHub.
+              </p>
+            </div>
           </Col>
 
           <Col md={6}>
-            <h2>Datenschutz</h2>
-            <p>
-              Dieses Tool verarbeitet im Zuge der Erstellung personali&shy;sierter
-              Stunden&shy;listen personen&shy;bezogene, sensible Daten. Der Code ist{" "}
-              <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
-                komplett quelloffen
-              </CondLink>{" "}
-              und per Design darauf ausgelegt, solche Daten{" "}
-              <b>zu keinem Zeitpunkt dauerhaft zu speichern</b>. Jegliche Eingaben werden nur ein
-              einziges Mal pro Anfrage verarbeitet, um <em>KaPlan</em>-Termine abzufragen sowie
-              Stundenlisten daraus zu generieren.
-            </p>
-            <p>
-              Um unnötig wiederholte Server-Anfragen zu vermeiden, gibt es einen
-              Caching-Mechanismus, bei dem der verschlüsselte Hash-Wert jedes Abonnement-Strings
-              kurzzeitig im Backend vorgehalten wird. Die Daten&shy;integrität bleibt dabei
-              gewähr&shy;leistet: Selbst aus Server Logs oder einem Speicher&shy;abbild können keine
-              personen&shy;bezogenen Daten rekonstruiert werden.
-            </p>
-            <p>
-              Für eine einfacherer Nutzbarkeit des Tools können im 2. Schritt die Werte aller
-              Eingabefelder lokal als Cookie gespeichert werden. Diese Daten verlassen die aktuelle
-              Browser-Sitzung nicht und werden in keinem Fall weiter verarbeitet.
-            </p>
+            <div className="mt-5">
+              <h2>Datenschutz</h2>
+              <p>
+                Dieses Tool verarbeitet im Zuge der Erstellung personali&shy;sierter
+                Stunden&shy;listen personen&shy;bezogene, sensible Daten. Der Code ist{" "}
+                <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
+                  komplett quelloffen
+                </CondLink>{" "}
+                und per Design darauf ausgelegt, solche Daten{" "}
+                <b>zu keinem Zeitpunkt dauerhaft zu speichern</b>. Jegliche Eingaben werden nur ein
+                einziges Mal pro Anfrage verarbeitet, um <em>KaPlan</em>-Termine abzufragen sowie
+                Stundenlisten daraus zu generieren.
+              </p>
+              <p>
+                Um unnötig wiederholte Server-Anfragen zu vermeiden, gibt es einen
+                Caching-Mechanismus, bei dem der verschlüsselte Hash-Wert jedes Abonnement-Strings
+                kurzzeitig im Backend vorgehalten wird. Die Daten&shy;integrität bleibt dabei
+                gewähr&shy;leistet: Selbst aus Server Logs oder einem Speicher&shy;abbild können
+                keine personen&shy;bezogenen Daten rekonstruiert werden.
+              </p>
+              <p>
+                Für eine einfacherer Nutzbarkeit des Tools können im 2. Schritt die Werte aller
+                Eingabe&shy;felder lokal als Cookie gespeichert werden. Diese Daten verlassen die
+                aktuelle Browser-Sitzung nicht und werden in keinem Fall weiter verarbeitet.
+              </p>
+            </div>
           </Col>
         </Row>
       </Container>
