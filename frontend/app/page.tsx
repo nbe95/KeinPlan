@@ -71,7 +71,7 @@ export default function Page() {
               </p>
               <p>
                 Jegliche Nutzung, insbesondere bzgl. des Inhalts erstellter Stunden&shy;listen,
-                erfolgt auf eigene Verantwortung des Nutzers und <b>ohne jegliche Gewähr</b>.
+                erfolgt rein auf eigene Verantwortung des Anwenders und <b>ohne jegliche Gewähr</b>.
               </p>
               <p>
                 Bitte beachte, dass auf dieser Webseite nur spezielle <em>KaPlan</em>-Arbeitsgruppen
