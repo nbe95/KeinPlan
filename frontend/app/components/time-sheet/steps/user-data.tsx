@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { NextButton } from "../../process-button";
@@ -10,6 +11,7 @@ type UserDataProps = {
 };
 
 const UserDataStep = (props: UserDataProps) => {
+  const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
     props.setUserData({
@@ -18,6 +20,7 @@ const UserDataStep = (props: UserDataProps) => {
       employer: event.target.employer.value,
     });
     props.nextStep();
+    router.push("#time-sheet");
   };
 
   // Directly focus next button if input data is already present
