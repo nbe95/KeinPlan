@@ -6,6 +6,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
 import { useCookies } from "react-cookie";
@@ -22,7 +23,6 @@ import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "..
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { NextButton, PrevButton } from "../../process-button";
 import { CookieData, TimeSheetDate, TimeSheetParams, UserData } from "../generator";
-import { useRouter } from "next/navigation";
 
 type DatesProps = {
   userData: UserData;
@@ -152,13 +152,6 @@ const DatesStep = (props: DatesProps) => {
     }
   }, [isSuccess]);
 
-  // Directly focus next button if input data is already present
-  useEffect(() => {
-    if (props.timeSheetParams) {
-      document.getElementById("btn-next")?.focus();
-    }
-  }, [props.timeSheetParams]);
-
   // Cookies
   const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
   const updateCookie = (): void => {
@@ -177,9 +170,16 @@ const DatesStep = (props: DatesProps) => {
     } else {
       removeCookie(USER_COOKIE_NAME);
       toast.dismiss(cookieToast.current);
-      cookieToast.current = toast.info("Ok! Deine gespeicherten Daten wurden entfernt.");
+      cookieToast.current = toast.info("OK! Deine gespeicherten Daten wurden entfernt.");
     }
   };
+
+  // Directly focus next button if input data is already present
+  useEffect(() => {
+    if (props.timeSheetParams) {
+      document.getElementById("btn-next")?.focus();
+    }
+  }, [props.timeSheetParams]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>

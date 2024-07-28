@@ -189,7 +189,7 @@ export default function Page() {
             </Modal.Body>
             <Modal.Footer>
               <Button variant="primary" onClick={() => setShowPrivacy(false)}>
-                Ok
+                OK
               </Button>
             </Modal.Footer>
           </Modal>
