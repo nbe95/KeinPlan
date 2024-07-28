@@ -147,7 +147,7 @@ const ResultStep = (props: ResultProps) => {
               <h2>Wie geht&apos;s jetzt weiter?</h2>
               <p>
                 Lade deine Stundenliste runter. Sende sie anschließend an das zuständige Pfarrbüro
-                per E-Mail, z.B. mit der folgenden Vorlage.
+                per E-Mail, z.&nbsp;B. mit der folgenden Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               <Button

@@ -70,15 +70,15 @@ export default function Page() {
               <h2>Haftungsausschluss</h2>
               <p>
                 <q>KeinPlan</q> ist ein rein privates Projekt und steht in keinerlei Verbindung mit{" "}
-                <em>KaPlan</em> oder einer spezifischen Pfarrgemeinde.
+                KaPlan oder einer spezifischen Pfarrgemeinde.
               </p>
               <p>
                 Jegliche Nutzung, insbesondere bzgl. des Inhalts erstellter Stunden&shy;listen,
                 erfolgt rein auf eigene Verantwortung des Anwenders und <b>ohne jegliche Gewähr</b>.
               </p>
               <p>
-                Bitte beachte, dass auf dieser Webseite nur spezielle <em>KaPlan</em>-Arbeitsgruppen
-                und/oder -Server vom Administrator freigeschaltet sein könnten.
+                Bitte beachte, dass auf dieser Webseite nur spezielle KaPlan-Arbeitsgruppen und/oder
+                -Server vom Administrator freigeschaltet sein könnten.
               </p>
             </div>
           </Col>
@@ -138,9 +138,9 @@ export default function Page() {
                   <b>zu keinem Zeitpunkt dauerhaft gespeichert</b>.
                 </p>
                 <p>
-                  Jegliche Eingaben werden nur ein einziges Mal pro Anfrage verarbeitet, um entweder{" "}
-                  <em>KaPlan</em>-Termine abzufragen oder Stundenlisten daraus zu generieren. Diese
-                  werden lediglich bei Bedarf generiert und nach erfolgtem Download nicht im
+                  Jegliche Eingaben werden nur ein einziges Mal pro Anfrage verarbeitet, um entweder
+                  Termindaten vom KaPlan-Server abzufragen oder Stundenlisten daraus zu generieren.
+                  Diese werden lediglich bei Bedarf generiert und nach erfolgtem Download nicht im
                   Speicher oder Dateisystem des Servers persistiert.
                 </p>
               </div>
@@ -161,8 +161,8 @@ export default function Page() {
               <div className="mb-4">
                 <h5>Serverseitiges Caching</h5>
                 <p>
-                  Um unnötig wiederholte Anfragen an den <em>KaPlan</em>-Server zu vermeiden, gibt
-                  es einen Caching-Mechanismus. Dabei wird jeder Abonnement-String nach gewissen
+                  Um unnötig wiederholte Anfragen an den KaPlan-Server zu vermeiden, gibt es einen
+                  Caching-Mechanismus. Dabei wird jeder Abonnement-String nach gewissen
                   Prüfschritten inkl. der damit verbundenen Termindaten <b>für kurze Zeit</b> im
                   Backend vorgehalten. Das passiert verschlüsselt als sog.{" "}
                   <Link href="https://de.wikipedia.org/wiki/Hashfunktion">Hash</Link>, sodass

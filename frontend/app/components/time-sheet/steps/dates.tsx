@@ -8,16 +8,24 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
+import { useCookies } from "react-cookie";
 import { Id, toast } from "react-toastify";
 import strftime from "strftime";
 import { b64_encode } from "../../../utils/base64";
-import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY } from "../../../utils/constants";
+import {
+  API_ENDPOINT_KAPLAN,
+  KAPLAN_ICS_HEADER,
+  KAPLAN_QUERY_KEY,
+  USER_COOKIE_NAME,
+} from "../../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { NextButton, PrevButton } from "../../process-button";
-import { TimeSheetDate, TimeSheetParams } from "../generator";
+import { CookieData, TimeSheetDate, TimeSheetParams, UserData } from "../generator";
+import { useRouter } from "next/navigation";
 
 type DatesProps = {
+  userData: UserData;
   timeSheetParams?: TimeSheetParams;
   setTimeSheetParams: (data: TimeSheetParams) => void;
   setDateList: (data: TimeSheetDate[]) => void;
@@ -26,6 +34,7 @@ type DatesProps = {
 };
 
 const DatesStep = (props: DatesProps) => {
+  // Date related stuff
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
   const [targetDate, setTargetDate] = useState(
     props.timeSheetParams?.targetDate ?? getMonday(fiveDaysAgo),
@@ -34,7 +43,6 @@ const DatesStep = (props: DatesProps) => {
     (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
     [targetDate],
   );
-
   const prevWeek = () => {
     setTargetDate(addDaysToDate(getMonday(targetDate), -7));
   };
@@ -43,6 +51,7 @@ const DatesStep = (props: DatesProps) => {
   };
   const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
 
+  // Query for KaPlan dates
   const [queryParams, setQueryParams] = useState<TimeSheetParams>();
   const { data, isFetching, isSuccess, isError, error } = useQuery({
     queryKey: [KAPLAN_QUERY_KEY, queryParams],
@@ -81,6 +90,7 @@ const DatesStep = (props: DatesProps) => {
     enabled: !!queryParams,
   });
 
+  // Form logic
   const handleSubmit = (event) => {
     event.preventDefault();
     const params: TimeSheetParams = {
@@ -91,8 +101,14 @@ const DatesStep = (props: DatesProps) => {
     };
     props.setTimeSheetParams(params);
     setQueryParams(params);
+
+    // Update existing cookie
+    if (cookies[USER_COOKIE_NAME]) {
+      updateCookie();
+    }
   };
 
+  // Toasts
   const kaPlanToast = useRef<Id | undefined>(undefined);
   useEffect(() => {
     if (isFetching) {
@@ -125,11 +141,14 @@ const DatesStep = (props: DatesProps) => {
     }
   }, [isError]);
 
+  // Proceed to next step as soon as KaPlan data is fetched
+  const router = useRouter();
   useEffect(() => {
     if (isSuccess) {
       toast.dismiss(kaPlanToast.current);
       props.setDateList(data);
       props.nextStep();
+      router.push("#time-sheet");
     }
   }, [isSuccess]);
 
@@ -139,6 +158,28 @@ const DatesStep = (props: DatesProps) => {
       document.getElementById("btn-next")?.focus();
     }
   }, [props.timeSheetParams]);
+
+  // Cookies
+  const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
+  const updateCookie = (): void => {
+    const cookie: CookieData = { userData: props.userData, timeSheetParams: props.timeSheetParams };
+    setCookie(USER_COOKIE_NAME, cookie);
+  };
+
+  const cookieToast = useRef<Id | undefined>(undefined);
+  const setResetCookie = (store: boolean): void => {
+    if (store) {
+      updateCookie();
+      toast.dismiss(cookieToast.current);
+      cookieToast.current = toast.success(
+        "Deine Daten sind nun in diesem Browser gespeichert. Wenn du das nächste Mal vorbeischaust, sind alle Felder bereits ausgefüllt. 👌",
+      );
+    } else {
+      removeCookie(USER_COOKIE_NAME);
+      toast.dismiss(cookieToast.current);
+      cookieToast.current = toast.info("Ok! Deine gespeicherten Daten wurden entfernt.");
+    }
+  };
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
@@ -212,15 +253,36 @@ const DatesStep = (props: DatesProps) => {
               </Stack>
             </Form.Text>
           </Form.Group>
-          <p className="mt-4 mb-1 col-xl-10">
+          <p className="mt-4 mb-1">
             Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
-            Abonnement-String notwendig. Dieser bietet lediglich Lesezugriff auf deine
-            KaPlan-Termine und ändert sich, wenn du z. B. dein Passwort änderst. Wie unten
-            beschrieben, wird er niemals gespeichert, sondern nur einmalig zur Erstellung der
-            Stundenliste verwendet.
+            Abonnement-String notwendig. Dieser ermöglicht Lesezugriff auf deine Termine und ändert
+            sich, wenn du z.&nbsp;B. dein Passwort änderst.
+            <br />
+            Wie weiter unten beschrieben, wird er nicht dauerhaft gespeichert, sondern nur einmalig
+            zur Erstellung deiner Stundenliste verwendet.
           </p>
         </Col>
       </Row>
+
+      <Row>
+        <Col className="mb-4">
+          <hr className="col-3 col-md-2" />
+          <Form.Group>
+            <Form.Check
+              type="switch"
+              id="confirm"
+              label="Daten als Cookie speichern, damit's beim nächsten Mal schneller geht."
+              onClick={(event) => setResetCookie(event.currentTarget.checked)}
+              checked={cookies[USER_COOKIE_NAME]}
+            />
+            <Form.Text>
+              Speichert deine bisherigen Eingaben im Browser, damit du sie nicht nochmal eintippen
+              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
+            </Form.Text>
+          </Form.Group>
+        </Col>
+      </Row>
+
       <Row>
         <Col className="d-flex justify-content-end order-2">
           <NextButton submit id="btn-next" disabled={isFetching} />
