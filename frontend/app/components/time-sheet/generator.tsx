@@ -74,7 +74,7 @@ const TimeSheetGenerator = () => {
 
   return (
     <>
-      <Container className="bg-light">
+      <Container className="bg-light" id="time-sheet">
         <Stepper
           steps={[
             { key: Steps.USER_DATA, name: "Allgemeines", icon: faUser },
@@ -99,6 +99,7 @@ const TimeSheetGenerator = () => {
 
         {step == Steps.TIME_SHEET_DATA && (
           <DatesStep
+            userData={userData!}
             timeSheetParams={timeSheetParams}
             setTimeSheetParams={setTimeSheetParams}
             setDateList={setDateList}
