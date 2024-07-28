@@ -2,7 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Col, Row } from "react-bootstrap";
+import Link from "next/link";
+import { useState } from "react";
+import { Button, Col, Modal, Row } from "react-bootstrap";
 import Container from "./components/layout/container";
 import { CondLink } from "./components/link";
 import MsgBox from "./components/msg-box";
@@ -12,14 +14,15 @@ import {
   API_ENDPOINT_VERSION,
   BACKEND_VERSION_KEY,
   GITHUB_LINK,
-  PROD,
   VERSION_FRONTEND,
 } from "./utils/constants";
 import { createMailToLink } from "./utils/mail";
 import { ClientError, isClientError, retryUnlessClientError } from "./utils/network";
 
 export default function Page() {
-  const { data, isError, error } = useQuery({
+  const [showPrivacy, setShowPrivacy] = useState(false);
+
+  const { data } = useQuery({
     queryKey: [BACKEND_VERSION_KEY],
     queryFn: async () => {
       return axios
@@ -78,6 +81,20 @@ export default function Page() {
                 und/oder -Server vom Administrator freigeschaltet sein könnten.
               </p>
             </div>
+          </Col>
+
+          <Col md={6}>
+            <div className="mt-5">
+              <h2>Datenschutz</h2>
+              <p>
+                Dieses Tool verarbeitet personenbezogene Daten.{" "}
+                <Link href="#" onClick={() => setShowPrivacy(true)}>
+                  Lies hier
+                </Link>
+                , was genau das bedeutet. Mit der Erstellung einer Stundenliste stimmst du der
+                Verarbeitung deiner Daten zu diesem Zweck zu.
+              </p>
+            </div>
 
             <div className="mt-5">
               <h2>Fragen oder Unklarheiten?</h2>
@@ -100,47 +117,85 @@ export default function Page() {
               </p>
             </div>
           </Col>
+          <Modal
+            show={showPrivacy}
+            onHide={() => {
+              setShowPrivacy(false);
+            }}
+            size="lg"
+            scrollable={true}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Datenverarbeitung</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="mb-4">
+                <h5>Grundlegendes</h5>
+                <p>
+                  <em>KeinPlan</em> verarbeitet im Zuge der Erstellung personali&shy;sierter
+                  Stunden&shy;listen sensible, personen&shy;bezogene Daten. Sowohl diese Daten als
+                  auch die generierten Stundenlisten werden{" "}
+                  <b>zu keinem Zeitpunkt dauerhaft gespeichert</b>.
+                </p>
+                <p>
+                  Jegliche Eingaben werden nur ein einziges Mal pro Anfrage verarbeitet, um entweder{" "}
+                  <em>KaPlan</em>-Termine abzufragen oder Stundenlisten daraus zu generieren. Diese
+                  werden lediglich bei Bedarf generiert und nach erfolgtem Download nicht im
+                  Speicher oder Dateisystem des Servers persistiert.
+                </p>
+              </div>
 
-          <Col md={6}>
-            <div className="mt-5">
-              <h2>Datenschutz</h2>
-              <p>
-                Dieses Tool verarbeitet im Zuge der Erstellung personali&shy;sierter
-                Stunden&shy;listen personen&shy;bezogene Daten. Der Code ist{" "}
-                <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
-                  komplett quelloffen
-                </CondLink>{" "}
-                und per Design darauf ausgelegt, solche Daten{" "}
-                <b>zu keinem Zeitpunkt dauerhaft zu speichern</b>. Jegliche Eingaben werden nur ein
-                einziges Mal pro Anfrage verarbeitet, um <em>KaPlan</em>-Termine abzufragen sowie
-                Stundenlisten daraus zu generieren.
-              </p>
-              <p>
-                Um unnötig wiederholte Server-Anfragen zu vermeiden, gibt es einen
-                Caching-Mechanismus, bei dem jeder Abonnement-String kurzzeitig verschlüsselt im
-                Backend vorgehalten wird. Die Daten&shy;integrität bleibt dabei gewähr&shy;leistet:
-                Selbst aus Server Logs oder einem Speicher&shy;abbild können zu keinem Zeitpunkt
-                sensible Daten rekon&shy;struiert werden.
-              </p>
-              <p>
-                Für eine einfachere Nutzbarkeit können im 2. Schritt die Werte aller
-                Eingabe&shy;felder lokal als Cookie gespeichert werden. Diese Daten verlassen die
-                aktuelle Browser-Sitzung nicht und werden zu keinem anderen Zweck weiterverarbeitet.
-              </p>
-            </div>
-          </Col>
+              <div className="mb-4">
+                <h5>Open source</h5>
+                <p>
+                  Der gesamte Code von <em>KeinPlan</em> ist quelloffen. Er ist im Zuge
+                  größtmöglicher Transparenz, insb. hinsichtlich Datenverarbeitung, jederzeit
+                  öffentlich einsehbar und auf GitHub verfügbar.
+                  <br />
+                  <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
+                    {GITHUB_LINK}
+                  </CondLink>{" "}
+                </p>
+              </div>
+
+              <div className="mb-4">
+                <h5>Serverseitiges Caching</h5>
+                <p>
+                  Um unnötig wiederholte Anfragen an den <em>KaPlan</em>-Server zu vermeiden, gibt
+                  es einen Caching-Mechanismus. Dabei wird jeder Abonnement-String nach gewissen
+                  Prüfschritten inkl. der damit verbundenen Termindaten <b>für kurze Zeit</b> im
+                  Backend vorgehalten. Das passiert verschlüsselt als sog.{" "}
+                  <Link href="https://de.wikipedia.org/wiki/Hashfunktion">Hash</Link>, sodass
+                  bereits angefragte Datensätze direkt zugeordnet und unnötiger Traffic vermieden
+                  werden, aber der jeweils zugrunde&shy;liegende Abonnement-String daraus nicht
+                  rekonstruiert werden kann.
+                </p>
+                <p>
+                  Die Daten&shy;integrität bleibt somit gewährleistet, denn selbst aus Server Logs
+                  oder einem Speicher&shy;abbild können zu keinem Zeitpunkt sensible Daten
+                  ausgelesen werden.
+                </p>
+              </div>
+
+              <div className="mb-4">
+                <h5>Cookies</h5>
+                <p>
+                  Für eine einfachere Nutzbarkeit des Tools bei der wiederholten Anfertigung von
+                  Stundenlisten können im zweiten Schritt die Werte aller Eingabe&shy;felder lokal
+                  als Cookie gespeichert werden. Diese Daten verlassen die aktuelle Browser-Sitzung
+                  nicht und werden zu keinem anderen Zweck ausgelesen oder anderweitig verarbeitet.
+                </p>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={() => setShowPrivacy(false)}>
+                Ok
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Row>
       </Container>
 
-      {!PROD && isError && (
-        <Container>
-          <MsgBox type="warning" trace={error.message}>
-            Es konnten keine Versionsangaben vom Backend abgerufen werden.
-            <br />
-            <small>(Hinweis: Diese Meldung erscheint nur auf unproduktiven Systemen.)</small>
-          </MsgBox>
-        </Container>
-      )}
       {VERSION_FRONTEND && data?.KeinPlan_backend && data?.KeinPlan_backend != VERSION_FRONTEND && (
         <Container>
           <MsgBox type="error">
