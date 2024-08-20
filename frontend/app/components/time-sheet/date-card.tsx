@@ -2,10 +2,10 @@ import { faClock, faLocationDot, faMugHot, faUser } from "@fortawesome/free-soli
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card } from "react-bootstrap";
 import strftime from "strftime";
-import { TimeSheetDate } from "./generator";
+import { DateEntry } from "./generator";
 
 type DateCardProps = {
-  date: TimeSheetDate;
+  date: DateEntry;
 };
 
 const DateCard = (props: DateCardProps) => {

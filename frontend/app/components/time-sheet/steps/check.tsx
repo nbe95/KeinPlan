@@ -3,12 +3,10 @@ import { Col, Row } from "react-bootstrap";
 import MsgBox from "../../msg-box";
 import { NextButton, PrevButton } from "../../process-button";
 import DateCard from "../date-card";
-import { TimeSheetDate, TimeSheetParams, UserData } from "../generator";
+import { DateEntry } from "../generator";
 
 type CheckProps = {
-  userData: UserData;
-  timeSheetParams: TimeSheetParams;
-  dateList: TimeSheetDate[];
+  dateList: DateEntry[];
   prevStep: () => void;
   nextStep: () => void;
 };
@@ -30,7 +28,7 @@ const CheckStep = (props: CheckProps) => {
       </p>
       <Row className="my-4">
         {props.dateList.length ? (
-          props.dateList.map((entry: TimeSheetDate, index: number) => (
+          props.dateList.map((entry: DateEntry, index: number) => (
             <Col key={index} sm={12} md={6}>
               <DateCard date={entry} />
             </Col>

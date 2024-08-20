@@ -22,41 +22,42 @@ import {
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { NextButton, PrevButton } from "../../process-button";
-import { CookieData, TimeSheetDate, TimeSheetParams, UserData } from "../generator";
+import { CookieData, DateEntry, UserData } from "../generator";
+
+interface KaPlanData {
+  icsString: string;
+  targetDate: Date;
+}
 
 type DatesProps = {
   userData: UserData;
-  timeSheetParams?: TimeSheetParams;
-  setTimeSheetParams: (data: TimeSheetParams) => void;
-  setDateList: (data: TimeSheetDate[]) => void;
+  targetDate: Date;
+  setTargetDate: (date: Date) => void;
+  setDateList: (data: DateEntry[]) => void;
   prevStep: () => void;
   nextStep: () => void;
 };
 
 const DatesStep = (props: DatesProps) => {
   // Date related stuff
-  const fiveDaysAgo = addDaysToDate(new Date(), -5);
-  const [targetDate, setTargetDate] = useState(
-    props.timeSheetParams?.targetDate ?? getMonday(fiveDaysAgo),
-  );
   const getCalWeekLabel = useCallback(
-    (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
-    [targetDate],
+    (): string => `KW ${getWeek(props.targetDate)}/${getWeekYear(props.targetDate)}`,
+    [props.targetDate],
   );
   const prevWeek = () => {
-    setTargetDate(addDaysToDate(getMonday(targetDate), -7));
+    props.setTargetDate(addDaysToDate(getMonday(props.targetDate), -7));
   };
   const nextWeek = () => {
-    setTargetDate(addDaysToDate(getMonday(targetDate), 7));
+    props.setTargetDate(addDaysToDate(getMonday(props.targetDate), 7));
   };
   const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
 
   // Query for KaPlan dates
-  const [queryParams, setQueryParams] = useState<TimeSheetParams>();
+  const [kaPlanData, setKaPlanData] = useState<KaPlanData>();
   const { data, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: [KAPLAN_QUERY_KEY, queryParams],
+    queryKey: [KAPLAN_QUERY_KEY, kaPlanData],
     queryFn: async () => {
-      const startDate = getMonday(queryParams!.targetDate);
+      const startDate = getMonday(kaPlanData!.targetDate);
       const endDate = addDaysToDate(startDate, 6);
       return axios
         .get(API_ENDPOINT_KAPLAN, {
@@ -65,15 +66,15 @@ const DatesStep = (props: DatesProps) => {
             to: getDateStr(endDate),
           },
           headers: {
-            [KAPLAN_ICS_HEADER]: b64_encode(queryParams!.kaPlanIcs),
+            [KAPLAN_ICS_HEADER]: b64_encode(kaPlanData!.icsString),
           },
         })
         .then((response) => response.data)
         .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
-    select: (data: any): TimeSheetDate[] =>
-      data.dates?.map((date: any): TimeSheetDate => {
+    select: (data: any): DateEntry[] =>
+      data.dates?.map((date: any): DateEntry => {
         return {
           title: date.title ?? "",
           role: date.role ?? "",
@@ -87,20 +88,16 @@ const DatesStep = (props: DatesProps) => {
     gcTime: 0,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!queryParams,
+    enabled: !!kaPlanData,
   });
 
   // Form logic
   const handleSubmit = (event) => {
     event.preventDefault();
-    const params: TimeSheetParams = {
-      type: "weekly",
-      format: "pdf",
-      targetDate: targetDate,
-      kaPlanIcs: event.target.kaplan_ics.value,
-    };
-    props.setTimeSheetParams(params);
-    setQueryParams(params);
+    setKaPlanData({
+      targetDate: props.targetDate,
+      icsString: event.target.kaplan_ics.value,
+    });
 
     // Update existing cookie
     if (cookies[USER_COOKIE_NAME]) {
@@ -121,7 +118,7 @@ const DatesStep = (props: DatesProps) => {
 
   useEffect(() => {
     if (isError) {
-      setQueryParams(undefined);
+      setKaPlanData(undefined);
       toast.dismiss(kaPlanToast.current);
       kaPlanToast.current = toast.error(
         () => (
@@ -155,7 +152,7 @@ const DatesStep = (props: DatesProps) => {
   // Cookies
   const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
   const updateCookie = (): void => {
-    const cookie: CookieData = { userData: props.userData, timeSheetParams: props.timeSheetParams };
+    const cookie: CookieData = { ...props.userData, kaPlanIcs: kaPlanData?.icsString ?? "" };
     setCookie(USER_COOKIE_NAME, cookie);
   };
 
@@ -175,11 +172,12 @@ const DatesStep = (props: DatesProps) => {
   };
 
   // Directly focus next button if input data is already present
-  useEffect(() => {
-    if (props.timeSheetParams) {
-      document.getElementById("btn-next")?.focus();
-    }
-  }, [props.timeSheetParams]);
+  // TODO(Niklas): Find a way to make this work properly
+  // useEffect(() => {
+  //   if (props.targetDate && props.kaPlanIcs) {
+  //     document.getElementById("btn-next")?.focus();
+  //   }
+  // }, [props.timeSheetParams]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
@@ -195,11 +193,11 @@ const DatesStep = (props: DatesProps) => {
                 type="date"
                 name="target_date"
                 placeholder="Datum"
-                value={getDateStr(targetDate)}
+                value={getDateStr(props.targetDate)}
                 onChange={(event) => {
                   const date = (event.target as HTMLInputElement).valueAsDate;
                   if (date) {
-                    setTargetDate(date);
+                    props.setTargetDate(date);
                   }
                 }}
                 disabled={isFetching}
@@ -239,7 +237,7 @@ const DatesStep = (props: DatesProps) => {
               type="text"
               name="kaplan_ics"
               placeholder=""
-              defaultValue={props.timeSheetParams?.kaPlanIcs}
+              defaultValue={kaPlanData?.icsString}
               disabled={isFetching}
               required
             />
