@@ -150,7 +150,8 @@ const Disclaimer = () => {
                     <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
                       {GITHUB_LINK}
                     </CondLink>{" "}
-                    <p></p>
+                  </p>
+                  <p>
                     Jeder mit technischem Interesse/Kenntnissen kann einen eigenen <em>KeinPlan</em>
                     -Server bzw. -Dienst lokal betreiben, z.&nbsp;B. bequem im Docker Container.
                   </p>
