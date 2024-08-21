@@ -2,6 +2,7 @@ import { faEnvelopeOpenText, faFilePdf } from "@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { unstable_noStore as noStore } from "next/cache";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import {
@@ -28,6 +29,9 @@ type ResultProps = {
 };
 
 const ResultStep = (props: ResultProps) => {
+  // Do not cache this component as it is required to fetch environment values at runtime
+  noStore();
+
   const getEndpointUrl = (format: string): string => {
     const type: string = "weekly";
     return new URL(`${API_ENDPOINT_TIME_SHEET}/${type}/${format}`, window.location.href).toString();
