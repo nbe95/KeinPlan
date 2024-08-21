@@ -1,5 +1,3 @@
-"use client";
-
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faCookie, faHardDrive } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -132,8 +130,11 @@ const Disclaimer = () => {
                     Für eine einfachere Nutzbarkeit des Tools bei wiederholter Anwendung können die
                     eingegebenen Werte der Eingabe&shy;felder (Name, Arbeitgeber,
                     KaPlan-Abonnement-String) gespeichert werden. Das passiert als Cookie im
-                    Browser. Die Daten verlassen die aktuelle Browser-Sitzung nicht und werden zu
-                    keinem anderen Zweck ausgelesen oder anderweitig verarbeitet.
+                    Browser.
+                  </p>
+                  <p>
+                    Die Daten verlassen die aktuelle Browser-Sitzung nicht und werden zu keinem
+                    anderen Zweck ausgelesen oder anderweitig verarbeitet.
                   </p>
                 </Accordion.Body>
               </Accordion.Item>
@@ -146,13 +147,16 @@ const Disclaimer = () => {
                   <p>
                     Der gesamte Code von <em>KeinPlan</em> ist quelloffen. Er ist im Zuge
                     größtmöglicher Transparenz jederzeit öffentlich auf GitHub einsehbar.
-                    <br />{" "}
+                  </p>
+                  <p>
                     <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
                       {GITHUB_LINK}
                     </CondLink>{" "}
-                    <p></p>
-                    Jeder mit technischem Interesse/Kenntnissen kann einen eigenen <em>KeinPlan</em>
-                    -Server bzw. -Dienst lokal betreiben, z.&nbsp;B. bequem im Docker Container.
+                  </p>
+                  <p>
+                    Jeder mit technischem Interesse/Kenntnissen kann <em>KeinPlan</em> lokal als
+                    Dienst oder auf einem Server betreiben, z.&nbsp;B. bequem mittels Docker
+                    Container.
                   </p>
                 </Accordion.Body>
               </Accordion.Item>
