@@ -22,41 +22,44 @@ import {
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { NextButton, PrevButton } from "../../process-button";
-import { CookieData, TimeSheetDate, TimeSheetParams, UserData } from "../generator";
+import { DateEntry, UserData } from "../generator";
+
+interface KaPlanData {
+  icsString: string;
+  targetDate: Date;
+}
 
 type DatesProps = {
   userData: UserData;
-  timeSheetParams?: TimeSheetParams;
-  setTimeSheetParams: (data: TimeSheetParams) => void;
-  setDateList: (data: TimeSheetDate[]) => void;
+  targetDate: Date;
+  setTargetDate: (date: Date) => void;
+  kaPlanIcs?: string;
+  setKaPlanIcs: (ics: string) => void;
+  setDateList: (data: DateEntry[]) => void;
   prevStep: () => void;
   nextStep: () => void;
 };
 
 const DatesStep = (props: DatesProps) => {
   // Date related stuff
-  const fiveDaysAgo = addDaysToDate(new Date(), -5);
-  const [targetDate, setTargetDate] = useState(
-    props.timeSheetParams?.targetDate ?? getMonday(fiveDaysAgo),
-  );
   const getCalWeekLabel = useCallback(
-    (): string => `KW ${getWeek(targetDate)}/${getWeekYear(targetDate)}`,
-    [targetDate],
+    (): string => `KW ${getWeek(props.targetDate)}/${getWeekYear(props.targetDate)}`,
+    [props.targetDate],
   );
   const prevWeek = () => {
-    setTargetDate(addDaysToDate(getMonday(targetDate), -7));
+    props.setTargetDate(addDaysToDate(getMonday(props.targetDate), -7));
   };
   const nextWeek = () => {
-    setTargetDate(addDaysToDate(getMonday(targetDate), 7));
+    props.setTargetDate(addDaysToDate(getMonday(props.targetDate), 7));
   };
   const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
 
   // Query for KaPlan dates
-  const [queryParams, setQueryParams] = useState<TimeSheetParams>();
+  const [kaPlanQuery, setKaPlanQuery] = useState<KaPlanData>();
   const { data, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: [KAPLAN_QUERY_KEY, queryParams],
+    queryKey: [KAPLAN_QUERY_KEY, kaPlanQuery],
     queryFn: async () => {
-      const startDate = getMonday(queryParams!.targetDate);
+      const startDate = getMonday(kaPlanQuery!.targetDate);
       const endDate = addDaysToDate(startDate, 6);
       return axios
         .get(API_ENDPOINT_KAPLAN, {
@@ -65,15 +68,15 @@ const DatesStep = (props: DatesProps) => {
             to: getDateStr(endDate),
           },
           headers: {
-            [KAPLAN_ICS_HEADER]: b64_encode(queryParams!.kaPlanIcs),
+            [KAPLAN_ICS_HEADER]: b64_encode(kaPlanQuery!.icsString),
           },
         })
         .then((response) => response.data)
         .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
-    select: (data: any): TimeSheetDate[] =>
-      data.dates?.map((date: any): TimeSheetDate => {
+    select: (data: any): DateEntry[] =>
+      data.dates?.map((date: any): DateEntry => {
         return {
           title: date.title ?? "",
           role: date.role ?? "",
@@ -87,24 +90,23 @@ const DatesStep = (props: DatesProps) => {
     gcTime: 0,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!queryParams,
+    enabled: !!kaPlanQuery,
   });
 
   // Form logic
+  const [cookies, setCookie] = useCookies([USER_COOKIE_NAME]);
   const handleSubmit = (event) => {
     event.preventDefault();
-    const params: TimeSheetParams = {
-      type: "weekly",
-      format: "pdf",
-      targetDate: targetDate,
-      kaPlanIcs: event.target.kaplan_ics.value,
-    };
-    props.setTimeSheetParams(params);
-    setQueryParams(params);
+
+    props.setKaPlanIcs(event.target.kaplan_ics.value);
+    setKaPlanQuery({ icsString: event.target.kaplan_ics.value, targetDate: props.targetDate });
 
     // Update existing cookie
     if (cookies[USER_COOKIE_NAME]) {
-      updateCookie();
+      setCookie(USER_COOKIE_NAME, {
+        ...cookies[USER_COOKIE_NAME],
+        kaPlanIcs: event.target.kaplan_ics.value,
+      });
     }
   };
 
@@ -121,7 +123,7 @@ const DatesStep = (props: DatesProps) => {
 
   useEffect(() => {
     if (isError) {
-      setQueryParams(undefined);
+      setKaPlanQuery(undefined);
       toast.dismiss(kaPlanToast.current);
       kaPlanToast.current = toast.error(
         () => (
@@ -152,34 +154,12 @@ const DatesStep = (props: DatesProps) => {
     }
   }, [isSuccess]);
 
-  // Cookies
-  const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
-  const updateCookie = (): void => {
-    const cookie: CookieData = { userData: props.userData, timeSheetParams: props.timeSheetParams };
-    setCookie(USER_COOKIE_NAME, cookie);
-  };
-
-  const cookieToast = useRef<Id | undefined>(undefined);
-  const setResetCookie = (store: boolean): void => {
-    if (store) {
-      updateCookie();
-      toast.dismiss(cookieToast.current);
-      cookieToast.current = toast.success(
-        "Deine Daten sind nun in diesem Browser gespeichert. Wenn du das nächste Mal vorbeischaust, sind alle Felder bereits ausgefüllt. 👌",
-      );
-    } else {
-      removeCookie(USER_COOKIE_NAME);
-      toast.dismiss(cookieToast.current);
-      cookieToast.current = toast.info("OK! Deine gespeicherten Daten wurden entfernt.");
-    }
-  };
-
   // Directly focus next button if input data is already present
   useEffect(() => {
-    if (props.timeSheetParams) {
+    if (props.targetDate && props.kaPlanIcs) {
       document.getElementById("btn-next")?.focus();
     }
-  }, [props.timeSheetParams]);
+  }, [props.targetDate, props.kaPlanIcs]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
@@ -195,11 +175,11 @@ const DatesStep = (props: DatesProps) => {
                 type="date"
                 name="target_date"
                 placeholder="Datum"
-                value={getDateStr(targetDate)}
+                value={getDateStr(props.targetDate)}
                 onChange={(event) => {
                   const date = (event.target as HTMLInputElement).valueAsDate;
                   if (date) {
-                    setTargetDate(date);
+                    props.setTargetDate(date);
                   }
                 }}
                 disabled={isFetching}
@@ -239,7 +219,7 @@ const DatesStep = (props: DatesProps) => {
               type="text"
               name="kaplan_ics"
               placeholder=""
-              defaultValue={props.timeSheetParams?.kaPlanIcs}
+              defaultValue={props.kaPlanIcs}
               disabled={isFetching}
               required
             />
@@ -261,25 +241,6 @@ const DatesStep = (props: DatesProps) => {
             Wie weiter unten beschrieben, wird er nicht dauerhaft gespeichert, sondern nur einmalig
             zur Erstellung deiner Stundenliste verwendet.
           </p>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col className="mb-4">
-          <hr className="col-3 col-md-2" />
-          <Form.Group>
-            <Form.Check
-              type="switch"
-              id="confirm"
-              label="Daten als Cookie speichern, damit's beim nächsten Mal schneller geht."
-              onClick={(event) => setResetCookie(event.currentTarget.checked)}
-              checked={cookies[USER_COOKIE_NAME]}
-            />
-            <Form.Text>
-              Speichert deine bisherigen Eingaben im Browser, damit du sie nicht nochmal eintippen
-              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
-            </Form.Text>
-          </Form.Group>
         </Col>
       </Row>
 

@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { USER_COOKIE_NAME } from "../../utils/constants";
+import { addDaysToDate, getMonday } from "../../utils/dates";
 import Container from "../layout/container";
 import Stepper from "../stepper";
 import CheckStep from "./steps/check";
@@ -22,22 +23,11 @@ export interface UserData {
   employer: string;
 }
 
-export type TimeSheetType = "weekly";
-export type TimeSheetFormat = "pdf";
-
-export interface TimeSheetParams {
-  type: TimeSheetType;
-  format: TimeSheetFormat;
-  targetDate: Date;
+export interface CookieData extends UserData {
   kaPlanIcs: string;
 }
 
-export interface CookieData {
-  userData: UserData;
-  timeSheetParams: TimeSheetParams;
-}
-
-export interface TimeSheetDate {
+export interface DateEntry {
   title: string;
   role: string;
   location: string;
@@ -47,8 +37,12 @@ export interface TimeSheetDate {
 
 const TimeSheetGenerator = () => {
   const [userData, setUserData] = useState<UserData>();
-  const [timeSheetParams, setTimeSheetParams] = useState<TimeSheetParams>();
-  const [dateList, setDateList] = useState<TimeSheetDate[]>();
+
+  const fiveDaysAgo = addDaysToDate(new Date(), -5);
+  const [targetDate, setTargetDate] = useState<Date>(getMonday(fiveDaysAgo));
+  const [kaPlanIcs, setKaPlanIcs] = useState<string>();
+
+  const [dateList, setDateList] = useState<DateEntry[]>();
 
   enum Steps {
     USER_DATA,
@@ -60,15 +54,15 @@ const TimeSheetGenerator = () => {
 
   // Take user data from cookie upon first render, if available
   const [cookies] = useCookies([USER_COOKIE_NAME]);
-  const userCookie = cookies[USER_COOKIE_NAME];
+  const userCookie: CookieData = cookies[USER_COOKIE_NAME];
   useEffect(() => {
     if (userCookie) {
-      setUserData(userCookie.userData);
-      const params: TimeSheetParams = {
-        ...userCookie.timeSheetParams,
-        targetDate: new Date(Date.parse(userCookie.timeSheetParams.targetDate)),
-      };
-      setTimeSheetParams(params);
+      setUserData({
+        firstName: userCookie.firstName,
+        lastName: userCookie.lastName,
+        employer: userCookie.employer,
+      });
+      setKaPlanIcs(userCookie.kaPlanIcs);
     }
   }, []);
 
@@ -100,8 +94,10 @@ const TimeSheetGenerator = () => {
         {step == Steps.TIME_SHEET_DATA && (
           <DatesStep
             userData={userData!}
-            timeSheetParams={timeSheetParams}
-            setTimeSheetParams={setTimeSheetParams}
+            targetDate={targetDate}
+            setTargetDate={setTargetDate}
+            kaPlanIcs={kaPlanIcs}
+            setKaPlanIcs={setKaPlanIcs}
             setDateList={setDateList}
             prevStep={() => {
               setStep(Steps.USER_DATA);
@@ -114,8 +110,6 @@ const TimeSheetGenerator = () => {
 
         {step == Steps.DATE_CHECK && (
           <CheckStep
-            userData={userData!}
-            timeSheetParams={timeSheetParams!}
             dateList={dateList!}
             prevStep={() => {
               setStep(Steps.TIME_SHEET_DATA);
@@ -129,7 +123,7 @@ const TimeSheetGenerator = () => {
         {step == Steps.RESULT_VIEW && (
           <ResultView
             userData={userData!}
-            timeSheetParams={timeSheetParams!}
+            targetDate={targetDate!}
             dateList={dateList!}
             prevStep={() => {
               setStep(Steps.DATE_CHECK);

@@ -18,31 +18,30 @@ import { CondLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
 import { PrevButton } from "../../process-button";
-import { TimeSheetDate, TimeSheetFormat, TimeSheetParams, UserData } from "../generator";
+import { DateEntry, UserData } from "../generator";
 
 type ResultProps = {
   userData: UserData;
-  timeSheetParams: TimeSheetParams;
-  dateList: TimeSheetDate[];
+  targetDate: Date;
+  dateList: DateEntry[];
   prevStep: () => void;
 };
 
 const ResultStep = (props: ResultProps) => {
-  const getEndpointUrl = useCallback((): string => {
-    return new URL(
-      `${API_ENDPOINT_TIME_SHEET}/${props.timeSheetParams?.type.toLowerCase()}/${props.timeSheetParams?.format.toLowerCase()}`,
-      window.location.href,
-    ).toString();
-  }, [props.timeSheetParams]);
+  const getEndpointUrl = (format: string): string => {
+    const type: string = "weekly";
+    return new URL(`${API_ENDPOINT_TIME_SHEET}/${type}/${format}`, window.location.href).toString();
+  };
 
-  const getTimeSheetName = useCallback((): string => {
-    const targetDate: Date = props.timeSheetParams.targetDate;
-    const format: TimeSheetFormat = props.timeSheetParams.format;
-
-    const basename: string = "Arbeitszeit";
-    const timestamp: string = `${targetDate.getFullYear()}-${getWeek(targetDate)}`;
-    return `${basename}_${timestamp}.${format.toLowerCase()}`;
-  }, [props.timeSheetParams.targetDate, props.timeSheetParams.format]);
+  const getTimeSheetName = useCallback(
+    (format: string): string => {
+      const targetDate: Date = props.targetDate;
+      const basename: string = "Arbeitszeit";
+      const timestamp: string = `${targetDate.getFullYear()}-${getWeek(targetDate)}`;
+      return `${basename}_${timestamp}.${format.toLowerCase()}`;
+    },
+    [props.targetDate],
+  );
 
   const {
     data: pdf,
@@ -50,16 +49,16 @@ const ResultStep = (props: ResultProps) => {
     isError,
     error,
   } = useQuery({
-    queryKey: [TIME_SHEET_QUERY_KEY, props.timeSheetParams, props.userData],
+    queryKey: [TIME_SHEET_QUERY_KEY, props.targetDate, props.userData],
     queryFn: async () => {
       return await axios
         .post(
-          getEndpointUrl(),
+          getEndpointUrl("pdf"),
           {
             employer: props.userData.employer,
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
-            year: props.timeSheetParams.targetDate.getFullYear(),
-            week: getWeek(props.timeSheetParams.targetDate),
+            year: props.targetDate.getFullYear(),
+            week: getWeek(props.targetDate),
             dates: props.dateList.map((date) => dictConvertDatesToIsoString(date)),
           },
           {
@@ -73,7 +72,7 @@ const ResultStep = (props: ResultProps) => {
           // Store the result as blob object and return its URL
           const url = URL.createObjectURL(new Blob([response.data]));
           return {
-            fileName: getTimeSheetName(),
+            fileName: getTimeSheetName("pdf"),
             blobUrl: url,
             size: response.data.size,
           };
@@ -89,7 +88,7 @@ const ResultStep = (props: ResultProps) => {
 
   const mailParams = useMemo((): MailProps => {
     const user: UserData = props.userData;
-    const targetDate: Date = props.timeSheetParams.targetDate;
+    const targetDate: Date = props.targetDate;
 
     const name: string = `${user?.firstName} ${user?.lastName}`;
     const week: string = `${getWeek(targetDate)}/${targetDate.getFullYear()}`;
@@ -98,7 +97,7 @@ const ResultStep = (props: ResultProps) => {
       subject: `Arbeitszeit ${name} - KW ${week}`,
       body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${name}`,
     };
-  }, [props.userData, props.timeSheetParams]);
+  }, [props.userData, props.targetDate]);
 
   return (
     <>
@@ -134,7 +133,7 @@ const ResultStep = (props: ResultProps) => {
                     <DownloadButton
                       fileName={pdf!.fileName}
                       url={pdf!.blobUrl}
-                      text={`KW ${getWeek(props.timeSheetParams.targetDate)}/${props.timeSheetParams.targetDate.getFullYear()}`}
+                      text={`KW ${getWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
                       size={pdf!.size}
                       faIcon={faFilePdf}
                       isPrimary={true}
