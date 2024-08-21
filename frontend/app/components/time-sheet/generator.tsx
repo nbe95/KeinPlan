@@ -85,6 +85,7 @@ const TimeSheetGenerator = () => {
           <FormUserData
             userData={userData}
             setUserData={setUserData}
+            setKaPlanIcs={setKaPlanIcs}
             nextStep={() => {
               setStep(Steps.TIME_SHEET_DATA);
             }}

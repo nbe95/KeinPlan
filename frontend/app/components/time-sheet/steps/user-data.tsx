@@ -10,6 +10,7 @@ import { UserData } from "../generator";
 type UserDataProps = {
   userData?: UserData;
   setUserData: (data: UserData) => void;
+  setKaPlanIcs: (ics: string | undefined) => void;
   nextStep: () => void;
 };
 
@@ -54,6 +55,7 @@ const UserDataStep = (props: UserDataProps) => {
       );
     } else {
       removeCookie(USER_COOKIE_NAME);
+      props.setKaPlanIcs(undefined);
       toast.dismiss(cookieToast.current);
       cookieToast.current = toast.info("OK! Deine gespeicherten Daten wurden entfernt.");
     }
@@ -107,7 +109,6 @@ const UserDataStep = (props: UserDataProps) => {
 
       <Row>
         <Col className="mb-4">
-          {/* <hr className="col-3 col-md-2" /> */}
           <Form.Group>
             <Form.Check
               type="switch"
