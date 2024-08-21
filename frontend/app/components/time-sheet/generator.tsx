@@ -62,8 +62,7 @@ const TimeSheetGenerator = () => {
         lastName: userCookie.lastName,
         employer: userCookie.employer,
       });
-      // TODO(Niklas): Fix cookies
-      // setKaPlanIcs(userCookie.kaPlanIcs);
+      setKaPlanIcs(userCookie.kaPlanIcs);
     }
   }, []);
 

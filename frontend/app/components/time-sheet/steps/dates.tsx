@@ -22,7 +22,7 @@ import {
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { NextButton, PrevButton } from "../../process-button";
-import { CookieData, DateEntry, UserData } from "../generator";
+import { DateEntry, UserData } from "../generator";
 
 interface KaPlanData {
   icsString: string;
@@ -33,7 +33,7 @@ type DatesProps = {
   userData: UserData;
   targetDate: Date;
   setTargetDate: (date: Date) => void;
-  kaPlanIcs: string;
+  kaPlanIcs?: string;
   setKaPlanIcs: (ics: string) => void;
   setDateList: (data: DateEntry[]) => void;
   prevStep: () => void;
@@ -90,18 +90,23 @@ const DatesStep = (props: DatesProps) => {
     gcTime: 0,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!kaPlanQuery
+    enabled: !!kaPlanQuery,
   });
 
   // Form logic
+  const [cookies, setCookie] = useCookies([USER_COOKIE_NAME]);
   const handleSubmit = (event) => {
     event.preventDefault();
+
     props.setKaPlanIcs(event.target.kaplan_ics.value);
-    setKaPlanQuery({ icsString: event.target.kaplan_ics.value, targetDate: props.targetDate })
+    setKaPlanQuery({ icsString: event.target.kaplan_ics.value, targetDate: props.targetDate });
 
     // Update existing cookie
     if (cookies[USER_COOKIE_NAME]) {
-      updateCookie();
+      setCookie(USER_COOKIE_NAME, {
+        ...cookies[USER_COOKIE_NAME],
+        kaPlanIcs: event.target.kaplan_ics.value,
+      });
     }
   };
 
@@ -149,35 +154,12 @@ const DatesStep = (props: DatesProps) => {
     }
   }, [isSuccess]);
 
-  // Cookies
-  const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
-  const updateCookie = (): void => {
-    const cookie: CookieData = { ...props.userData, kaPlanIcs: props.kaPlanIcs ?? "" };
-    setCookie(USER_COOKIE_NAME, cookie);
-  };
-
-  const cookieToast = useRef<Id | undefined>(undefined);
-  const setResetCookie = (store: boolean): void => {
-    if (store) {
-      updateCookie();
-      toast.dismiss(cookieToast.current);
-      cookieToast.current = toast.success(
-        "Deine Daten sind nun in diesem Browser gespeichert. Wenn du das nächste Mal vorbeischaust, sind alle Felder bereits ausgefüllt. 👌",
-      );
-    } else {
-      removeCookie(USER_COOKIE_NAME);
-      toast.dismiss(cookieToast.current);
-      cookieToast.current = toast.info("OK! Deine gespeicherten Daten wurden entfernt.");
-    }
-  };
-
   // Directly focus next button if input data is already present
-  // TODO(Niklas): Find a way to make this work properly
-  // useEffect(() => {
-  //   if (props.targetDate && props.kaPlanIcs) {
-  //     document.getElementById("btn-next")?.focus();
-  //   }
-  // }, [props.timeSheetParams]);
+  useEffect(() => {
+    if (props.targetDate && props.kaPlanIcs) {
+      document.getElementById("btn-next")?.focus();
+    }
+  }, [props.targetDate, props.kaPlanIcs]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
@@ -259,25 +241,6 @@ const DatesStep = (props: DatesProps) => {
             Wie weiter unten beschrieben, wird er nicht dauerhaft gespeichert, sondern nur einmalig
             zur Erstellung deiner Stundenliste verwendet.
           </p>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col className="mb-4">
-          <hr className="col-3 col-md-2" />
-          <Form.Group>
-            <Form.Check
-              type="switch"
-              id="confirm"
-              label="Daten als Cookie speichern, damit's beim nächsten Mal schneller geht."
-              onClick={(event) => setResetCookie(event.currentTarget.checked)}
-              checked={cookies[USER_COOKIE_NAME]}
-            />
-            <Form.Text>
-              Speichert deine bisherigen Eingaben im Browser, damit du sie nicht nochmal eintippen
-              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
-            </Form.Text>
-          </Form.Group>
         </Col>
       </Row>
 

@@ -1,6 +1,9 @@
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
+import { useCookies } from "react-cookie";
+import { Id, toast } from "react-toastify";
+import { USER_COOKIE_NAME } from "../../../utils/constants";
 import { NextButton } from "../../process-button";
 import { UserData } from "../generator";
 
@@ -14,11 +17,19 @@ const UserDataStep = (props: UserDataProps) => {
   const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.setUserData({
+
+    const userData: UserData = {
       firstName: event.target.first_name.value,
       lastName: event.target.last_name.value,
       employer: event.target.employer.value,
-    });
+    };
+    props.setUserData(userData);
+
+    // Set or update existing cookie
+    if (enableCookie) {
+      setCookie(USER_COOKIE_NAME, { ...cookies[USER_COOKIE_NAME], ...userData });
+    }
+
     props.nextStep();
     router.push("#time-sheet");
   };
@@ -29,6 +40,24 @@ const UserDataStep = (props: UserDataProps) => {
       document.getElementById("btn-next")?.focus();
     }
   }, [props.userData]);
+
+  // Cookies
+  const cookieToast = useRef<Id | undefined>(undefined);
+  const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
+  const [enableCookie, setEnableCookie] = useState<boolean>(cookies[USER_COOKIE_NAME]);
+  const setResetCookie = (enable: boolean) => {
+    setEnableCookie(enable);
+    if (enable) {
+      toast.dismiss(cookieToast.current);
+      cookieToast.current = toast.success(
+        "Deine Eingaben werden in diesem Browser gespeichert. Beim nächsten Mal sind alle Felder bereits ausgefüllt. 👌",
+      );
+    } else {
+      removeCookie(USER_COOKIE_NAME);
+      toast.dismiss(cookieToast.current);
+      cookieToast.current = toast.info("OK! Deine gespeicherten Daten wurden entfernt.");
+    }
+  };
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
@@ -75,6 +104,26 @@ const UserDataStep = (props: UserDataProps) => {
           </Form.Group>
         </Col>
       </Row>
+
+      <Row>
+        <Col className="mb-4">
+          {/* <hr className="col-3 col-md-2" /> */}
+          <Form.Group>
+            <Form.Check
+              type="switch"
+              id="confirm"
+              label="Eingaben speichern, damit's beim nächsten Mal schneller geht."
+              onClick={(event) => setResetCookie(event.currentTarget.checked)}
+              checked={enableCookie}
+            />
+            <Form.Text>
+              Speichert deine Eingaben als Cookie im Browser, damit du sie nicht nochmal eintippen
+              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
+            </Form.Text>
+          </Form.Group>
+        </Col>
+      </Row>
+
       <Row>
         <Col className="d-flex justify-content-end order-1">
           <NextButton submit id="btn-next" />

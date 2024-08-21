@@ -181,9 +181,9 @@ export default function Page() {
                 <h5>Cookies</h5>
                 <p>
                   Für eine einfachere Nutzbarkeit des Tools bei der wiederholten Anfertigung von
-                  Stundenlisten können im zweiten Schritt die Werte aller Eingabe&shy;felder lokal
-                  als Cookie gespeichert werden. Diese Daten verlassen die aktuelle Browser-Sitzung
-                  nicht und werden zu keinem anderen Zweck ausgelesen oder anderweitig verarbeitet.
+                  Stundenlisten können die Werte aller Eingabe&shy;felder lokal als Cookie
+                  gespeichert werden. Diese Daten verlassen die aktuelle Browser-Sitzung nicht und
+                  werden zu keinem anderen Zweck ausgelesen oder anderweitig verarbeitet.
                 </p>
               </div>
             </Modal.Body>
