@@ -36,10 +36,12 @@ export interface DateEntry {
 }
 
 const TimeSheetGenerator = () => {
-  // Global data required to be shared between steps
   const [userData, setUserData] = useState<UserData>();
+
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
   const [targetDate, setTargetDate] = useState<Date>(getMonday(fiveDaysAgo));
+  const [kaPlanIcs, setKaPlanIcs] = useState<string>();
+
   const [dateList, setDateList] = useState<DateEntry[]>();
 
   enum Steps {
@@ -93,7 +95,10 @@ const TimeSheetGenerator = () => {
         {step == Steps.TIME_SHEET_DATA && (
           <DatesStep
             userData={userData!}
+            targetDate={targetDate}
             setTargetDate={setTargetDate}
+            kaPlanIcs={kaPlanIcs}
+            setKaPlanIcs={setKaPlanIcs}
             setDateList={setDateList}
             prevStep={() => {
               setStep(Steps.USER_DATA);

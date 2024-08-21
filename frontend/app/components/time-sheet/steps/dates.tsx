@@ -33,6 +33,8 @@ type DatesProps = {
   userData: UserData;
   targetDate: Date;
   setTargetDate: (date: Date) => void;
+  kaPlanIcs: string;
+  setKaPlanIcs: (ics: string) => void;
   setDateList: (data: DateEntry[]) => void;
   prevStep: () => void;
   nextStep: () => void;
@@ -53,11 +55,11 @@ const DatesStep = (props: DatesProps) => {
   const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
 
   // Query for KaPlan dates
-  const [kaPlanData, setKaPlanData] = useState<KaPlanData>();
+  const [kaPlanQuery, setKaPlanQuery] = useState<KaPlanData>();
   const { data, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: [KAPLAN_QUERY_KEY, kaPlanData],
+    queryKey: [KAPLAN_QUERY_KEY, kaPlanQuery],
     queryFn: async () => {
-      const startDate = getMonday(kaPlanData!.targetDate);
+      const startDate = getMonday(kaPlanQuery!.targetDate);
       const endDate = addDaysToDate(startDate, 6);
       return axios
         .get(API_ENDPOINT_KAPLAN, {
@@ -66,7 +68,7 @@ const DatesStep = (props: DatesProps) => {
             to: getDateStr(endDate),
           },
           headers: {
-            [KAPLAN_ICS_HEADER]: b64_encode(kaPlanData!.icsString),
+            [KAPLAN_ICS_HEADER]: b64_encode(kaPlanQuery!.icsString),
           },
         })
         .then((response) => response.data)
@@ -88,16 +90,14 @@ const DatesStep = (props: DatesProps) => {
     gcTime: 0,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!kaPlanData,
+    enabled: !!kaPlanQuery
   });
 
   // Form logic
   const handleSubmit = (event) => {
     event.preventDefault();
-    setKaPlanData({
-      targetDate: props.targetDate,
-      icsString: event.target.kaplan_ics.value,
-    });
+    props.setKaPlanIcs(event.target.kaplan_ics.value);
+    setKaPlanQuery({ icsString: event.target.kaplan_ics.value, targetDate: props.targetDate })
 
     // Update existing cookie
     if (cookies[USER_COOKIE_NAME]) {
@@ -118,7 +118,7 @@ const DatesStep = (props: DatesProps) => {
 
   useEffect(() => {
     if (isError) {
-      setKaPlanData(undefined);
+      setKaPlanQuery(undefined);
       toast.dismiss(kaPlanToast.current);
       kaPlanToast.current = toast.error(
         () => (
@@ -152,7 +152,7 @@ const DatesStep = (props: DatesProps) => {
   // Cookies
   const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
   const updateCookie = (): void => {
-    const cookie: CookieData = { ...props.userData, kaPlanIcs: kaPlanData?.icsString ?? "" };
+    const cookie: CookieData = { ...props.userData, kaPlanIcs: props.kaPlanIcs ?? "" };
     setCookie(USER_COOKIE_NAME, cookie);
   };
 
@@ -237,7 +237,7 @@ const DatesStep = (props: DatesProps) => {
               type="text"
               name="kaplan_ics"
               placeholder=""
-              defaultValue={kaPlanData?.icsString}
+              defaultValue={props.kaPlanIcs}
               disabled={isFetching}
               required
             />
