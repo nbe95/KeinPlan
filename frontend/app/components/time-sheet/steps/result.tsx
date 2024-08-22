@@ -110,7 +110,10 @@ const ResultStep = (props: ResultProps) => {
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
-              <CondLink condition={!!ADMIN_MAIL} href={createMailToLink({ recipient: ADMIN_MAIL! })}>
+              <CondLink
+                condition={!!ADMIN_MAIL}
+                href={createMailToLink({ recipient: ADMIN_MAIL! })}
+              >
                 Admin
               </CondLink>
               .
@@ -145,8 +148,8 @@ const ResultStep = (props: ResultProps) => {
             <Col sm={12} md={6}>
               <h2>Wie geht&apos;s jetzt weiter?</h2>
               <p>
-                Lade deine Stundenliste runter. Sende sie anschließend an das zuständige Pfarrbüro
-                per E-Mail, z.&nbsp;B. mit der folgenden Vorlage.
+                Lade deine Stundenliste runter. Sende sie anschließend per E-Mail an das zuständige
+                Pfarrbüro, z.&nbsp;B. mit der folgenden Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               <Button

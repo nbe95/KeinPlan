@@ -21,7 +21,10 @@ const Disclaimer = () => {
             <h2>Fragen? Unklarheiten?</h2>
             <p>
               Kommt vor. Melde dich einfach beim{" "}
-              <CondLink condition={!!ADMIN_MAIL} href={createMailToLink({ recipient: ADMIN_MAIL! })}>
+              <CondLink
+                condition={!!ADMIN_MAIL}
+                href={createMailToLink({ recipient: ADMIN_MAIL! })}
+              >
                 Admin deines Vertrauens
               </CondLink>
               .
