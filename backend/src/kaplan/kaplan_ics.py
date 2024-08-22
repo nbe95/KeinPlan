@@ -132,11 +132,11 @@ class KaPlanIcs:
             logger.warning("Invalid URL without host or workgroup provided.")
             return False
 
-        if host not in KAPLAN_ALLOWED_SERVERS:
+        if KAPLAN_ALLOWED_SERVERS and host not in KAPLAN_ALLOWED_SERVERS:
             logger.warning("'%s' is not within the allowed KaPlan hosts.", host)
             return False
 
-        if workgroup not in KAPLAN_ALLOWED_WORKGROUPS:
+        if KAPLAN_ALLOWED_WORKGROUPS and workgroup not in KAPLAN_ALLOWED_WORKGROUPS:
             logger.warning("'%s' is not within the allowed KaPlan workgroups.", workgroup)
             return False
 
