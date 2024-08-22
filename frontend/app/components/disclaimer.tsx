@@ -1,7 +1,6 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faCookie, faHardDrive } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { useState } from "react";
 import { Accordion, Button, Col, Modal, Row } from "react-bootstrap";
@@ -11,9 +10,6 @@ import Container from "./layout/container";
 import { CondLink } from "./link";
 
 const Disclaimer = () => {
-  // Do not cache this component as it is required to fetch environment values at runtime
-  noStore();
-
   const [showPrivacy, setShowPrivacy] = useState(false);
 
   return (
@@ -25,7 +21,7 @@ const Disclaimer = () => {
             <h2>Fragen? Unklarheiten?</h2>
             <p>
               Kommt vor. Melde dich einfach beim{" "}
-              <CondLink condition={!!ADMIN_MAIL} href={createMailToLink({ recipient: ADMIN_MAIL })}>
+              <CondLink condition={!!ADMIN_MAIL} href={createMailToLink({ recipient: ADMIN_MAIL! })}>
                 Admin deines Vertrauens
               </CondLink>
               .
@@ -149,7 +145,7 @@ const Disclaimer = () => {
                     größtmöglicher Transparenz jederzeit öffentlich auf GitHub einsehbar.
                   </p>
                   <p>
-                    <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK}>
+                    <CondLink condition={!!GITHUB_LINK} href={GITHUB_LINK!}>
                       {GITHUB_LINK}
                     </CondLink>{" "}
                   </p>
