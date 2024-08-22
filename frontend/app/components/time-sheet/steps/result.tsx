@@ -2,7 +2,6 @@ import { faEnvelopeOpenText, faFilePdf } from "@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { unstable_noStore as noStore } from "next/cache";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import {
@@ -29,9 +28,6 @@ type ResultProps = {
 };
 
 const ResultStep = (props: ResultProps) => {
-  // Do not cache this component as it is required to fetch environment values at runtime
-  noStore();
-
   const getEndpointUrl = (format: string): string => {
     const type: string = "weekly";
     return new URL(`${API_ENDPOINT_TIME_SHEET}/${type}/${format}`, window.location.href).toString();
@@ -114,7 +110,10 @@ const ResultStep = (props: ResultProps) => {
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
               beim{" "}
-              <CondLink condition={!!ADMIN_MAIL} href={createMailToLink({ recipient: ADMIN_MAIL })}>
+              <CondLink
+                condition={!!ADMIN_MAIL}
+                href={createMailToLink({ recipient: ADMIN_MAIL! })}
+              >
                 Admin
               </CondLink>
               .
@@ -149,8 +148,8 @@ const ResultStep = (props: ResultProps) => {
             <Col sm={12} md={6}>
               <h2>Wie geht&apos;s jetzt weiter?</h2>
               <p>
-                Lade deine Stundenliste runter. Sende sie anschließend an das zuständige Pfarrbüro
-                per E-Mail, z.&nbsp;B. mit der folgenden Vorlage.
+                Lade deine Stundenliste runter. Sende sie anschließend per E-Mail an das zuständige
+                Pfarrbüro, z.&nbsp;B. mit der folgenden Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               <Button

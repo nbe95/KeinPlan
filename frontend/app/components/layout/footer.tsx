@@ -1,6 +1,5 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { Stack } from "react-bootstrap";
 import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../../utils/constants";
@@ -8,9 +7,6 @@ import { createMailToLink } from "../../utils/mail";
 import Container from "./container";
 
 const Footer = () => {
-  // Do not cache this component as it is required to fetch environment values at runtime
-  noStore();
-
   return (
     <Container>
       <footer className="pt-3 my-3 text-muted border-top">
@@ -26,7 +22,7 @@ const Footer = () => {
           {ADMIN_MAIL && (
             <Link
               href={createMailToLink({ recipient: ADMIN_MAIL })}
-              className="text-muted link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
+              className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
               title="E-Mail an den Administrator"
             >
               Kontakt
@@ -35,7 +31,7 @@ const Footer = () => {
           {KAPLAN_LINK && (
             <Link
               href={KAPLAN_LINK}
-              className="text-muted link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
+              className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
               title="KaPlan Web öffnen"
             >
               KaPlan Web
