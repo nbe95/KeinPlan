@@ -23,7 +23,8 @@ folgenden Endpunkte bereitstellt:
   Ergebnissen möglichst geschickt umgeht (Caching usw.).
 - POST auf `/time-sheet`: Endpunkt für die Generierung diverser Stundenlistentypen.
 
-> Hinweis: Alle Endpunkte erhalten das URL-Präfix `/api/v1`.
+> [!NOTE]
+> Alle Endpunkte erhalten das URL-Präfix `/api/v1`.
 
 Die eigentliche Generierung der Stundenlisten geschieht intern via Jinja2-Templates. Resultierende
 Markdown-Dateien werden mittels `pandoc` in PDFs umgewandelt.
