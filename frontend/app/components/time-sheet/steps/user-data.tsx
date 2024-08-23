@@ -117,8 +117,8 @@ const UserDataStep = (props: UserDataProps) => {
               checked={enableCookie}
             />
             <Form.Text>
-              Damit geht's beim nächsten Mal deutlich schneller und du musst nicht alles nochmal
-              eintippen. Deine Daten sind sicher und bleiben auf diesem Gerät.
+              Damit geht&apos;s beim nächsten Mal deutlich schneller und du musst nicht alles
+              nochmal eintippen. Deine Daten sind sicher und bleiben auf diesem Gerät.
             </Form.Text>
           </Form.Group>
         </Col>
