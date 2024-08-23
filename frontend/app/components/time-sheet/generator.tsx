@@ -6,7 +6,7 @@ import {
   faMagnifyingGlass,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { USER_COOKIE_NAME } from "../../utils/constants";
 import { addDaysToDate, getMonday } from "../../utils/dates";
@@ -65,6 +65,15 @@ const TimeSheetGenerator = () => {
       setKaPlanIcs(userCookie.kaPlanIcs);
     }
   }, []);
+
+  // Focus on time sheet generator on each active step change
+  const enableFocusOnEachStep = useRef(false);
+  useEffect(() => {
+    enableFocusOnEachStep.current ||= step != Steps.USER_DATA;
+    if (enableFocusOnEachStep.current) {
+      document.getElementById("time-sheet")?.scrollIntoView();
+    }
+  }, [step]);
 
   return (
     <>

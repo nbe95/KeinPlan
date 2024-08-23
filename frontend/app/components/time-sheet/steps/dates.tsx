@@ -9,12 +9,7 @@ import { useCookies } from "react-cookie";
 import { Id, toast } from "react-toastify";
 import strftime from "strftime";
 import { b64_encode } from "../../../utils/base64";
-import {
-  API_ENDPOINT_KAPLAN,
-  KAPLAN_ICS_HEADER,
-  KAPLAN_QUERY_KEY,
-  USER_COOKIE_NAME,
-} from "../../../utils/constants";
+import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY, USER_COOKIE_NAME } from "../../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { NextButton, PrevButton } from "../../process-button";
@@ -146,16 +141,15 @@ const DatesStep = (props: DatesProps) => {
       toast.dismiss(kaPlanToast.current);
       props.setDateList(data);
       props.nextStep();
-      router.push("#time-sheet");
     }
   }, [isSuccess]);
 
-  // Directly focus next button if input data is already present
+  // Directly focus next button if input data is already present (here upon first render)
   useEffect(() => {
     if (props.targetDate && props.kaPlanIcs) {
-      document.getElementById("btn-next")?.focus();
+      document.getElementById("btn-next")?.focus({preventScroll: true});
     }
-  }, [props.targetDate, props.kaPlanIcs]);
+  }, []);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>

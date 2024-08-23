@@ -30,15 +30,14 @@ const UserDataStep = (props: UserDataProps) => {
     if (enableCookie) {
       setCookie(USER_COOKIE_NAME, { ...cookies[USER_COOKIE_NAME], ...userData });
     }
-
     props.nextStep();
-    router.push("#time-sheet");
   };
 
   // Directly focus next button if input data is already present
   useEffect(() => {
     if (props.userData) {
-      document.getElementById("btn-next")?.focus();
+      document.getElementById("btn-next")?.focus({preventScroll: true});
+      document.getElementById("time-sheet")?.scrollIntoView();
     }
   }, [props.userData]);
 
