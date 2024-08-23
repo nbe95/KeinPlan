@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import { AnchorHTMLAttributes, PropsWithChildren } from "react";
 
-type LinkProps = {
-  condition: boolean;
+interface LinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
   href: string;
-};
+  condition: boolean;
+}
 
 export const CondLink = (props: PropsWithChildren<LinkProps>) => {
   if (props.condition) {

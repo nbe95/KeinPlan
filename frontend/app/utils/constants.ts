@@ -21,6 +21,7 @@ export const BACKEND_VERSION_KEY: string = "backend-version";
 export const KAPLAN_QUERY_KEY: string = "kaplan";
 export const TIME_SHEET_QUERY_KEY: string = "time-sheet";
 export const USER_COOKIE_NAME: string = "user-data";
+export const KAPLAN_WEB_LINK_TARGET: string = "kaplan-web";
 
 // Miscellaneous
 export const KAPLAN_ICS_HEADER: string = "X-KaPlan-ICS";

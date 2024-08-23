@@ -21,7 +21,7 @@ export const catchQueryError = (error: any) => {
     error.response?.data ??
     (error.response?.status
       ? `The request returned status code ${error.response?.status}`
-      : error.message ?? "Unknown error");
+      : (error.message ?? "Unknown error"));
   if (isClientError(error.response?.status)) {
     throw new ClientError(msg);
   }

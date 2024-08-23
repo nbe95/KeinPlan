@@ -1,8 +1,15 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faArrowUpRightFromSquare, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Stack } from "react-bootstrap";
-import { ADMIN_MAIL, GITHUB_LINK, KAPLAN_LINK, VERSION_FRONTEND } from "../../utils/constants";
+import {
+  ADMIN_MAIL,
+  GITHUB_LINK,
+  KAPLAN_LINK,
+  KAPLAN_WEB_LINK_TARGET,
+  VERSION_FRONTEND,
+} from "../../utils/constants";
 import { createMailToLink } from "../../utils/mail";
 import Container from "./container";
 
@@ -10,7 +17,7 @@ const Footer = () => {
   return (
     <Container>
       <footer className="pt-3 my-3 text-muted border-top">
-        <Stack direction="horizontal" gap={3}>
+        <Stack direction="horizontal" gap={4}>
           <div className="me-auto">
             {GITHUB_LINK && (
               <Link href={GITHUB_LINK} className="text-muted me-2" title="KeinPlan auf Github">
@@ -25,6 +32,7 @@ const Footer = () => {
               className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
               title="E-Mail an den Administrator"
             >
+              <FontAwesomeIcon icon={faEnvelope} size="xs" className="me-2" />
               Kontakt
             </Link>
           )}
@@ -32,8 +40,10 @@ const Footer = () => {
             <Link
               href={KAPLAN_LINK}
               className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
+              target={KAPLAN_WEB_LINK_TARGET}
               title="KaPlan Web öffnen"
             >
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" className="me-2" />
               KaPlan Web
             </Link>
           )}
