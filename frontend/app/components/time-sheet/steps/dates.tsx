@@ -1,8 +1,4 @@
-import {
-  faCircleChevronLeft,
-  faCircleChevronRight,
-  faCircleInfo,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -187,23 +183,25 @@ const DatesStep = (props: DatesProps) => {
               />
               <InputGroup.Text>
                 <Button
+                  type="button"
                   variant="none"
                   className="py-0 border-0"
                   onClick={prevWeek}
                   disabled={isFetching}
                   tabIndex={-1}
                 >
-                  <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
+                  <FontAwesomeIcon icon={faMinusCircle} size="lg" />
                 </Button>
                 {getCalWeekLabel()}
                 <Button
+                  type="button"
                   variant="none"
                   className="py-0 border-0"
                   onClick={nextWeek}
                   disabled={isFetching}
                   tabIndex={-1}
                 >
-                  <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
+                  <FontAwesomeIcon icon={faPlusCircle} size="lg" />
                 </Button>
               </InputGroup.Text>
             </InputGroup>
