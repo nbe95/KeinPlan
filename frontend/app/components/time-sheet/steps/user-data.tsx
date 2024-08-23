@@ -112,13 +112,13 @@ const UserDataStep = (props: UserDataProps) => {
             <Form.Check
               type="switch"
               id="confirm"
-              label="Eingaben speichern, damit's beim nächsten Mal schneller geht."
+              label="Alle Eingaben als Cookie speichern"
               onClick={(event) => setResetCookie(event.currentTarget.checked)}
               checked={enableCookie}
             />
             <Form.Text>
-              Speichert deine Eingaben als Cookie im Browser, damit du sie nicht nochmal eintippen
-              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
+              Damit geht's beim nächsten Mal deutlich schneller und du musst nicht alles nochmal
+              eintippen. Deine Daten sind sicher und bleiben auf diesem Gerät.
             </Form.Text>
           </Form.Group>
         </Col>

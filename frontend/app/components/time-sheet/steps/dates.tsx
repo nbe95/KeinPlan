@@ -9,9 +9,17 @@ import { useCookies } from "react-cookie";
 import { Id, toast } from "react-toastify";
 import strftime from "strftime";
 import { b64_encode } from "../../../utils/base64";
-import { API_ENDPOINT_KAPLAN, KAPLAN_ICS_HEADER, KAPLAN_QUERY_KEY, USER_COOKIE_NAME } from "../../../utils/constants";
+import {
+  API_ENDPOINT_KAPLAN,
+  KAPLAN_ICS_HEADER,
+  KAPLAN_LINK,
+  KAPLAN_QUERY_KEY,
+  KAPLAN_WEB_LINK_TARGET,
+  USER_COOKIE_NAME,
+} from "../../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
+import { CondLink } from "../../link";
 import { NextButton, PrevButton } from "../../process-button";
 import { DateEntry, UserData } from "../generator";
 
@@ -210,7 +218,7 @@ const DatesStep = (props: DatesProps) => {
             <Form.Control
               type="text"
               name="kaplan_ics"
-              placeholder=""
+              placeholder="https://…"
               defaultValue={props.kaPlanIcs}
               disabled={isFetching}
               required
@@ -219,16 +227,24 @@ const DatesStep = (props: DatesProps) => {
               <Stack direction="horizontal" gap={1} className="mb-3">
                 <FontAwesomeIcon icon={faCircleInfo} size="lg" className="me-1" />
                 <span>
-                  Du findest deinen Abonnement-String in KaPlan unter{" "}
-                  <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
+                  Du findest deinen Abonnement-String in{" "}
+                  <CondLink
+                    condition={!!KAPLAN_LINK}
+                    href={`${KAPLAN_LINK}/hilfe.asp#kalenderintegration`}
+                    target={KAPLAN_WEB_LINK_TARGET}
+                    title="KaPlan Web öffnen"
+                  >
+                    KaPlan Web
+                  </CondLink>{" "}
+                  unter <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
                 </span>
               </Stack>
             </Form.Text>
           </Form.Group>
           <p className="mt-4 mb-1">
-            Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
-            Abonnement-String notwendig. Dieser ermöglicht Lesezugriff auf deine Termine und ändert
-            sich, wenn du z.&nbsp;B. dein Passwort änderst.
+            Für die Abfrage deiner Termine vom KaPlan-Server ist dein persönlicher Abonnement-String
+            notwendig. Er ermöglicht lediglich Lesezugriff und ändert sich, wenn du z.&nbsp;B. dein
+            Passwort änderst.
             <br />
             Wie weiter unten beschrieben, wird er nicht dauerhaft gespeichert, sondern nur einmalig
             zur Erstellung deiner Stundenliste verwendet.
