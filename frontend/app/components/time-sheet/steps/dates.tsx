@@ -155,7 +155,7 @@ const DatesStep = (props: DatesProps) => {
   // Directly focus next button if input data is already present (here upon first render)
   useEffect(() => {
     if (props.targetDate && props.kaPlanIcs) {
-      document.getElementById("btn-next")?.focus({preventScroll: true});
+      document.getElementById("btn-next")?.focus({ preventScroll: true });
     }
   }, []);
 

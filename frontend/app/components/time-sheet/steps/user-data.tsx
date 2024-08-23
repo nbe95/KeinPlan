@@ -36,7 +36,7 @@ const UserDataStep = (props: UserDataProps) => {
   // Directly focus next button if input data is already present
   useEffect(() => {
     if (props.userData) {
-      document.getElementById("btn-next")?.focus({preventScroll: true});
+      document.getElementById("btn-next")?.focus({ preventScroll: true });
       document.getElementById("time-sheet")?.scrollIntoView();
     }
   }, [props.userData]);
