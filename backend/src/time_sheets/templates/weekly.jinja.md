@@ -8,6 +8,7 @@ header-includes:
   - \usepackage{hyperref}
   - \hypersetup{colorlinks,urlcolor=blue}
   - \usepackage{array}
+  - \usepackage{color}
   - \usepackage{calc}
   - \usepackage{fancyhdr}
   - \hypersetup{pdftex,
