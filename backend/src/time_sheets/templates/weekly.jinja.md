@@ -24,8 +24,8 @@ header-includes:
 \bigskip
 \def\arraystretch{1.3}
 \begin{tabular}{ll}
-  Dienstgeber: & {{ texbold(employer) }} \\
-  Mitarbeiter: & {{ texbold(employee) }} \\
+  Dienstgeber: & {{ texbold(employer|sanitize_latex) }} \\
+  Mitarbeiter: & {{ texbold(employee|sanitize_latex) }} \\
   Aufzeichnung für: & \textbf{KW {{ date_start.strftime("%V/%Y") }} } {\small ({{ date_start.strftime("%d.%m.%Y") }} -- {{ date_end.strftime("%d.%m.%Y") }})}
 \end{tabular}
 \bigskip
@@ -37,8 +37,8 @@ header-includes:
 {% for entry in entries -%}
   |
   {{- entry.time_span.begin.strftime("%a. %d.%m.%Y") }}|
-  {{- entry.title }}{% if entry.role %} ({{ entry.role }}{% endif %})|
-  {{- entry.location }}|
+  {{- entry.title|sanitize_latex }}{% if entry.role %} ({{ entry.role|sanitize_latex }}{% endif %})|
+  {{- entry.location|sanitize_latex }}|
   {{- entry.time_span.begin.strftime("%-H:%M") }} -- {{ entry.time_span.end.strftime("%-H:%M") }}|
   {%- if entry.break_span -%}
     {{- entry.break_span.begin.strftime("%-H:%M") }} -- {{ entry.break_span.end.strftime("%-H:%M") }}|
@@ -82,12 +82,12 @@ Arbeitsleistung folgenden Kalendertages aufzuzeichnen.
     {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
     von
     {%- if hyperlink %}
-      \href{{ "{" }}{{ hyperlink }}{{ "}" }}{KeinPlan}
+      \href{{ "{" }}{{ hyperlink|sanitize_latex }}{{ "}" }}{KeinPlan}
     {%- else %}
       KeinPlan
     {%- endif -%}
     {%- if version %}
-      v{{ version }}
+      v{{ version|sanitize_latex }}
     {%- endif -%}.
   }
 {%- endif %}

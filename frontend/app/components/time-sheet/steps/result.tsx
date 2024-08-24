@@ -126,7 +126,7 @@ const ResultStep = (props: ResultProps) => {
           <Row className="align-items-center mb-5">
             <Col sm={12} md={6}>
               <div className="text-center m-4 p-4 bg-light rounded">
-                {isLoading ? (
+                {isLoading || !pdf ? (
                   <div className="my-4">
                     <LoadingSpinner message="Working hard…" />
                   </div>
@@ -134,10 +134,10 @@ const ResultStep = (props: ResultProps) => {
                   <>
                     <h5>Hier ist deine Stundenliste:</h5>
                     <DownloadButton
-                      fileName={pdf!.fileName}
-                      url={pdf!.blobUrl}
+                      fileName={pdf.fileName}
+                      url={pdf.blobUrl}
                       text={`KW ${getWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
-                      size={pdf!.size}
+                      size={pdf.size}
                       faIcon={faFilePdf}
                       isPrimary={true}
                     />
