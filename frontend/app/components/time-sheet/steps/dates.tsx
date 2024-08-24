@@ -161,7 +161,7 @@ const DatesStep = (props: DatesProps) => {
     <form onSubmit={(event) => handleSubmit(event)}>
       <p className="lead">Als nächstes rufen wir deine Termine vom KaPlan-Server ab.</p>
       <Row>
-        <Col lg={9} md={12} className="mb-4">
+        <Col className="mb-4">
           <Form.Group>
             <Form.Label>
               Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
@@ -240,12 +240,10 @@ const DatesStep = (props: DatesProps) => {
             </Form.Text>
           </Form.Group>
           <p className="mt-4 mb-1">
-            Für die Abfrage deiner Termine vom KaPlan-Server ist dein persönlicher Abonnement-String
-            notwendig. Er ermöglicht lediglich Lesezugriff und ändert sich, wenn du z.&nbsp;B. dein
-            Passwort änderst.
-            <br />
-            Wie weiter unten beschrieben, wird er nicht dauerhaft gespeichert, sondern nur einmalig
-            zur Erstellung deiner Stundenliste verwendet.
+            Für die Abfrage vom KaPlan-Server ist dein persönlicher Abonnement-String erforderlich.
+            Er ermöglicht Lesezugriff auf deine Termine und ändert sich, wenn du z.&nbsp;B. dein
+            Passwort änderst. Wie weiter unten beschrieben, wird er nicht gespeichert, sondern nur
+            einmalig zur Erstellung deiner Stundenliste verwendet.
           </p>
         </Col>
       </Row>

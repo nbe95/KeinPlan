@@ -42,12 +42,12 @@ const Disclaimer = () => {
           <div className="mt-5">
             <h2>Datenschutz</h2>
             <p>
-              Dieses Tool{" "}
-              <Link href="#" onClick={() => setShowPrivacy(true)}>
-                verarbeitet personenbezogene Daten
-              </Link>
-              . Mit der Erstellung einer Stundenliste stimmst du der Datenverarbeitung zu diesem
-              Zweck zu.
+              Dieses Tool verarbeitet personenbezogene Daten. Mit der Nutzung und Erstellung einer
+              Stundenliste erklärst du dich mit{" "}
+              <a href="javascript:void(null);" onClick={() => setShowPrivacy(true)}>
+                der hier beschriebenen Datenverarbeitung
+              </a>{" "}
+              einverstanden.
             </p>
           </div>
         </Col>
@@ -56,7 +56,7 @@ const Disclaimer = () => {
           <div className="mt-5">
             <h2>Haftungsausschluss</h2>
             <p>
-              <q>KeinPlan</q> ist ein rein privates Projekt und steht in keinerlei Verbindung zu{" "}
+              <em>KeinPlan</em> ist ein rein privates Projekt und steht in keinerlei Verbindung zu
               KaPlan oder einer bestimmten Pfarrgemeinde.
             </p>
             <p>
@@ -73,7 +73,6 @@ const Disclaimer = () => {
             setShowPrivacy(false);
           }}
           size="lg"
-          scrollable={true}
           fullscreen="sm-down"
         >
           <Modal.Header closeButton>
