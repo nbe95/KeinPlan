@@ -1,7 +1,6 @@
 """API definition for our kaplan endpoint."""
 
 from base64 import b64decode
-from binascii import Error
 from datetime import date, datetime
 from typing import Optional
 
@@ -32,7 +31,7 @@ class KaPlanEndpoint(Resource):
             return f"The URL was malformed or not properly encoded: {e}", 400
 
         except ValueError:
-            return f"Got an invalid KaPlan URL.", 400
+            return "Got an invalid KaPlan URL.", 400
 
         try:
             date_from: date = datetime.strptime(
@@ -44,7 +43,7 @@ class KaPlanEndpoint(Resource):
             return self.kaplan_interface.get_events(normalized_url, date_from, date_to)
 
         except ValueError:
-            return f"Got an invalid response from KaPlan server.", 400
+            return "Got an invalid response from KaPlan server.", 400
 
         except KaPlanInterfaceError as e:
             return f"Unknown error during import from KaPlan server: {e}", 400
