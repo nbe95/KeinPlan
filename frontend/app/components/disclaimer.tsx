@@ -44,9 +44,9 @@ const Disclaimer = () => {
             <p>
               Dieses Tool verarbeitet personenbezogene Daten. Mit der Nutzung und Erstellung einer
               Stundenliste erklärst du dich mit{" "}
-                verarbeitet personenbezogene Daten
-              </Link>
-              . Mit der Erstellung einer Stundenliste stimmst du der Datenverarbeitung zu diesem
+              <a href="javascript:void(null);" onClick={() => setShowPrivacy(true)}>
+                der hier beschriebenen Datenverarbeitung
+              </a>{" "}
               einverstanden.
             </p>
           </div>
