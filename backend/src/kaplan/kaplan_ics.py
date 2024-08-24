@@ -76,7 +76,7 @@ class KaPlanIcs:
         if not response.ok:
             logger.error("Server returned status %d: %s", response.status_code, response.reason)
             raise KaPlanInterfaceError(
-                f"Got an error from KaPlan server with code {response.status_code}."
+                f"Got response code {response.status_code} from KaPlan server."
             )
 
         content: str = response.content.decode(KAPLAN_ICS_ENCODING)
