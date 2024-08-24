@@ -242,9 +242,8 @@ const DatesStep = (props: DatesProps) => {
           <p className="mt-4 mb-1">
             Für die Abfrage vom KaPlan-Server ist dein persönlicher Abonnement-String erforderlich.
             Er ermöglicht Lesezugriff auf deine Termine und ändert sich, wenn du z.&nbsp;B. dein
-            Passwort änderst.
-            Wie weiter unten beschrieben, wird er nicht gespeichert, sondern nur einmalig zur
-            Erstellung deiner Stundenliste verwendet.
+            Passwort änderst. Wie weiter unten beschrieben, wird er nicht gespeichert, sondern nur
+            einmalig zur Erstellung deiner Stundenliste verwendet.
           </p>
         </Col>
       </Row>
