@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import { Col, Row } from "react-bootstrap";
 import MsgBox from "../../msg-box";
 import { NextButton, PrevButton } from "../../process-button";
@@ -12,8 +11,6 @@ type CheckProps = {
 };
 
 const CheckStep = (props: CheckProps) => {
-  const router = useRouter();
-
   const handleSubmit = (event) => {
     event.preventDefault();
     props.nextStep();

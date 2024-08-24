@@ -7,9 +7,9 @@ export const getMonday = (dateInWeek: Date | undefined): Date => {
 };
 
 export const addDaysToDate = (refDate: Date, daysToAdd: number): Date => {
-  let result: Date = new Date(refDate);
-  result.setDate(result.getDate() + daysToAdd);
-  return result;
+  let date: Date = new Date(refDate);
+  date.setDate(date.getDate() + daysToAdd);
+  return date;
 };
 
 export const parseDateStr = (date: string): Date => {
@@ -25,7 +25,8 @@ export const parseDateStr = (date: string): Date => {
 // Source: https://weeknumber.com/how-to/javascript
 
 // Returns the ISO week of the date.
-export const getWeek = (date: Date): number => {
+export const getWeek = (refDate: Date): number => {
+  let date: Date = new Date(refDate);
   date.setHours(0, 0, 0, 0);
   // Thursday in current week decides the year.
   date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
@@ -39,7 +40,8 @@ export const getWeek = (date: Date): number => {
 };
 
 // Returns the four-digit year corresponding to the ISO week of the date.
-export const getWeekYear = (date: Date): number => {
+export const getWeekYear = (refDate: Date): number => {
+  let date: Date = new Date(refDate);
   date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
   return date.getFullYear();
 };
