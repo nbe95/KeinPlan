@@ -8,6 +8,7 @@ header-includes:
   - \usepackage{hyperref}
   - \hypersetup{colorlinks,urlcolor=blue}
   - \usepackage{color}
+  - \usepackage{calc}
   - \usepackage{fancyhdr}
   - \hypersetup{pdftex,
       pdftitle={Arbeitszeit {{ employee }} - KW {{ date_start.strftime("%V/%Y") }}},
@@ -21,7 +22,7 @@ header-includes:
 
 \bigskip
 \fcolorbox{white}{gray!20}{
-  \parbox{\linewidth-2\fboxsep-1\tabcolsep}{
+  \parbox{\linewidth - 2\fboxsep - \tabcolsep}{
     \begin{tabular}{ll}
       Dienstgeber: & {{ texbold(employer) }} \\
       Mitarbeiter: & {{ texbold(employee) }} \\
