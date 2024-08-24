@@ -42,7 +42,7 @@ const Footer = () => {
                   title="KaPlan Web öffnen"
                 >
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" className="me-2" />
-                  KaPlan Web
+                  KaPlan&nbsp;Web
                 </Link>
               )}
             </Stack>

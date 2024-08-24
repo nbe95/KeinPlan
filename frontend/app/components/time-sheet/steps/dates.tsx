@@ -232,7 +232,7 @@ const DatesStep = (props: DatesProps) => {
                     target={KAPLAN_WEB_LINK_TARGET}
                     title="KaPlan Web öffnen"
                   >
-                    KaPlan Web
+                    KaPlan&nbsp;Web
                   </CondLink>{" "}
                   unter <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
                 </span>
