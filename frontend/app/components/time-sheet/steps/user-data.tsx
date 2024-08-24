@@ -4,6 +4,7 @@ import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { Id, toast } from "react-toastify";
 import { USER_COOKIE_NAME } from "../../../utils/constants";
+import { scrollToElement } from "../../../utils/viewport";
 import { NextButton } from "../../process-button";
 import { UserData } from "../generator";
 
@@ -30,15 +31,14 @@ const UserDataStep = (props: UserDataProps) => {
     if (enableCookie) {
       setCookie(USER_COOKIE_NAME, { ...cookies[USER_COOKIE_NAME], ...userData });
     }
-
     props.nextStep();
-    router.push("#time-sheet");
   };
 
   // Directly focus next button if input data is already present
   useEffect(() => {
     if (props.userData) {
-      document.getElementById("btn-next")?.focus();
+      document.getElementById("btn-next")?.focus({ preventScroll: true });
+      scrollToElement("time-sheet", true);
     }
   }, [props.userData]);
 
@@ -113,13 +113,13 @@ const UserDataStep = (props: UserDataProps) => {
             <Form.Check
               type="switch"
               id="confirm"
-              label="Eingaben speichern, damit's beim nächsten Mal schneller geht."
+              label="Alle Eingaben als Cookie speichern"
               onClick={(event) => setResetCookie(event.currentTarget.checked)}
               checked={enableCookie}
             />
             <Form.Text>
-              Speichert deine Eingaben als Cookie im Browser, damit du sie nicht nochmal eintippen
-              musst. Deine Daten sind sicher und bleiben auf diesem Gerät.
+              Damit geht&apos;s beim nächsten Mal deutlich schneller und du musst nicht alles
+              nochmal eintippen. Deine Daten sind sicher und bleiben auf diesem Gerät.
             </Form.Text>
           </Form.Group>
         </Col>

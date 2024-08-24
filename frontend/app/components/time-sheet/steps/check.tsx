@@ -17,7 +17,6 @@ const CheckStep = (props: CheckProps) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.nextStep();
-    router.push("#time-sheet");
   };
 
   return (

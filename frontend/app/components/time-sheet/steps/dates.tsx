@@ -1,8 +1,4 @@
-import {
-  faCircleChevronLeft,
-  faCircleChevronRight,
-  faCircleInfo,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -16,11 +12,14 @@ import { b64_encode } from "../../../utils/base64";
 import {
   API_ENDPOINT_KAPLAN,
   KAPLAN_ICS_HEADER,
+  KAPLAN_LINK,
   KAPLAN_QUERY_KEY,
+  KAPLAN_WEB_LINK_TARGET,
   USER_COOKIE_NAME,
 } from "../../../utils/constants";
 import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
+import { CondLink } from "../../link";
 import { NextButton, PrevButton } from "../../process-button";
 import { DateEntry, UserData } from "../generator";
 
@@ -150,16 +149,15 @@ const DatesStep = (props: DatesProps) => {
       toast.dismiss(kaPlanToast.current);
       props.setDateList(data);
       props.nextStep();
-      router.push("#time-sheet");
     }
   }, [isSuccess]);
 
-  // Directly focus next button if input data is already present
+  // Directly focus next button if input data is already present (here upon first render)
   useEffect(() => {
     if (props.targetDate && props.kaPlanIcs) {
-      document.getElementById("btn-next")?.focus();
+      document.getElementById("btn-next")?.focus({ preventScroll: true });
     }
-  }, [props.targetDate, props.kaPlanIcs]);
+  }, []);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
@@ -187,23 +185,25 @@ const DatesStep = (props: DatesProps) => {
               />
               <InputGroup.Text>
                 <Button
+                  type="button"
                   variant="none"
                   className="py-0 border-0"
                   onClick={prevWeek}
                   disabled={isFetching}
                   tabIndex={-1}
                 >
-                  <FontAwesomeIcon icon={faCircleChevronLeft} size="lg" />
+                  <FontAwesomeIcon icon={faMinusCircle} size="lg" />
                 </Button>
                 {getCalWeekLabel()}
                 <Button
+                  type="button"
                   variant="none"
                   className="py-0 border-0"
                   onClick={nextWeek}
                   disabled={isFetching}
                   tabIndex={-1}
                 >
-                  <FontAwesomeIcon icon={faCircleChevronRight} size="lg" />
+                  <FontAwesomeIcon icon={faPlusCircle} size="lg" />
                 </Button>
               </InputGroup.Text>
             </InputGroup>
@@ -218,7 +218,7 @@ const DatesStep = (props: DatesProps) => {
             <Form.Control
               type="text"
               name="kaplan_ics"
-              placeholder=""
+              placeholder="https://…"
               defaultValue={props.kaPlanIcs}
               disabled={isFetching}
               required
@@ -227,16 +227,24 @@ const DatesStep = (props: DatesProps) => {
               <Stack direction="horizontal" gap={1} className="mb-3">
                 <FontAwesomeIcon icon={faCircleInfo} size="lg" className="me-1" />
                 <span>
-                  Du findest deinen Abonnement-String in KaPlan unter{" "}
-                  <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
+                  Du findest deinen Abonnement-String in{" "}
+                  <CondLink
+                    condition={!!KAPLAN_LINK}
+                    href={`${KAPLAN_LINK}/hilfe.asp#kalenderintegration`}
+                    target={KAPLAN_WEB_LINK_TARGET}
+                    title="KaPlan Web öffnen"
+                  >
+                    KaPlan Web
+                  </CondLink>{" "}
+                  unter <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
                 </span>
               </Stack>
             </Form.Text>
           </Form.Group>
           <p className="mt-4 mb-1">
-            Um deine Termine vom KaPlan-Server abfragen zu können, ist dein persönlicher
-            Abonnement-String notwendig. Dieser ermöglicht Lesezugriff auf deine Termine und ändert
-            sich, wenn du z.&nbsp;B. dein Passwort änderst.
+            Für die Abfrage deiner Termine vom KaPlan-Server ist dein persönlicher Abonnement-String
+            notwendig. Er ermöglicht lediglich Lesezugriff und ändert sich, wenn du z.&nbsp;B. dein
+            Passwort änderst.
             <br />
             Wie weiter unten beschrieben, wird er nicht dauerhaft gespeichert, sondern nur einmalig
             zur Erstellung deiner Stundenliste verwendet.
