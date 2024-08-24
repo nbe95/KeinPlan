@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { useCookies } from "react-cookie";
@@ -16,7 +15,6 @@ type UserDataProps = {
 };
 
 const UserDataStep = (props: UserDataProps) => {
-  const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
 

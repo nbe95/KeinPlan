@@ -2,7 +2,6 @@ import { faCircleInfo, faMinusCircle, faPlusCircle } from "@fortawesome/free-sol
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
 import { useCookies } from "react-cookie";
@@ -143,7 +142,6 @@ const DatesStep = (props: DatesProps) => {
   }, [isError]);
 
   // Proceed to next step as soon as KaPlan data is fetched
-  const router = useRouter();
   useEffect(() => {
     if (isSuccess) {
       toast.dismiss(kaPlanToast.current);
