@@ -73,7 +73,6 @@ const Disclaimer = () => {
             setShowPrivacy(false);
           }}
           size="lg"
-          scrollable={true}
           fullscreen="sm-down"
         >
           <Modal.Header closeButton>
