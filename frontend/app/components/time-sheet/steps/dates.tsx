@@ -161,7 +161,7 @@ const DatesStep = (props: DatesProps) => {
     <form onSubmit={(event) => handleSubmit(event)}>
       <p className="lead">Als nächstes rufen wir deine Termine vom KaPlan-Server ab.</p>
       <Row>
-        <Col lg={9} md={12} className="mb-4">
+        <Col className="mb-4">
           <Form.Group>
             <Form.Label>
               Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
