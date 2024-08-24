@@ -11,8 +11,8 @@ services:
       - KEINPLAN_LINK=https://mein-keinplan-server.tld/
       - KAPLAN_ALLOWED_SERVERS=kommaGetrennteUpstreamServer
       - KAPLAN_ALLOWED_WORKGROUPS=kommaGetrennteArbeitsgruppen
-    networks:
-      - webserver
+#   networks:
+#     - webserver
 
   frontend:
     image: nbe95/keinplan-frontend
@@ -24,17 +24,16 @@ services:
       - ADMIN_MAIL=foo@bar.baz
       - TIME_SHEET_MAIL=pfarrbuero@meinegemeinde.de
       - KAPLAN_LINK=https://kaplan.meinegemeinde.com/
-    networks:
-      - webserver
+#   networks:
+#     - webserver
 
-networks:
-  webserver:
-    # In production, a reverse proxy with automatic TLS support (e.g. Caddy)
-    # should serve this site on the internal ports 3000 (frontend) and 8080
-    # (backend). Routes to /api/* should go to the backend, any other route
-    # should target the frontend.
-    # Either open the above ports to your host OR create a network named
-    # "webserver" with all containers attached, and open only your reverse proxy
-    # to the outside world (ports 80/443).
-    name: webserver
-    external: true
+# In production, a reverse proxy with automatic TLS support (e.g. Caddy) should serve this site on
+# the internal ports 3000 (frontend) and 8080 (backend). Routes to /api/* should go to the backend,
+# any other route should target the frontend. Either open the above ports to your host OR create a
+# network named "webserver" with all containers attached, and open only your reverse proxy to the
+# outside world (ports 80/443).
+#
+# networks:
+#   webserver:
+#     name: webserver
+#     external: true
