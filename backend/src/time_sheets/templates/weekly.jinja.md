@@ -46,6 +46,13 @@ header-includes:
   {%- endif -%}
   {{- "%.2f"|format_locale(entry.calc_hours()) }}|
 {% endfor %}
+{% else %}
+\setlength{\fboxsep}{10pt}
+\fcolorbox{white}{gray!20}{
+  \parbox{\linewidth-2\fboxsep}{\centering
+    Keine Dienste im genannten Zeitraum.
+  }
+}
 {% endif %}
 
 Alle Stundenangaben sind auf jeweils 15 Minuten auf- oder abgerundet.
