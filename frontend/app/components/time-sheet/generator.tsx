@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { USER_COOKIE_NAME } from "../../utils/constants";
 import { addDaysToDate, getMonday } from "../../utils/dates";
+import { scrollToElement } from "../../utils/viewport";
 import Container from "../layout/container";
 import Stepper from "../stepper";
 import CheckStep from "./steps/check";
@@ -66,12 +67,12 @@ const TimeSheetGenerator = () => {
     }
   }, []);
 
-  // Focus on time sheet generator on each active step change
+  // Focus on time sheet generator upon each active step change (mobile devices only)
   const enableFocusOnEachStep = useRef(false);
   useEffect(() => {
     enableFocusOnEachStep.current ||= step != Steps.USER_DATA;
     if (enableFocusOnEachStep.current) {
-      document.getElementById("time-sheet")?.scrollIntoView();
+      scrollToElement("time-sheet", true);
     }
   }, [step]);
 

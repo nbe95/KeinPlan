@@ -4,6 +4,7 @@ import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { Id, toast } from "react-toastify";
 import { USER_COOKIE_NAME } from "../../../utils/constants";
+import { scrollToElement } from "../../../utils/viewport";
 import { NextButton } from "../../process-button";
 import { UserData } from "../generator";
 
@@ -37,7 +38,7 @@ const UserDataStep = (props: UserDataProps) => {
   useEffect(() => {
     if (props.userData) {
       document.getElementById("btn-next")?.focus({ preventScroll: true });
-      document.getElementById("time-sheet")?.scrollIntoView();
+      scrollToElement("time-sheet", true);
     }
   }, [props.userData]);
 
