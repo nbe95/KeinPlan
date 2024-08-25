@@ -23,6 +23,10 @@ license = {text = "MIT"}
 [tool.pdm]
 distribution = false
 
+[tool.pdm.scripts]
+lint = "tox run -e lint"
+format = "tox run -e format"
+
 [tool.pdm.dev-dependencies]
 dev = [
     "tox-pdm>=0.7.2",
@@ -39,6 +43,9 @@ dev = [
 
 [tool.black]
 line-length = 100
+
+[tool.isort]
+profile = "black"
 
 [tool.pylint.DESIGN]
 max-args = 10
