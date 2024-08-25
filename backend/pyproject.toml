@@ -32,4 +32,37 @@ dev = [
     "pydocstyle>=6.3.0",
     "isort>=5.13.2",
     "black>=24.8.0",
+    "flake8-pyproject>=1.2.3",
+    "types-flask-cors>=4.0.0.20240825",
+    "types-requests>=2.32.0.20240712",
+]
+
+[tool.black]
+line-length = 100
+
+[tool.pylint.DESIGN]
+max-args = 10
+max-attributes = 10
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+    "too-few-public-methods",
+    "cell-var-from-loop",
+    "broad-exception-caught"
+]
+
+[tool.flake8]
+max-line-length = 100
+ignore = [
+    "W503"  # line break before binary operator
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.pydocstyle]
+ignore = [
+    "D107", # Missing docstring in __init__
+    "D203", # 1 blank line required before class docstring
+    "D213"  # Multi-line docstring summary should start at the second line
 ]
