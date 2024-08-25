@@ -49,7 +49,10 @@ class KaPlanIcs:
         ics: str
         fetch_date: datetime
         ics, fetch_date = self.fetch_ics_data(url)
-        cal: Calendar = Calendar(ics)
+        try:
+            cal: Calendar = Calendar(ics)
+        except Exception as e:
+            raise KaPlanInterfaceError("Could not parse KaPlan ICS data.") from e
 
         dates: List[Dict[str, Any]] = [
             self._parse_event(event)
@@ -57,7 +60,7 @@ class KaPlanIcs:
             if event.begin.date() >= date_from and event.end.date() <= date_to
         ]
         logger.info(
-            "Retrieved %d dates (%d total) from KaPlan between %s and %s.",
+            "Retrieved %d dates (%d total) from KaPlan server between %s and %s.",
             len(dates),
             len(cal.events),
             date_from,
@@ -80,6 +83,9 @@ class KaPlanIcs:
             )
 
         content: str = response.content.decode(KAPLAN_ICS_ENCODING)
+        if content == "VCAL API: Parameter Error.":
+            raise KaPlanInterfaceError("Got VCAL API parameter error from KaPlan server.")
+
         logger.info("Fetched %d bytes in %fs.", len(content), response.elapsed.total_seconds())
         return content, datetime.now()
 

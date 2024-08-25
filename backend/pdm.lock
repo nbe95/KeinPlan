@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:f3b67b2005381e524df4ff9c0a67bcae592ca31c9f958d7482a1e2e5c37f873f"
+content_hash = "sha256:0d1229f8042fbdbe79359eb9e3fb82c659bc6fc444c696f4c832f74a5500a433"
 
 [[metadata.targets]]
 requires_python = "==3.11.*"
@@ -738,6 +738,17 @@ groups = ["default", "dev"]
 files = [
     {file = "urllib3-2.2.2-py3-none-any.whl", hash = "sha256:a448b2f64d686155468037e1ace9f2d2199776e17f0a46610480d311f73e3472"},
     {file = "urllib3-2.2.2.tar.gz", hash = "sha256:dd505485549a7a552833da5e6063639d0d177c04f23bc3864e41e5dc5f612168"},
+]
+
+[[package]]
+name = "validators"
+version = "0.33.0"
+requires_python = ">=3.8"
+summary = "Python Data Validation for Humans™"
+groups = ["default"]
+files = [
+    {file = "validators-0.33.0-py3-none-any.whl", hash = "sha256:134b586a98894f8139865953899fc2daeb3d0c35569552c5518f089ae43ed075"},
+    {file = "validators-0.33.0.tar.gz", hash = "sha256:535867e9617f0100e676a1257ba1e206b9bfd847ddc171e4d44811f07ff0bfbf"},
 ]
 
 [[package]]
