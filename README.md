@@ -38,8 +38,8 @@ Proxy samt aller Container umfasst, welche darüber erreichbar sein sollen. Dies
 anhand ihrer Namen untereinander kommunizieren. Es müssen dann keine Ports (außer natürlich 80/443)
 extra nach außen geöffnet werden.
 
-Lokale Entwicklung mittels `pdm`:
+Lokale Entwicklung mittels [PDM](https://pdm-project.org/):
 
-- `pdm run dev`: Startet das Backend als Server (waitress) auf Port 8080
+- `pdm run dev`: Startet einen Backend-Server (waitress) auf Port 8080
 - `pdm run lint`: Führt Linting auf dem Python-Code aus
 - `pdm run format`: Formatiert den Python-Code
