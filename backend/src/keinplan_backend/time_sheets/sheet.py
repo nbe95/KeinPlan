@@ -10,7 +10,7 @@ from typing import Iterable, List, Tuple, Union
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.constants import LOG_LEVEL, VERSION_BACKEND
+from src.keinplan_backend.constants import LOG_LEVEL, VERSION_BACKEND
 
 from .constants import KEINPLAN_LINK, TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from .entry import TimeEntry

@@ -1,5 +1,53 @@
+[project]
+name = "KeinPlan-backend"
+dynamic = ["version"]
+description = "Backend for KeinPlan server."
+authors = [
+    {name = "Niklas Bettgen", email = "niklas@bettgen.de"},
+]
+dependencies = [
+    "hyperlink>=21.0.0",
+    "ics>=0.7.2",
+    "jinja2>=3.1.4",
+    "python-dateutil>=2.9.0.post0",
+    "requests>=2.32.3",
+    "waitress>=3.0.0",
+    "flask>=3.0.3",
+    "flask-cors>=4.0.1",
+    "flask-restful>=0.3.10",
+    "validators>=0.33.0",
+]
+requires-python = "==3.11.*"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+dev = "waitress-serve --port 8080 src.keinplan_backend.main:backend"
+lint = "tox run -e lint"
+format = "tox run -e format"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "tox-pdm>=0.7.2",
+    "flake8>=7.1.1",
+    "pylint>=3.2.6",
+    "mypy>=1.11.2",
+    "pydocstyle>=6.3.0",
+    "isort>=5.13.2",
+    "black>=24.8.0",
+    "flake8-pyproject>=1.2.3",
+    "types-flask-cors>=4.0.0.20240825",
+    "types-requests>=2.32.0.20240712",
+]
+
 [tool.black]
 line-length = 100
+
+[tool.isort]
+profile = "black"
 
 [tool.pylint.DESIGN]
 max-args = 10
@@ -9,21 +57,21 @@ max-attributes = 10
 disable = [
     "too-few-public-methods",
     "cell-var-from-loop",
-    "broad-exception-caught",
-    "fixme",
+    "broad-exception-caught"
 ]
 
 [tool.flake8]
-ignore = "E203, W503"
 max-line-length = 100
-
-[tool.pydocstyle]
-ignore = "D105, D107, D203, D213"
+ignore = [
+    "W503"  # line break before binary operator
+]
 
 [tool.mypy]
-python_version = 3.11
-mypy_path = "src"
-check_untyped_defs = true
 ignore_missing_imports = true
-ignore_missing_imports_per_module = true
-warn_unused_ignores = true
+
+[tool.pydocstyle]
+ignore = [
+    "D107", # Missing docstring in __init__
+    "D203", # 1 blank line required before class docstring
+    "D213"  # Multi-line docstring summary should start at the second line
+]

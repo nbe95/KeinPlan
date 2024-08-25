@@ -12,7 +12,7 @@ deployt.
 Zur einfachen Bedienung des Tools im Browser gibt es ein interaktives *next.js* Web-Frontend,
 welches (intern) auf Port 3000 lauscht.
 
-Lokale Entwicklung mittels `npm run dev` etc.
+Lokale Entwicklung mittels `npm run dev` etc. Siehe `package.json`.
 
 ## Backend
 
@@ -38,6 +38,5 @@ Proxy samt aller Container umfasst, welche darüber erreichbar sein sollen. Dies
 anhand ihrer Namen untereinander kommunizieren. Es müssen dann keine Ports (außer natürlich 80/443)
 extra nach außen geöffnet werden.
 
-Lokale Entwicklung in einer `venv` mittels `waitress-serve --port 8080 src.main:backend` oder
-(z. B. für Frontend-Tests) im Docker-Container. Eine tox-Umgebung steht für Linting und
-Code-Formatierung bereit.
+Lokale Entwicklung mittels [PDM](https://pdm-project.org/): `pdm run dev` etc. Siehe
+`pyproject.toml`.

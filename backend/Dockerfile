@@ -1,6 +1,25 @@
-FROM python:3-slim
+ARG PYTHON_BASE=3.11-slim
+ARG WORKDIR=/keinplan-backend
 
-WORKDIR /keinplan-backend/
+
+# Build stage for pdm modules
+FROM python:$PYTHON_BASE AS builder
+
+WORKDIR $WORKDIR/
+
+RUN pip install -U pdm
+ENV PDM_CHECK_UPDATE=false
+
+COPY pyproject.toml pdm.lock ./
+COPY src/ ./src
+
+RUN pdm install --check --prod --no-editable
+
+
+# Run stage
+FROM python:$PYTHON_BASE
+
+WORKDIR $WORKDIR/
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive \
@@ -13,14 +32,15 @@ RUN sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen
 ENV LC_ALL de_DE.utf8
 
-COPY requirements.txt .
-COPY src/ src/
+# Retrieve installed python packages from build stage
+COPY --from=builder $WORKDIR/.venv/ ./.venv
+ENV PATH="$WORKDIR/.venv/bin:$PATH"
 
-RUN python -m pip install -r requirements.txt
+COPY src/ ./src/
 
 EXPOSE 8080
 
 ARG VERSION
 ENV KEINPLAN_VERSION ${VERSION}
 
-CMD waitress-serve --port 8080 src.main:backend
+CMD waitress-serve --port 8080 src.keinplan_backend.main:backend

@@ -19,14 +19,16 @@ jobs:
         working-directory: ./backend/
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v3
         with:
           python-version: "3.11"
-      - name: Install tox
-        run: pip install tox
-      - name: Run tox
-        run: tox -e lint
+      - name: Install dependencies
+        run: |
+          pdm sync -d
+      - name: Run linters
+        run: |
+          pdm run lint
 
   lint-frontend:
     name: Lint the frontend code
@@ -40,11 +42,14 @@ jobs:
         with:
           node-version: 18
       - name: Install dev-dependencies
-        run: npm install --only=dev
+        run: |
+          npm install --only=dev
       - name: Run linters
-        run: npm run lint
+        run: |
+          npm run lint
       - name: Perform type check
-        run: npx tsc
+        run: |
+          npx tsc
 
   validate-release:
     name: Validate release label and notes
