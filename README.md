@@ -38,6 +38,8 @@ Proxy samt aller Container umfasst, welche darüber erreichbar sein sollen. Dies
 anhand ihrer Namen untereinander kommunizieren. Es müssen dann keine Ports (außer natürlich 80/443)
 extra nach außen geöffnet werden.
 
-Lokale Entwicklung in einer `venv` mittels `waitress-serve --port 8080 src.main:backend` oder
-(z. B. für Frontend-Tests) im Docker-Container. Eine tox-Umgebung steht für Linting und
-Code-Formatierung bereit.
+Lokale Entwicklung mittels `pdm`:
+
+- `pdm run dev`: Startet das Backend als Server (waitress) auf Port 8080
+- `pdm run lint`: Führt Linting auf dem Python-Code aus
+- `pdm run format`: Formatiert den Python-Code

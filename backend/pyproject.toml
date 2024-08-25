@@ -24,6 +24,7 @@ license = {text = "MIT"}
 distribution = false
 
 [tool.pdm.scripts]
+dev = "waitress-serve --port 8080 src.keinplan_backend.main:backend"
 lint = "tox run -e lint"
 format = "tox run -e format"
 
