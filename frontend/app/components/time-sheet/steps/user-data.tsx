@@ -72,6 +72,7 @@ const UserDataStep = (props: UserDataProps) => {
                 name="first_name"
                 placeholder="Vorname"
                 defaultValue={props.userData?.firstName}
+                maxLength={45}
                 required
               />
               <Form.Control
@@ -79,6 +80,7 @@ const UserDataStep = (props: UserDataProps) => {
                 name="last_name"
                 placeholder="Nachname"
                 defaultValue={props.userData?.lastName}
+                maxLength={45}
                 required
               />
             </InputGroup>
@@ -95,6 +97,7 @@ const UserDataStep = (props: UserDataProps) => {
               name="employer"
               placeholder="Dienstgeber"
               defaultValue={props.userData?.employer}
+              maxLength={100}
               required
             />
             <Form.Text>

@@ -49,7 +49,7 @@ const ResultStep = (props: ResultProps) => {
     isError,
     error,
   } = useQuery({
-    queryKey: [TIME_SHEET_QUERY_KEY, props.targetDate, props.userData],
+    queryKey: [TIME_SHEET_QUERY_KEY, props.targetDate, props.userData, props.dateList],
     queryFn: async () => {
       return await axios
         .post(
@@ -68,21 +68,28 @@ const ResultStep = (props: ResultProps) => {
             responseType: "blob",
           },
         )
-        .then((response) => {
-          // Store the result as blob object and return its URL
-          const url = URL.createObjectURL(new Blob([response.data]));
+        .then(async (response) => {
+          const getContentAsDataUrl = async (blobData: Blob): Promise<string> => {
+            return new Promise((resolve) => {
+              let reader: FileReader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.readAsDataURL(blobData);
+            });
+          };
+
+          // Directly return a data URL, because on iOS, PWAs don't support download from blob URLs
+          // https://stackoverflow.com/q/56802222
+          const file = new Blob([response.data], { type: "application/pdf;charset=UTF-8" });
           return {
             fileName: getTimeSheetName("pdf"),
-            blobUrl: url,
+            dataUrl: await getContentAsDataUrl(file),
             size: response.data.size,
           };
         })
         .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
-    // Fetch only once
-    staleTime: Infinity,
-    gcTime: Infinity,
+    staleTime: 1000 * 60 * 10, // 10 minutes until stale
     refetchOnWindowFocus: false,
   });
 
@@ -135,7 +142,7 @@ const ResultStep = (props: ResultProps) => {
                     <h5>Hier ist deine Stundenliste:</h5>
                     <DownloadButton
                       fileName={pdf.fileName}
-                      url={pdf.blobUrl}
+                      url={pdf.dataUrl}
                       text={`KW ${getWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
                       size={pdf.size}
                       faIcon={faFilePdf}
@@ -148,8 +155,9 @@ const ResultStep = (props: ResultProps) => {
             <Col sm={12} md={6}>
               <h2>Wie geht&apos;s jetzt weiter?</h2>
               <p>
-                Lade deine Stundenliste runter. Sende sie anschließend per E-Mail an das zuständige
-                Pfarrbüro, z.&nbsp;B. mit der folgenden Vorlage.
+                Lade deine Stundenliste runter. Sende anschlie&shy;ßend eine E-Mail an das
+                zustän&shy;dige Pfarr&shy;büro und hänge sie als Anhang an. Nutze dazu gerne die
+                folgende Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               <Button
