@@ -85,7 +85,7 @@ const DatesStep = (props: DatesProps) => {
           },
         };
       }),
-    gcTime: 0,
+    staleTime: 1000 * 60 * 10,  // 10 minutes until stale
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!kaPlanQuery,

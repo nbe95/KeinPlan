@@ -89,9 +89,7 @@ const ResultStep = (props: ResultProps) => {
         .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
-    // Fetch only once
-    staleTime: Infinity,
-    gcTime: Infinity,
+    staleTime: 1000 * 60 * 10,  // 10 minutes until stale
     refetchOnWindowFocus: false,
   });
 
