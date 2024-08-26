@@ -25,7 +25,7 @@ export const parseDateStr = (date: string): Date => {
 // Source: https://weeknumber.com/how-to/javascript
 
 // Returns the ISO week of the date.
-export const getWeek = (refDate: Date): number => {
+export const getIsoWeek = (refDate: Date): number => {
   let date: Date = new Date(refDate);
   date.setHours(0, 0, 0, 0);
   // Thursday in current week decides the year.
@@ -40,11 +40,15 @@ export const getWeek = (refDate: Date): number => {
 };
 
 // Returns the four-digit year corresponding to the ISO week of the date.
-export const getWeekYear = (refDate: Date): number => {
+// Note: This function is necessary for e.g. 01/01/2023 = ISO week 52/2022
+export const getIsoYear = (refDate: Date): number => {
   let date: Date = new Date(refDate);
   date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
   return date.getFullYear();
 };
+
+export const getIsoWeekAndYear = (date: Date, separator: string = "/"): string =>
+  `${getIsoWeek(date)}${separator}${getIsoYear(date)}`;
 
 // Recursively convert all Date objects in a dictionary to ISO strings while keeping their timezone
 export const dictConvertDatesToIsoString = (dict: {

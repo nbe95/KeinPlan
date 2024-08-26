@@ -10,7 +10,7 @@ import {
   TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
 } from "../../../utils/constants";
-import { dictConvertDatesToIsoString, getWeek } from "../../../utils/dates";
+import { dictConvertDatesToIsoString, getIsoWeek, getIsoWeekAndYear } from "../../../utils/dates";
 import { MailProps, createMailToLink } from "../../../utils/mail";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
@@ -37,7 +37,7 @@ const ResultStep = (props: ResultProps) => {
     (format: string): string => {
       const targetDate: Date = props.targetDate;
       const basename: string = "Arbeitszeit";
-      const timestamp: string = `${targetDate.getFullYear()}-${getWeek(targetDate)}`;
+      const timestamp: string = `${targetDate.getFullYear()}-${getIsoWeek(targetDate)}`;
       return `${basename}_${timestamp}.${format.toLowerCase()}`;
     },
     [props.targetDate],
@@ -58,7 +58,7 @@ const ResultStep = (props: ResultProps) => {
             employer: props.userData.employer,
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
             year: props.targetDate.getFullYear(),
-            week: getWeek(props.targetDate),
+            week: getIsoWeek(props.targetDate),
             dates: props.dateList.map((date) => dictConvertDatesToIsoString(date)),
           },
           {
@@ -68,21 +68,12 @@ const ResultStep = (props: ResultProps) => {
             responseType: "blob",
           },
         )
-        .then(async (response) => {
-          const getContentAsDataUrl = async (blobData: Blob): Promise<string> => {
-            return new Promise((resolve) => {
-              let reader: FileReader = new FileReader();
-              reader.onload = () => resolve(reader.result as string);
-              reader.readAsDataURL(blobData);
-            });
-          };
-
-          // Directly return a data URL, because on iOS, PWAs don't support download from blob URLs
-          // https://stackoverflow.com/q/56802222
-          const file = new Blob([response.data], { type: "application/pdf;charset=UTF-8" });
+        .then((response) => {
+          // Store the result as blob object and return its URL
+          const url = URL.createObjectURL(new Blob([response.data]));
           return {
             fileName: getTimeSheetName("pdf"),
-            dataUrl: await getContentAsDataUrl(file),
+            blobUrl: url,
             size: response.data.size,
           };
         })
@@ -94,15 +85,13 @@ const ResultStep = (props: ResultProps) => {
   });
 
   const mailParams = useMemo((): MailProps => {
-    const user: UserData = props.userData;
-    const targetDate: Date = props.targetDate;
-
-    const name: string = `${user?.firstName} ${user?.lastName}`;
-    const week: string = `${getWeek(targetDate)}/${targetDate.getFullYear()}`;
+    const firstLastName: string = `${props.userData.firstName} ${props.userData.lastName}`;
+    const lastFirstName: string = `${props.userData.lastName}, ${props.userData.firstName}`;
+    const week: string = getIsoWeekAndYear(props.targetDate);
     return {
       recipient: TIME_SHEET_MAIL ?? "",
-      subject: `Arbeitszeit ${name} - KW ${week}`,
-      body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${name}`,
+      subject: `Arbeitszeit ${lastFirstName} - KW ${week}`,
+      body: `Guten Tag,\n\nanbei übersende ich die wöchentliche Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${firstLastName}`,
     };
   }, [props.userData, props.targetDate]);
 
@@ -142,8 +131,8 @@ const ResultStep = (props: ResultProps) => {
                     <h5>Hier ist deine Stundenliste:</h5>
                     <DownloadButton
                       fileName={pdf.fileName}
-                      url={pdf.dataUrl}
-                      text={`KW ${getWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
+                      url={pdf.blobUrl}
+                      text={`KW ${getIsoWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
                       size={pdf.size}
                       faIcon={faFilePdf}
                       isPrimary={true}
