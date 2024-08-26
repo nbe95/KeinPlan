@@ -85,15 +85,13 @@ const ResultStep = (props: ResultProps) => {
   });
 
   const mailParams = useMemo((): MailProps => {
-    const user: UserData = props.userData;
-    const targetDate: Date = props.targetDate;
-
-    const name: string = `${user?.firstName} ${user?.lastName}`;
-    const week: string = `${getWeek(targetDate)}/${targetDate.getFullYear()}`;
+    const firstLastName: string = `${props.userData.firstName} ${props.userData.lastName}`;
+    const lastFirstName: string = `${props.userData.lastName}, ${props.userData.firstName}`;
+    const week: string = getIsoWeekAndYear(props.targetDate);
     return {
       recipient: TIME_SHEET_MAIL ?? "",
-      subject: `Arbeitszeit ${name} - KW ${week}`,
-      body: `Guten Tag,\n\nanbei erhalten Sie die Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${name}`,
+      subject: `Arbeitszeit ${lastFirstName} - KW ${week}`,
+      body: `Guten Tag,\n\nanbei übersende ich die wöchentliche Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${firstLastName}`,
     };
   }, [props.userData, props.targetDate]);
 
