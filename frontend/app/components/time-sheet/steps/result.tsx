@@ -49,7 +49,7 @@ const ResultStep = (props: ResultProps) => {
     isError,
     error,
   } = useQuery({
-    queryKey: [TIME_SHEET_QUERY_KEY, props.targetDate, props.userData],
+    queryKey: [TIME_SHEET_QUERY_KEY, props.targetDate, props.userData, props.dateList],
     queryFn: async () => {
       return await axios
         .post(
@@ -68,12 +68,21 @@ const ResultStep = (props: ResultProps) => {
             responseType: "blob",
           },
         )
-        .then((response) => {
-          // Store the result as blob object and return its URL
-          const url = URL.createObjectURL(new Blob([response.data]));
+        .then(async (response) => {
+          const getContentAsDataUrl = async (blobData: Blob): Promise<string> => {
+            return new Promise((resolve) => {
+              let reader: FileReader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.readAsDataURL(blobData);
+            });
+          };
+
+          // Directly return a data URL, because on iOS, PWAs don't support download from blob URLs
+          // https://stackoverflow.com/q/56802222
+          const file = new Blob([response.data], { type: "application/pdf;charset=UTF-8" });
           return {
             fileName: getTimeSheetName("pdf"),
-            blobUrl: url,
+            dataUrl: await getContentAsDataUrl(file),
             size: response.data.size,
           };
         })
@@ -135,7 +144,7 @@ const ResultStep = (props: ResultProps) => {
                     <h5>Hier ist deine Stundenliste:</h5>
                     <DownloadButton
                       fileName={pdf.fileName}
-                      url={pdf.blobUrl}
+                      url={pdf.dataUrl}
                       text={`KW ${getWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
                       size={pdf.size}
                       faIcon={faFilePdf}
