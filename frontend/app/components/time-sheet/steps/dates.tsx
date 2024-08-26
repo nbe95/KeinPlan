@@ -85,7 +85,7 @@ const DatesStep = (props: DatesProps) => {
           },
         };
       }),
-    staleTime: 1000 * 60 * 10,  // 10 minutes until stale
+    staleTime: 1000 * 60 * 10, // 10 minutes until stale
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!kaPlanQuery,
@@ -218,6 +218,7 @@ const DatesStep = (props: DatesProps) => {
               name="kaplan_ics"
               placeholder="https://…"
               defaultValue={props.kaPlanIcs}
+              maxLength={2048}
               disabled={isFetching}
               required
             />

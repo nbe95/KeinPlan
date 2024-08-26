@@ -14,7 +14,7 @@ from src.keinplan_backend.constants import LOG_LEVEL, VERSION_BACKEND
 
 from .constants import KEINPLAN_LINK, TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from .entry import TimeEntry
-from .templates.jinja_filters import sanitize_latex
+from .templates.jinja_filters import escape_latex
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -81,7 +81,7 @@ class WeeklyTimeSheet(TimeSheet):
         jinja_env: Environment = Environment(
             loader=FileSystemLoader(searchpath=TIME_SHEETS_TEMPLATE_DIR)
         )
-        jinja_env.filters.update({"format_locale": format_string, "sanitize_latex": sanitize_latex})
+        jinja_env.filters.update({"format_locale": format_string, "escape_latex": escape_latex})
         template: Template = jinja_env.get_template(template_file)
 
         self.entries.sort(key=lambda e: e.time_span.begin)

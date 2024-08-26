@@ -89,7 +89,7 @@ const ResultStep = (props: ResultProps) => {
         .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
-    staleTime: 1000 * 60 * 10,  // 10 minutes until stale
+    staleTime: 1000 * 60 * 10, // 10 minutes until stale
     refetchOnWindowFocus: false,
   });
 
@@ -155,9 +155,9 @@ const ResultStep = (props: ResultProps) => {
             <Col sm={12} md={6}>
               <h2>Wie geht&apos;s jetzt weiter?</h2>
               <p>
-                Lade deine Stundenliste runter.
-                Sende anschlie&shy;ßend eine E-Mail an das zustän&shy;dige Pfarr&shy;büro und hänge
-                sie als Anhang an. Nutze dazu gerne die folgende Vorlage.
+                Lade deine Stundenliste runter. Sende anschlie&shy;ßend eine E-Mail an das
+                zustän&shy;dige Pfarr&shy;büro und hänge sie als Anhang an. Nutze dazu gerne die
+                folgende Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               <Button

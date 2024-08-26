@@ -3,7 +3,7 @@
 from typing import Dict
 
 
-def sanitize_latex(inputStr: str) -> str:
+def escape_latex(inputStr: str) -> str:
     """Sanitize input for use in LaTeX templates by escaping special chars."""
     specialCharMap: Dict[str, str] = {
         "'": r"\textquotesingle{}",
