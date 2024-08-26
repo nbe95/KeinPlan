@@ -16,7 +16,7 @@ import {
   KAPLAN_WEB_LINK_TARGET,
   USER_COOKIE_NAME,
 } from "../../../utils/constants";
-import { addDaysToDate, getMonday, getWeek, getWeekYear, parseDateStr } from "../../../utils/dates";
+import { addDaysToDate, getIsoWeekAndYear, getMonday, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { CondLink } from "../../link";
 import { NextButton, PrevButton } from "../../process-button";
@@ -41,7 +41,7 @@ type DatesProps = {
 const DatesStep = (props: DatesProps) => {
   // Date related stuff
   const getCalWeekLabel = useCallback(
-    (): string => `KW ${getWeek(props.targetDate)}/${getWeekYear(props.targetDate)}`,
+    (): string => `KW ${getIsoWeekAndYear(props.targetDate)}`,
     [props.targetDate],
   );
   const prevWeek = () => {
