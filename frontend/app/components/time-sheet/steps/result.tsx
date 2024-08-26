@@ -155,8 +155,9 @@ const ResultStep = (props: ResultProps) => {
             <Col sm={12} md={6}>
               <h2>Wie geht&apos;s jetzt weiter?</h2>
               <p>
-                Lade deine Stundenliste runter. Sende sie anschließend per E-Mail an das zuständige
-                Pfarrbüro, z.&nbsp;B. mit der folgenden Vorlage.
+                Lade deine Stundenliste runter.
+                Sende anschlie&shy;ßend eine E-Mail an das zustän&shy;dige Pfarr&shy;büro und hänge
+                sie als Anhang an. Nutze dazu gerne die folgende Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               <Button
