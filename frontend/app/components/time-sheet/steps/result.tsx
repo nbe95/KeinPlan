@@ -49,7 +49,7 @@ const ResultStep = (props: ResultProps) => {
     isError,
     error,
   } = useQuery({
-    queryKey: [TIME_SHEET_QUERY_KEY, props.targetDate, props.userData],
+    queryKey: [TIME_SHEET_QUERY_KEY, props.targetDate, props.userData, props.dateList],
     queryFn: async () => {
       return await axios
         .post(
