@@ -34,32 +34,11 @@ jobs:
           base-branch: true
           with-v: false
 
-  changes:
-    name: Detect changes
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    outputs:
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
-    steps:
-    - uses: dorny/paths-filter@v3
-      id: filter
-      with:
-        base: ${{ github.ref }} # compare against same branch, i.e. most recent commit
-        filters: |
-          backend:
-            - "backend/**"
-          frontend:
-            - "frontend/**"
-
   lint-backend:
     name: Lint backend code
     runs-on: ubuntu-latest
     needs:
       - validate-release
-      - changes
-    if: ${{ needs.changes.outputs.backend == 'true' }}
     defaults:
       run:
         working-directory: ./backend/
@@ -81,8 +60,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - validate-release
-      - changes
-    if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:
         working-directory: ./frontend/
