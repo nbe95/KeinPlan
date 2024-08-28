@@ -79,7 +79,7 @@ jobs:
           npx tsc
 
   docker-image-backend:
-    name: Build Docker image for backend
+    name: Build backend Docker image
     runs-on: ubuntu-latest
     needs:
       - lint-backend
@@ -107,7 +107,7 @@ jobs:
             ${{ env.BACKEND_IMAGE_NAME }}:testing
 
   docker-image-frontend:
-    name: Build Docker image for frontend
+    name: Build frontend Docker image
     runs-on: ubuntu-latest
     needs:
       - lint-frontend
