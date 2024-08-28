@@ -1,9 +1,18 @@
 {
   "scripts": {
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "format": "npx prettier . --write"
   },
   "devDependencies": {
-    "cypress": "^13.14.0"
+    "cypress": "^13.14.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.0.0"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "plugins": [
+      "prettier-plugin-organize-imports"
+    ]
   }
 }
