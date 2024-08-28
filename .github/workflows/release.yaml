@@ -11,7 +11,7 @@ on:
 
 jobs:
   bump-tag-version:
-    name: Bump and tag new version
+    name: Tag new version
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -36,7 +36,7 @@ jobs:
           with-v: false
 
   create-docker-images:
-    name: Build and publish Docker images
+    name: Build Docker images
     runs-on: ubuntu-latest
     needs:
       - bump-tag-version
