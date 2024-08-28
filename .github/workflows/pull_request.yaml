@@ -78,11 +78,10 @@ jobs:
         run: |
           npx tsc
 
-  create-docker-images:
-    name: Build Docker images
+  docker-image-backend:
+    name: Build Docker image for backend
     runs-on: ubuntu-latest
     needs:
-      - lint-frontend
       - lint-backend
     steps:
       - uses: actions/checkout@v4
@@ -96,7 +95,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build and push backend
+      - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           file: ./backend/Dockerfile
@@ -106,7 +105,25 @@ jobs:
           push: true
           tags: |
             ${{ env.BACKEND_IMAGE_NAME }}:testing
-      - name: Build and push frontend
+
+  docker-image-frontend:
+    name: Build Docker image for frontend
+    runs-on: ubuntu-latest
+    needs:
+      - lint-frontend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get commit data
+        id: commit
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           file: ./frontend/Dockerfile
@@ -121,7 +138,8 @@ jobs:
     name: Deploy to testing
     runs-on: ubuntu-latest
     needs:
-      - create-docker-images
+      - docker-image-backend
+      - docker-image-frontend
     environment:
       name: testing
     steps:
