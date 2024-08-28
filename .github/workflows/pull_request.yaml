@@ -106,8 +106,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - lint-backend
-      - changes
-    if: ${{ needs.changes.outputs.frontend == "true" }}
     steps:
       - uses: actions/checkout@v4
       - name: Get commit data
@@ -133,8 +131,6 @@ jobs:
 
   docker-image-frontend:
     name: Build Docker image for frontend
-    if:
-
     runs-on: ubuntu-latest
     needs:
       - lint-frontend
