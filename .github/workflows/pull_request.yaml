@@ -130,6 +130,7 @@ jobs:
           curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
 
   test-e2e:
+    name: Perform e2e tests
     runs-on: ubuntu-latest
     needs:
       - deploy-testing
@@ -138,3 +139,5 @@ jobs:
       # Install npm dependencies, cache them correctly and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        with:
+          project: ./tests
