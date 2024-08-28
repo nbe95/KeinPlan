@@ -87,6 +87,20 @@ jobs:
             ${{ env.FRONTEND_IMAGE_NAME }}:${{ needs.tag-version.outputs.version }}
             ${{ env.FRONTEND_IMAGE_NAME }}:latest
 
+  deploy-testing:
+    name: Deploy to testing environment
+    runs-on: ubuntu-latest
+    needs:
+      - tag-version
+      - docker-image-backend
+      - docker-image-frontend
+    environment:
+      name: testing
+    steps:
+      - name: Call webhook
+        run: |
+          curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.tag-version.outputs.version }}"
+
   deploy-prod:
     name: Deploy to production
     runs-on: ubuntu-latest
