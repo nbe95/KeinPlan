@@ -34,8 +34,8 @@ jobs:
           base-branch: true
           with-v: false
 
-  # Detect changes to subfolders
   changes:
+    name: Detect changes
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -59,7 +59,7 @@ jobs:
     needs:
       - validate-release
       - changes
-    if: ${{ needs.changes.outputs.backend == "true" }}
+    if: ${{ needs.changes.outputs.backend == 'true' }}
     defaults:
       run:
         working-directory: ./backend/
@@ -82,7 +82,7 @@ jobs:
     needs:
       - validate-release
       - changes
-    if: ${{ needs.changes.outputs.frontend == "true" }}
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     defaults:
       run:
         working-directory: ./frontend/
