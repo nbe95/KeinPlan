@@ -115,7 +115,7 @@ jobs:
             VERSION=${{ steps.commit.outputs.sha_short }}-testing
           push: true
           tags: |
-            ${{ env.BACKEND_IMAGE_NAME }}:testing
+            ${{ env.FRONTEND_IMAGE_NAME }}:testing
 
   deploy-testing:
     name: Deploy to testing environment
