@@ -134,10 +134,11 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - deploy-testing
+    defaults:
+      run:
+        working-directory: ./tests/
     steps:
       - uses: actions/checkout@v4
       # Install npm dependencies, cache them correctly and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          project: ./tests/
