@@ -36,7 +36,7 @@ const UserDataStep = (props: UserDataProps) => {
   useEffect(() => {
     if (props.userData) {
       document.getElementById("btn-next")?.focus({ preventScroll: true });
-      scrollToElement("time-sheet", true);
+      scrollToElement("stepper", true);
     }
   }, [props.userData]);
 
