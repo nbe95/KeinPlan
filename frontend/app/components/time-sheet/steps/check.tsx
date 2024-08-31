@@ -40,10 +40,10 @@ const CheckStep = (props: CheckProps) => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-end order-2">
-          <NextButton submit />
+          <NextButton submit id="btn-next" />
         </Col>
         <Col className="d-flex justify-content-start order-1">
-          <PrevButton callback={props.prevStep} />
+          <PrevButton id="btn-prev" callback={props.prevStep} />
         </Col>
       </Row>
     </form>

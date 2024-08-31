@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "cy:open": "cypress open",
+    "cy:open": "cypress open --e2e -b electron",
     "cy:run": "cypress run",
     "format": "npx prettier . --write"
   },

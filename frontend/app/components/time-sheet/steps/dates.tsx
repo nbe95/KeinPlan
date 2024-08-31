@@ -254,7 +254,7 @@ const DatesStep = (props: DatesProps) => {
           <NextButton submit id="btn-next" disabled={isFetching} />
         </Col>
         <Col className="d-flex justify-content-start order-1">
-          <PrevButton callback={props.prevStep} disabled={isFetching} />
+          <PrevButton id="btn-prev" callback={props.prevStep} disabled={isFetching} />
         </Col>
       </Row>
     </form>
