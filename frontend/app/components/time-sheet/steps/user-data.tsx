@@ -113,7 +113,7 @@ const UserDataStep = (props: UserDataProps) => {
           <Form.Group>
             <Form.Check
               type="switch"
-              id="confirm"
+              name="use_cookie"
               label="Alle Eingaben als Cookie speichern"
               onClick={(event) => setResetCookie(event.currentTarget.checked)}
               checked={enableCookie}
