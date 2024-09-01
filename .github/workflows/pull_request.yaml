@@ -90,6 +90,7 @@ jobs:
     name: Build backend Docker image
     runs-on: ubuntu-latest
     needs:
+      - validate-release
       - lint-backend
     steps:
       - uses: actions/checkout@v4
@@ -106,8 +107,8 @@ jobs:
           file: ./backend/Dockerfile
           context: ./backend/
           build-args: |
-            VERSION=${{ jobs.validate-release.outputs.sha_short }}-testing
-            VERSION_SHA=${{ jobs.validate-release.outputs.sha }}
+            VERSION=${{ needs.validate-release.outputs.sha_short }}-testing
+            VERSION_SHA=${{ needs.validate-release.outputs.sha }}
           push: true
           tags: |
             ${{ env.BACKEND_IMAGE_NAME }}:testing
@@ -116,6 +117,7 @@ jobs:
     name: Build frontend Docker image
     runs-on: ubuntu-latest
     needs:
+      - validate-release
       - lint-frontend
     steps:
       - uses: actions/checkout@v4
@@ -132,8 +134,8 @@ jobs:
           file: ./frontend/Dockerfile
           context: ./frontend/
           build-args: |
-            VERSION=${{ jobs.validate-release.outputs.sha_short }}-testing
-            VERSION_SHA=${{ jobs.validate-release.outputs.sha }}
+            VERSION=${{ needs.validate-release.outputs.sha_short }}-testing
+            VERSION_SHA=${{ needs.validate-release.outputs.sha }}
           push: true
           tags: |
             ${{ env.FRONTEND_IMAGE_NAME }}:testing
@@ -155,6 +157,7 @@ jobs:
     name: Perform e2e tests
     runs-on: ubuntu-latest
     needs:
+      - validate-release
       - deploy-testing
     environment:
       name: testing
@@ -168,5 +171,5 @@ jobs:
         env:
           CYPRESS_BASE_URL: ${{ vars.DEPLOYMENT_URL }}
           CYPRESS_BACKEND_URL: ${{ vars.DEPLOYMENT_URL }}
-          CYPRESS_TEST_VERSION: ${{ jobs.validate-release.outputs.sha_short }}-testing
-          CYPRESS_TEST_SHA: ${{ jobs.validate-release.outputs.sha }}
+          CYPRESS_TEST_VERSION: ${{ needs.validate-release.outputs.sha_short }}-testing
+          CYPRESS_TEST_SHA: ${{ needs.validate-release.outputs.sha }}
