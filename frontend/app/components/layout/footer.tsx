@@ -58,7 +58,7 @@ const Footer = () => {
                 <FontAwesomeIcon icon={faGithub} size="xl" />
               </Link>
             )}
-            <span id="version" className="text-center" title={VERSION_SHA_FRONTEND ?? ""}>
+            <span id="version" className="text-center" title={VERSION_SHA_FRONTEND ? `Commit ${VERSION_SHA_FRONTEND}` : ""}>
               KeinPlan {VERSION_FRONTEND ? `v${VERSION_FRONTEND}` : "(unbekannte Version)"}
             </span>
           </Col>

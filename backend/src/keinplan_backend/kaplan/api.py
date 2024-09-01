@@ -22,6 +22,8 @@ class KaPlanEndpoint(Resource):
 
     def get(self) -> ResponseReturnValue:
         """Handle GET requests."""
+        self.kaplan_interface.set_own_url(request.base_url)
+
         try:
             ics_url_b64: Optional[str] = request.headers.get(KAPLAN_ICS_HEADER)
             if not ics_url_b64:
