@@ -4,6 +4,8 @@ import { env } from "next-runtime-env";
 export const PROD: boolean = process.env.NODE_ENV == "production";
 export const GITHUB_LINK: string | undefined = process.env.NEXT_PUBLIC_GITHUB_LINK;
 export const VERSION_FRONTEND: string | undefined = process.env.NEXT_PUBLIC_VERSION_FRONTEND;
+export const VERSION_SHA_FRONTEND: string | undefined =
+  process.env.NEXT_PUBLIC_VERSION_SHA_FRONTEND;
 
 // Environment variables (fetched at runtime)
 export const ADMIN_MAIL: string | undefined = env("NEXT_PUBLIC_ADMIN_MAIL");

@@ -9,6 +9,7 @@ import {
   KAPLAN_LINK,
   KAPLAN_WEB_LINK_TARGET,
   VERSION_FRONTEND,
+  VERSION_SHA_FRONTEND,
 } from "../../utils/constants";
 import { createMailToLink } from "../../utils/mail";
 import Container from "./container";
@@ -57,7 +58,7 @@ const Footer = () => {
                 <FontAwesomeIcon icon={faGithub} size="xl" />
               </Link>
             )}
-            <span className="text-center">
+            <span id="version" className="text-center" title={VERSION_SHA_FRONTEND ?? ""}>
               KeinPlan {VERSION_FRONTEND ? `v${VERSION_FRONTEND}` : "(unbekannte Version)"}
             </span>
           </Col>

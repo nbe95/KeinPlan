@@ -19,8 +19,14 @@ jobs:
       pull-requests: read
     outputs:
       version: ${{ steps.semver.outputs.version }}
+      sha: ${{ steps.commit.outputs.sha }}
     steps:
       - uses: actions/checkout@v4
+      - name: Get commit data
+        id: commit
+        run: |
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - uses: jefflinse/pr-semver-bump@v1.7.0
         name: Bump and tag new version
         id: semver
@@ -56,6 +62,7 @@ jobs:
           context: ./backend/
           build-args: |
             VERSION=${{ needs.tag-version.outputs.version }}
+            VERSION_SHA=${{ needs.tag-version.outputs.sha }}
           push: true
           tags: |
             ${{ env.BACKEND_IMAGE_NAME }}:${{ needs.tag-version.outputs.version }}
@@ -82,6 +89,7 @@ jobs:
           context: ./frontend/
           build-args: |
             VERSION=${{ needs.tag-version.outputs.version }}
+            VERSION_SHA=${{ needs.tag-version.outputs.sha }}
           push: true
           tags: |
             ${{ env.FRONTEND_IMAGE_NAME }}:${{ needs.tag-version.outputs.version }}

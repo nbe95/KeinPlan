@@ -1,6 +1,6 @@
 describe("test step functionalities", () => {
-  let icsUrl = new URL(Cypress.config("baseUrl"))
-  icsUrl.pathname = "test-kaplan-debug.ics"
+  let icsUrl = new URL(Cypress.config("baseUrl"));
+  icsUrl.pathname = "test-kaplan-debug.ics";
 
   beforeEach(() => {
     cy.visit("/");
