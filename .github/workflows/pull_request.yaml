@@ -108,7 +108,6 @@ jobs:
           build-args: |
             VERSION=${{ needs.validate-release.outputs.sha_short }}-testing
             VERSION_SHA=${{ needs.validate-release.outputs.sha }}
-            TESTING=1
           push: true
           tags: |
             ${{ env.BACKEND_IMAGE_NAME }}:testing
@@ -136,7 +135,6 @@ jobs:
           build-args: |
             VERSION=${{ needs.validate-release.outputs.sha_short }}-testing
             VERSION_SHA=${{ needs.validate-release.outputs.sha }}
-            TESTING=1
           push: true
           tags: |
             ${{ env.FRONTEND_IMAGE_NAME }}:testing

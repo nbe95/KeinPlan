@@ -3,7 +3,7 @@
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
 
-from ..constants import IS_TESTING, VERSION_BACKEND, VERSION_SHA_BACKEND
+from ..constants import VERSION_BACKEND, VERSION_SHA_BACKEND
 
 
 class VersionEndpoint(Resource):
@@ -16,7 +16,6 @@ class VersionEndpoint(Resource):
                 "backend": {
                     "version": VERSION_BACKEND,
                     "sha": VERSION_SHA_BACKEND,
-                    "is_testing": IS_TESTING,
                 }
             }
         }

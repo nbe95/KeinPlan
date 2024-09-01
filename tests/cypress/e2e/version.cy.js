@@ -20,6 +20,6 @@ describe("check version", () => {
       .its("body")
       .its("KeinPlan")
       .its("backend")
-      .should("include", { version: version, sha: sha, is_testing: true });
+      .should("include", { version: version ?? null, sha: sha ?? null });
   });
 });
