@@ -49,6 +49,7 @@ describe("test cookie handling", () => {
 
     cy.get('input[name="use_cookie"]').should("be.checked").uncheck();
     cy.get(".Toastify .Toastify__toast-container").should("be.visible");
+    cy.get(".Toastify .Toastify__toast-container", { timeout: 10000 }).should("not.exist");
 
     cy.getCookie("user-data").should("not.exist");
   });
