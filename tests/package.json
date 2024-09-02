@@ -2,6 +2,7 @@
   "scripts": {
     "cy:open": "cypress open --e2e -b electron",
     "cy:run": "cypress run",
+    "lint": "npx prettier . --check",
     "format": "npx prettier . --write"
   },
   "devDependencies": {
