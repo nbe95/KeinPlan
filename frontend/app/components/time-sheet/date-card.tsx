@@ -15,6 +15,7 @@ const DateCard = (props: DateCardProps) => {
     <Card
       className="d-flex flex-row my-2 shadow-sm"
       title={`${strftimeGer("%d.%m.%Y", props.date.time.begin)} ${props.date.title ?? "Gottesdienst"}`}
+      data-uid={props.date.uid}
     >
       {props.date.time.begin && (
         <div className="bg-light rounded-start border-end">

@@ -9,6 +9,6 @@ module.exports = defineConfig({
     env: {
       BACKEND_URL: "http://localhost:8080/",
     },
-    experimentalOriginDependencies: true
+    experimentalOriginDependencies: true,
   },
 });

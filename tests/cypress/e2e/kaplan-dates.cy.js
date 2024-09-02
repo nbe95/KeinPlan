@@ -20,8 +20,8 @@ describe("check KaPlan date handling", () => {
   });
 
   it("should display dates correctly", () => {
-    var strftime = require('strftime')
-    var strftimeGer = strftime.localizeByIdentifier('de_DE')
+    var strftime = require("strftime");
+    var strftimeGer = strftime.localizeByIdentifier("de_DE");
 
     cy.get('input[name="kaplan_ics"]').type(icsDebugUrl.toString());
 
@@ -41,10 +41,13 @@ describe("check KaPlan date handling", () => {
           card.should("contain.text", date.location);
         }
         if (date.start && date.end) {
-          const start = new Date(Date.parse(date.start))
-          const end = new Date(Date.parse(date.end))
-          card.should("contain.text", `${strftimeGer("%H:%M", start)} – ${strftimeGer("%H:%M", end)}`)
-          card.should("contain.text", `${strftimeGer("%a%d%b", start)}`)
+          const start = new Date(Date.parse(date.start));
+          const end = new Date(Date.parse(date.end));
+          card.should(
+            "contain.text",
+            `${strftimeGer("%H:%M", start)} – ${strftimeGer("%H:%M", end)}`,
+          );
+          card.should("contain.text", `${strftimeGer("%a%d%b", start)}`);
         }
       });
     });

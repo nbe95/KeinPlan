@@ -29,6 +29,7 @@ export interface CookieData extends UserData {
 }
 
 export interface DateEntry {
+  uid: string;
   title: string;
   role: string;
   location: string;
