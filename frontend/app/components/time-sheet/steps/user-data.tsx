@@ -42,7 +42,7 @@ const UserDataStep = (props: UserDataProps) => {
 
   // Cookies
   const cookieToast = useRef<Id | undefined>(undefined);
-  const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
+  const [cookies, setCookie, removeCookie, updateCookies] = useCookies([USER_COOKIE_NAME]);
   const [enableCookie, setEnableCookie] = useState<boolean>(cookies[USER_COOKIE_NAME]);
   const setResetCookie = (enable: boolean) => {
     setEnableCookie(enable);
@@ -53,6 +53,7 @@ const UserDataStep = (props: UserDataProps) => {
       );
     } else {
       removeCookie(USER_COOKIE_NAME);
+      updateCookies(); // required for Cypress testing
       props.setKaPlanIcs(undefined);
       toast.dismiss(cookieToast.current);
       cookieToast.current = toast.info("OK! Deine gespeicherten Daten wurden entfernt.");
