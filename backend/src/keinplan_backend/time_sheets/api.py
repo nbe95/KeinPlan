@@ -71,6 +71,7 @@ class TimeSheetEndpoint(Resource):
         item_time: Dict[str, str] = item.get("time") or {}
         item_break: Dict[str, str] = item.get("break") or {}
         entry: TimeEntry = TimeEntry(
+            item.get("uid", ""),
             item.get("title", ""),
             item.get("role", ""),
             item.get("location", ""),

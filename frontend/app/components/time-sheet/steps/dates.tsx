@@ -76,6 +76,7 @@ const DatesStep = (props: DatesProps) => {
     select: (data: any): DateEntry[] =>
       data.dates?.map((date: any): DateEntry => {
         return {
+          uid: date.uid ?? "",
           title: date.title ?? "",
           role: date.role ?? "",
           location: date.location_short ?? "",
