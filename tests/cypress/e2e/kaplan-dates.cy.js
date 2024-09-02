@@ -41,13 +41,13 @@ describe("check KaPlan date handling", () => {
           card.should("contain.text", date.location);
         }
         if (date.start && date.end) {
-          const start = new Date(Date.parse(date.start));
-          const end = new Date(Date.parse(date.end));
+          const dateStart = new Date(Date.parse(date.start));
+          const dateEnd = new Date(Date.parse(date.end));
           card.should(
             "contain.text",
-            `${strftimeGer("%H:%M", start)} – ${strftimeGer("%H:%M", end)}`,
+            `${strftimeGer("%H:%M", dateStart)} – ${strftimeGer("%H:%M", dateEnd)}`,
           );
-          card.should("contain.text", `${strftimeGer("%a%d%b", start)}`);
+          card.should("contain.text", `${strftimeGer("%a%d%b", dateStart)}`);
         }
       });
     });

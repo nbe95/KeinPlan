@@ -4,11 +4,6 @@ describe("check email template", () => {
 
   beforeEach(() => {
     cy.visit("/");
-  });
-
-  it("should give correct mailto link", () => {
-    var strftime = require("strftime");
-    var strftimeGer = strftime.localizeByIdentifier("de_DE");
 
     cy.fixture("form-data.json").then((data) => {
       cy.get('input[name="first_name"]').type(data.firstName);
@@ -23,7 +18,14 @@ describe("check email template", () => {
       cy.get("#btn-next").click();
 
       cy.get("#btn-next").click();
+    });
+  });
 
+  it("should give correct mailto link", () => {
+    var strftime = require("strftime");
+    var strftimeGer = strftime.localizeByIdentifier("de_DE");
+
+    cy.fixture("form-data.json").then((data) => {
       cy.get("#open-mail-template")
         .invoke("attr", "href")
         .then((href) => {

@@ -1,6 +1,7 @@
 # Cypress
 cypress/videos
 cypress/screenshots
+cypress/downloads
 js/*.jss
 
 # Logs
