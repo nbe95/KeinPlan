@@ -162,6 +162,10 @@ jobs:
     environment:
       name: testing
     steps:
+      - name: Set timezone required for tests
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Europe/Berlin"
       - uses: actions/checkout@v4
       # Install npm dependencies, cache them correctly and run all Cypress tests
       - name: Cypress run
