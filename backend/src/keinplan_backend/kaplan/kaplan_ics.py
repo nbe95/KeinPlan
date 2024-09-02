@@ -115,7 +115,7 @@ class KaPlanIcs:
         if matcher:
             role, _, host, internal = matcher.groups()
 
-        location_matcher: Optional[Match[str]] = fullmatch(r"(.+), \d{5} .+", event.location or "")
+        location_matcher: Optional[Match[str]] = fullmatch(r"(.+), \d+ .+", event.location or "")
         short_location: Optional[str] = (
             event.location if not location_matcher else location_matcher.group(1)
         )
