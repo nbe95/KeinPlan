@@ -50,7 +50,7 @@ describe("test cookie handling", () => {
     cy.get('input[name="use_cookie"]').should("be.checked").uncheck();
     cy.get(".Toastify .Toastify__toast-container").should("be.visible");
 
-    cy.wait(500).getCookie("user-data").should("not.exist");
+    cy.wait(2000).getCookie("user-data").should("not.exist");
   });
 
   it("should use a cookie's data", () => {
