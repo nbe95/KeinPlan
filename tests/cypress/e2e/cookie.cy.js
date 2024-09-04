@@ -12,7 +12,7 @@ describe("test cookie handling", () => {
       cy.get('input[name="employer"]').type(cookie.employer);
 
       cy.get('input[name="use_cookie"]').should("not.be.checked").check();
-      cy.get(".Toastify .Toastify__toast-container").should("be.visible");
+      cy.get(".Toastify .Toastify__toast-container").should("be.visible").contains("gespeichert");
 
       cy.get("#btn-next").click();
 
@@ -48,10 +48,9 @@ describe("test cookie handling", () => {
     cy.getCookie("user-data").should("exist");
 
     cy.get('input[name="use_cookie"]').should("be.checked").uncheck();
-    cy.get(".Toastify .Toastify__toast-container").should("be.visible");
-    cy.get(".Toastify .Toastify__toast-container", { timeout: 10000 }).should("not.exist");
+    cy.get(".Toastify .Toastify__toast-container").should("be.visible").contains("entfernt");
 
-    cy.getCookie("user-data").should("not.exist");
+    cy.getCookie("user-data").should("be.null");
   });
 
   it("should use a cookie's data", () => {
