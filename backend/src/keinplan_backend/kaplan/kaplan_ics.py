@@ -37,6 +37,15 @@ class KaPlanIcs:
         f"Mozilla/5.0 ({uname().sysname} {uname().release}) "
         f"KeinPlan/{VERSION_BACKEND or 'beta'} (JSON)"
     )
+    own_server_url: str = ""
+
+    @classmethod
+    def set_own_url(cls, server_url: str) -> None:
+        """Save this server's public URL for later checks, if not done yet."""
+        if not cls.own_server_url:
+            url: ParseResult = urlparse(server_url)
+            cls.own_server_url = url.netloc
+            logger.info('This server\'s public URL appears to be "%s".', cls.own_server_url)
 
     def get_events(self, url: str, date_from: date, date_to: date) -> Dict[str, Any]:
         """Call the KaPlan endpoint and return all available dates."""
@@ -106,7 +115,7 @@ class KaPlanIcs:
         if matcher:
             role, _, host, internal = matcher.groups()
 
-        location_matcher: Optional[Match[str]] = fullmatch(r"(.+), \d{5} .+", event.location or "")
+        location_matcher: Optional[Match[str]] = fullmatch(r"(.+), \d+ .+", event.location or "")
         short_location: Optional[str] = (
             event.location if not location_matcher else location_matcher.group(1)
         )
@@ -124,11 +133,15 @@ class KaPlanIcs:
             "modified": event.last_modified.for_json() if event.last_modified else None,
         }
 
-    @staticmethod
-    def _validate_url(url_str: str) -> bool:
+    @classmethod
+    def _validate_url(cls, url_str: str) -> bool:
         """Check if the specified URL meets the configured requirements."""
         url: ParseResult = urlparse(url_str)
         query: Dict[str, List[str]] = parse_qs(url.query)
+
+        # Allow own server URL for e2e testing
+        if url.netloc == cls.own_server_url:
+            return True
 
         # Extract host and workgroup from URL
         host: str = url.netloc

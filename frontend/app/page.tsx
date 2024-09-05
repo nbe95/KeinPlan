@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useMemo } from "react";
 import Disclaimer from "./components/disclaimer";
 import Container from "./components/layout/container";
 import MsgBox from "./components/msg-box";
@@ -10,7 +11,7 @@ import { API_ENDPOINT_VERSION, BACKEND_VERSION_KEY, VERSION_FRONTEND } from "./u
 import { ClientError, isClientError, retryUnlessClientError } from "./utils/network";
 
 export default function Page() {
-  const { data } = useQuery({
+  const { data, isSuccess } = useQuery({
     queryKey: [BACKEND_VERSION_KEY],
     queryFn: async () => {
       return axios
@@ -33,6 +34,11 @@ export default function Page() {
     refetchOnMount: false,
   });
 
+  const versionBackend: string | undefined = useMemo(
+    () => (isSuccess ? data?.KeinPlan?.backend?.version : undefined),
+    [data, isSuccess],
+  );
+
   return (
     <>
       <Container>
@@ -52,12 +58,11 @@ export default function Page() {
 
       <Disclaimer />
 
-      {VERSION_FRONTEND && data?.KeinPlan_backend && data?.KeinPlan_backend != VERSION_FRONTEND && (
+      {VERSION_FRONTEND && versionBackend && versionBackend != VERSION_FRONTEND && (
         <Container>
           <MsgBox type="error">
-            Auf diesem Server läuft das Backend mit Version{" "}
-            <strong>v{data.KeinPlan_backend}</strong>. Aktualisiere die Software bzw. Docker-Images,
-            um Fehlfunktionen zu vermeiden!
+            Auf diesem Server läuft das Backend mit Version <strong>v{versionBackend}</strong>.
+            Aktualisiere die Software bzw. Docker-Images, um Fehlfunktionen zu vermeiden!
           </MsgBox>
         </Container>
       )}

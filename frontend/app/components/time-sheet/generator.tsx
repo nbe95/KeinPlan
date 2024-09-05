@@ -29,6 +29,7 @@ export interface CookieData extends UserData {
 }
 
 export interface DateEntry {
+  uid: string;
   title: string;
   role: string;
   location: string;
@@ -72,13 +73,13 @@ const TimeSheetGenerator = () => {
   useEffect(() => {
     enableFocusOnEachStep.current ||= step != Steps.USER_DATA;
     if (enableFocusOnEachStep.current) {
-      scrollToElement("time-sheet", true);
+      scrollToElement("stepper", true);
     }
   }, [step]);
 
   return (
     <>
-      <Container className="bg-light" id="time-sheet">
+      <Container className="bg-light" id="stepper">
         <Stepper
           steps={[
             { key: Steps.USER_DATA, name: "Allgemeines", icon: faUser },

@@ -5,6 +5,7 @@ import { PropsWithChildren, useRef } from "react";
 import { Button, Stack } from "react-bootstrap";
 
 type DownloadButtonProps = {
+  id?: string;
   fileName: string;
   url: string;
   text: string;
@@ -18,6 +19,7 @@ const DownloadButton = (props: PropsWithChildren<DownloadButtonProps>) => {
 
   return (
     <Button
+      id={props.id}
       variant={props.isPrimary ? "success" : "secondary"}
       className="bg-gradient m-2"
       onClick={() => {

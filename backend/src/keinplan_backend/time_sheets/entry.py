@@ -11,6 +11,7 @@ from .span import TimeSpan
 class TimeEntry:
     """Class for each individual time entry."""
 
+    uid: str
     title: str
     role: str
     location: str

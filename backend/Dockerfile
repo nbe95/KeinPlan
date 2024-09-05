@@ -41,6 +41,8 @@ COPY src/ ./src/
 EXPOSE 8080
 
 ARG VERSION
+ARG VERSION_SHA
 ENV KEINPLAN_VERSION ${VERSION}
+ENV KEINPLAN_VERSION_SHA ${VERSION_SHA}
 
 CMD waitress-serve --port 8080 src.keinplan_backend.main:backend

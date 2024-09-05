@@ -3,7 +3,7 @@
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
 
-from ..constants import VERSION_BACKEND
+from ..constants import VERSION_BACKEND, VERSION_SHA_BACKEND
 
 
 class VersionEndpoint(Resource):
@@ -12,5 +12,10 @@ class VersionEndpoint(Resource):
     def get(self) -> ResponseReturnValue:
         """Handle GET requests."""
         return {
-            "KeinPlan_backend": VERSION_BACKEND,
+            "KeinPlan": {
+                "backend": {
+                    "version": VERSION_BACKEND,
+                    "sha": VERSION_SHA_BACKEND,
+                }
+            }
         }

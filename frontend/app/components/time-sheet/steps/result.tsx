@@ -130,6 +130,7 @@ const ResultStep = (props: ResultProps) => {
                   <>
                     <h5>Hier ist deine Stundenliste:</h5>
                     <DownloadButton
+                      id="download-pdf"
                       fileName={pdf.fileName}
                       url={pdf.blobUrl}
                       text={`KW ${getIsoWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
@@ -150,11 +151,10 @@ const ResultStep = (props: ResultProps) => {
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               <Button
+                id="open-mail-template"
                 type="button"
                 variant="primary"
-                onClick={() => {
-                  window.location.href = createMailToLink(mailParams);
-                }}
+                href={createMailToLink(mailParams)}
               >
                 <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
                 Mail-Vorlage öffnen
@@ -165,7 +165,7 @@ const ResultStep = (props: ResultProps) => {
       )}
       <Row>
         <Col className="d-flex justify-content-start order-1">
-          <PrevButton callback={props.prevStep} />
+          <PrevButton id="btn-prev" callback={props.prevStep} />
         </Col>
       </Row>
     </>

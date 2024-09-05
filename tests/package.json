@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "cy:open": "cypress open --e2e -b electron",
+    "cy:run": "cypress run",
+    "lint": "npx prettier . --check",
+    "format": "npx prettier . --write"
+  },
+  "devDependencies": {
+    "cypress": "^13.14.1",
+    "pdf-parse": "^1.1.1",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.0.0",
+    "strftime": "^0.10.3"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "plugins": [
+      "prettier-plugin-organize-imports"
+    ]
+  }
+}

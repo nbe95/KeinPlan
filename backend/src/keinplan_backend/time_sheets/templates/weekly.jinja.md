@@ -41,7 +41,7 @@ header-includes:
 {% for entry in entries -%}
   |
   {{- entry.time_span.begin.strftime("%a. %d.%m.%Y") }}|
-  {{- trunc(entry.title, 50)|escape_latex }}{% if entry.role %} ({{ trunc(entry.role, 50)|escape_latex }}{% endif %})|
+  {{- trunc(entry.title, 50)|escape_latex }}{% if entry.role %} ({{ trunc(entry.role, 50)|escape_latex }}){% endif %}|
   {{- trunc(entry.location, 50)|escape_latex }}|
   {{- entry.time_span.begin.strftime("%-H:%M") }} -- {{ entry.time_span.end.strftime("%-H:%M") }}|
   {%- if entry.break_span -%}

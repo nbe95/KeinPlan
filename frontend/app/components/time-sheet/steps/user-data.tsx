@@ -36,7 +36,7 @@ const UserDataStep = (props: UserDataProps) => {
   useEffect(() => {
     if (props.userData) {
       document.getElementById("btn-next")?.focus({ preventScroll: true });
-      scrollToElement("time-sheet", true);
+      scrollToElement("stepper", true);
     }
   }, [props.userData]);
 
@@ -113,7 +113,7 @@ const UserDataStep = (props: UserDataProps) => {
           <Form.Group>
             <Form.Check
               type="switch"
-              id="confirm"
+              name="use_cookie"
               label="Alle Eingaben als Cookie speichern"
               onClick={(event) => setResetCookie(event.currentTarget.checked)}
               checked={enableCookie}
