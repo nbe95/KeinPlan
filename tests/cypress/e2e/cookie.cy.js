@@ -42,7 +42,7 @@ describe("test cookie handling", () => {
 
   it("should remove cookie", () => {
     cy.fixture("cookie2.json").then((cookie) => {
-      cy.setCookie("user-data", JSON.stringify(cookie));
+      cy.setCookie("user-data", JSON.stringify(cookie), { hostOnly: true });
     });
 
     cy.getCookie("user-data").should("exist");
@@ -50,12 +50,12 @@ describe("test cookie handling", () => {
     cy.get('input[name="use_cookie"]').should("be.checked").uncheck();
     cy.get(".Toastify .Toastify__toast-container").should("be.visible").contains("entfernt");
 
-    cy.getCookie("user-data").should("be.null");
+    cy.getCookie("user-data").should("not.exist");
   });
 
   it("should use a cookie's data", () => {
     cy.fixture("cookie2.json").then((cookie) => {
-      cy.setCookie("user-data", JSON.stringify(cookie));
+      cy.setCookie("user-data", JSON.stringify(cookie), { hostOnly: true });
 
       cy.get('input[name="first_name"]').should("have.value", cookie.firstName);
       cy.get('input[name="last_name"]').should("have.value", cookie.lastName);
