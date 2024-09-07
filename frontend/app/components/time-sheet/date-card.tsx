@@ -1,4 +1,4 @@
-import { faClock, faLocationDot, faMugHot, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faLocationDot, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card } from "react-bootstrap";
 import strftime from "strftime";
@@ -14,20 +14,20 @@ const DateCard = (props: DateCardProps) => {
   return (
     <Card
       className="d-flex flex-row my-2 shadow-sm"
-      title={`${strftimeGer("%d.%m.%Y", props.date.time.begin)} ${props.date.title ?? "Gottesdienst"}`}
+      title={`${strftimeGer("%d.%m.%Y", props.date.start_date)} ${props.date.title ?? "Gottesdienst"}`}
       data-uid={props.date.uid}
     >
-      {props.date.time.begin && (
+      {props.date.start_date && (
         <div className="bg-light rounded-start border-end">
           <div className="text-center m-3">
             <p className="badge bg-danger rounded-0 my-0" style={{ textTransform: "uppercase" }}>
-              {strftimeGer("%a", props.date.time.begin)}
+              {strftimeGer("%a", props.date.start_date)}
             </p>
             <p className="text-primary display-6 my-0" style={{ width: "3rem" }}>
-              {strftimeGer("%d", props.date.time.begin)}
+              {strftimeGer("%d", props.date.start_date)}
             </p>
             <p className="badge text-muted border-top border-grey my-0">
-              {strftimeGer("%b", props.date.time.begin)}
+              {strftimeGer("%b", props.date.start_date)}
             </p>
           </div>
         </div>
@@ -37,26 +37,15 @@ const DateCard = (props: DateCardProps) => {
           {props.date.title ?? "Gottesdienst"}
         </div>
         <div className="d-flex flex-row">
-          {props.date.time.begin && props.date.time.end && (
+          {props.date.start_date && props.date.end_date && (
             <>
               <div style={{ width: "1.5rem" }}>
                 <FontAwesomeIcon icon={faClock} className="text-secondary me-2" />
               </div>
               <span>
-                {strftimeGer("%H:%M", props.date.time.begin)} –{" "}
-                {strftimeGer("%H:%M", props.date.time.end)}
+                {strftimeGer("%H:%M", props.date.start_date)} –{" "}
+                {strftimeGer("%H:%M", props.date.end_date)}
               </span>
-              {props.date.break?.begin && props.date.break?.end && (
-                <>
-                  <div className="ms-4" style={{ width: "1.5rem" }}>
-                    <FontAwesomeIcon icon={faMugHot} className="text-secondary me-2" />
-                  </div>
-                  <span className="text-muted">
-                    {strftimeGer("%H:%M", props.date.break.begin)} –{" "}
-                    {strftimeGer("%H:%M", props.date.break.end)}
-                  </span>
-                </>
-              )}
             </>
           )}
         </div>

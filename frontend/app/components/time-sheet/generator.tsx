@@ -33,8 +33,8 @@ export interface DateEntry {
   title: string;
   role: string;
   location: string;
-  time: { begin: Date; end: Date };
-  break?: { begin: Date; end: Date };
+  start_date: Date;
+  end_date: Date;
 }
 
 const TimeSheetGenerator = () => {
