@@ -42,7 +42,7 @@ class TimeSheet:
             "--output-directory",
             str(pdf_file.parent.absolute()),
             "--jobname",
-            str(pdf_file.stem), # File name without extension
+            str(pdf_file.stem),  # File name without extension
             str(tex_file.absolute()),
         )
         result: CompletedProcess[str] = run(cmd, check=True, text=True)
@@ -92,13 +92,12 @@ class WeeklyTimeSheet(TimeSheet):
         for date_offset in range(7):
             day: date = start_date + timedelta(days=date_offset)
             entries: List[TimeEntry] = list(filter(lambda entry: entry.date == day, self.entries))
-            entries_by_date.append(
-                WeeklyTimeSheet.DayListing(
-                    day,
-                    entries,
-                    sum(entry.get_hours() for entry in entries),
+            if entries:
+                entries_by_date.append(
+                    WeeklyTimeSheet.DayListing(
+                        day, entries, sum(entry.get_hours() for entry in entries)
+                    )
                 )
-            )
 
         template.stream(
             data=self,

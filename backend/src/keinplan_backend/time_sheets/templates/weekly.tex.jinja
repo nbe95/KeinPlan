@@ -35,22 +35,21 @@
 \bigskip
 \bigskip
 
-\begin{tabularx}{\textwidth}{llXr}
+\begin{tabularx}{\linewidth}{llXr}
   {%- for listing in days -%}
     \rowcolor{gray!30}
     \multicolumn{3}{l}{\bf {{ listing.day.strftime("%A, %d.%m.%Y") }} } &
     \bf {{ "%.2f"|format_locale(listing.total_hours) }} h \\
-    {%- if listing.entries -%}
-      {%- for entry in listing.entries %}
-        {{- entry.start_time.strftime("%H:%M") }} -- {{ entry.end_time.strftime("%H:%M") }} &
-        {{- trunc(entry.location, 50)|escape_latex }} &
-        {{- trunc(entry.title, 50)|escape_latex }} &
-        {{- "%.2f"|format_locale(entry.get_hours()) }} h
-      {%- endfor -%}
-    {%- else -%}
-      \multicolumn{4}{p{\textwidth}}{\centering\it\small Keine Dienste.}
-    {%- endif -%}
-    \vspace{0.3cm} \\  {#- extra space after each day's listing -#}
+    {%- for entry in listing.entries %}
+      {{- entry.start_time.strftime("%H:%M") }} -- {{ entry.end_time.strftime("%H:%M") }} &
+      {{- trunc(entry.location, 50)|escape_latex }} &
+      {{- trunc(entry.title, 50)|escape_latex }}{% if entry.role %} {\small ({{ trunc(entry.role, 50)|escape_latex }})}{% endif %} &
+      {{- "%.2f"|format_locale(entry.get_hours()) }} h
+    {%- endfor -%}
+    \vspace{0.5cm} \\  {#- extra space after each day's listing -#}
+  {%- else -%}
+    \rowcolor{gray!30}
+    \multicolumn{4}{p{\linewidth}}{\centering\small Keine Dienste im genannten Zeitraum.}
   {%- endfor -%}
 \end{tabularx}
 
@@ -62,7 +61,7 @@ Alle Stundenangaben sind auf jeweils 15 Minuten auf- oder abgerundet.
 \mbox{
   \setlength{\tabcolsep}{10pt}
   \begin{tabular}{rr<{\hspace{-\tabcolsep}} }
-    Summe Dienste: & {\bf {{ data.entries|length }} } \\
+    Summe Dienste: & {\bf {{ data.entries|length }}{{"}"}} \\
     Summe Stunden: & {\bf {{ "%.2f"|format_locale(total_hours) }} h} \\
   \end{tabular}
 }
@@ -77,14 +76,14 @@ Arbeitsleistung folgenden Kalendertages aufzuzeichnen.
 \fancyhf{}
 \fancyfoot[R]{(\thepage)}
 \renewcommand{\headrulewidth}{0pt}
-{% if footer %}
+{% if footer -%}
   \fancyfoot[L]{\small
     Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
-    {% if hyperlink %}
+    {%- if hyperlink -%}
       von \href{{ "{" }}{{ hyperlink }}{{ "}" }}{KeinPlan}
-      {% if version %} v{{ version }} {% endif %}
-    {% endif %}.
+      {%- if version %} v{{ version }}{% endif -%}
+    {%- endif -%}.
   }
-{% endif %}
+{%- endif -%}
 
 \end{document}
