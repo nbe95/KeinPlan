@@ -1,4 +1,4 @@
-ARG PYTHON_BASE=3.11-slim
+ARG PYTHON_BASE=3.12-slim
 ARG WORKDIR=/keinplan-backend
 
 
@@ -24,7 +24,6 @@ WORKDIR $WORKDIR/
 RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive \
     lmodern \
-    pandoc \
     locales \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
