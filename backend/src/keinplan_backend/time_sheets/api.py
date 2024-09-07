@@ -70,17 +70,20 @@ class TimeSheetEndpoint(Resource):
             return f'Invalid file format "{file_format}"', 400
 
     def _parse_date(self, item: Dict[str, Any]) -> TimeEntry:
-        start: datetime = datetime.fromisoformat(item.get("start_date") or "")
-        end: datetime = datetime.fromisoformat(item.get("end_date") or "")
-        entry: TimeEntry = TimeEntry(
-            item.get("uid", ""),
-            item.get("title", ""),
-            item.get("role", ""),
-            item.get("location", ""),
-            start.date(),
-            start.time(),
-            end.time(),
-        )
-        if not entry.is_valid:
-            raise ValueError(f"Got an invalid time entry: {entry}")
-        return entry
+        try:
+            start: datetime = datetime.fromisoformat(item["start_date"] or "")
+            end: datetime = datetime.fromisoformat(item["end_date"] or "")
+            entry: TimeEntry = TimeEntry(
+                item.get("uid", ""),
+                item["title"],
+                item["role"],
+                item["location"],
+                start.date(),
+                start.time(),
+                end.time(),
+            )
+            if not entry.is_valid:
+                raise ValueError(f"Got an invalid time entry: {entry}")
+            return entry
+        except KeyError as e:
+            raise ValueError(f"Got an invalid time entry: {entry}") from e
