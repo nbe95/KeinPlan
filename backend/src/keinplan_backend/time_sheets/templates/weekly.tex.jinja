@@ -32,30 +32,39 @@
   {\small ({{ start_date.strftime("%d.%m.%Y") }} -- {{ end_date.strftime("%d.%m.%Y") }})} \\
 \end{tabular}
 
-\bigskip
-\bigskip
+\vspace{1cm}
 
 \begin{tabularx}{\linewidth}{llXr}
-  {%- for listing in days -%}
+  {%- for listing in days %}
     \rowcolor{gray!30}
     \multicolumn{3}{l}{\bf {{ listing.day.strftime("%A, %d.%m.%Y") }} } &
     \bf {{ "%.2f"|format_locale(listing.total_hours) }} h \\
-    {%- for entry in listing.entries %}
-      {{- entry.start_time.strftime("%H:%M") }} -- {{ entry.end_time.strftime("%H:%M") }} &
-      {{- trunc(entry.location, 50)|escape_latex }} &
-      {{- trunc(entry.title, 50)|escape_latex }}{% if entry.role %} {\small ({{ trunc(entry.role, 50)|escape_latex }})}{% endif %} &
-      {{- "%.2f"|format_locale(entry.get_hours()) }} h
-    {%- endfor -%}
-    \vspace{0.5cm} \\  {#- extra space after each day's listing -#}
-  {%- else -%}
+    {% for entry in listing.entries %}
+      {{ entry.start_time.strftime("%H:%M") }} -- {{ entry.end_time.strftime("%H:%M") }} &
+      {{ trunc(entry.location, 50)|escape_latex }} &
+      {{ trunc(entry.title, 50)|escape_latex }}{% if entry.role %} {\small ({{ trunc(entry.role, 50)|escape_latex }})}{% endif %} &
+      {{ "%.2f"|format_locale(entry.get_hours()) }} h
+      {%- if loop.last -%}
+        \vspace{0.5cm}  {#- extra space after each day's listing -#}
+      {%- endif -%}
+      \\
+    {% endfor -%}
+  {% else -%}
     \rowcolor{gray!30}
     \multicolumn{4}{p{\linewidth}}{\centering\small Keine Dienste im genannten Zeitraum.}
-  {%- endfor -%}
+  {%- endfor %}
 \end{tabularx}
 
 \bigskip
 
-Alle Stundenangaben sind auf jeweils 15 Minuten auf- oder abgerundet.
+\textbf{Wichtig:} Die Aufzeichnungen sind wöchentlich zu führen. Dabei sind der Beginn, das Ende und
+die Dauer der täglichen Arbeitszeit spätestens bis zum Ablauf des siebten auf den Tag der
+Arbeitsleistung folgenden Kalendertages aufzuzeichnen.
+
+\vfill
+
+\hrule
+Alle Stundenangaben sind auf jeweils 15 Minuten gerundet.
 \hfill
 \def\arraystretch{1.0}
 \mbox{
@@ -66,24 +75,20 @@ Alle Stundenangaben sind auf jeweils 15 Minuten auf- oder abgerundet.
   \end{tabular}
 }
 
-\vfill
-
-\textbf{Wichtig:} Die Aufzeichnungen sind wöchentlich zu führen. Dabei sind der Beginn, das Ende und
-die Dauer der täglichen Arbeitszeit spätestens bis zum Ablauf des siebten auf den Tag der
-Arbeitsleistung folgenden Kalendertages aufzuzeichnen.
+\bigskip
 
 \pagestyle{fancy}
 \fancyhf{}
 \fancyfoot[R]{(\thepage)}
 \renewcommand{\headrulewidth}{0pt}
-{% if footer -%}
+{%- if footer %}
   \fancyfoot[L]{\small
     Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
     {%- if hyperlink -%}
       von \href{{ "{" }}{{ hyperlink }}{{ "}" }}{KeinPlan}
       {%- if version %} v{{ version }}{% endif -%}
-    {%- endif -%}.
+    {%- endif %}.
   }
-{%- endif -%}
+{%- endif %}
 
 \end{document}
