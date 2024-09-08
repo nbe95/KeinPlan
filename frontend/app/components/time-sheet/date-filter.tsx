@@ -81,14 +81,14 @@ export const WeekFilter = (props: WeekFilterProps) => {
       {Array(7)
         .fill(0)
         .map((_, dayOffset) => {
+          const key: string = `${keyPrefix}-${dayOffset}`;
           const day: Date = addDaysToDate(props.baseDate, dayOffset);
           const occurrences: number = props.dateList.filter((date) => isSameDay(date, day)).length;
           return (
-            <Nav.Item>
+            <Nav.Item key={key}>
               <FilterItem
                 as={Nav.Link}
-                key={`${keyPrefix}-${dayOffset}`}
-                eventKey={`${keyPrefix}-${dayOffset}`}
+                eventKey={key}
                 title={strftimeGer("%A", day)}
                 disabled={occurrences == 0}
                 filterValue={day}
@@ -114,6 +114,7 @@ export const WeekFilter = (props: WeekFilterProps) => {
           {Array(7)
             .fill(0)
             .map((_, dayOffset) => {
+              const key: string = `${keyPrefix}-${dayOffset}`;
               const day: Date = addDaysToDate(props.baseDate, dayOffset);
               const occurrences: number = props.dateList.filter((date) =>
                 isSameDay(date, day),
@@ -121,8 +122,8 @@ export const WeekFilter = (props: WeekFilterProps) => {
               return (
                 <FilterItem
                   as={Dropdown.Item}
-                  key={`${keyPrefix}-${dayOffset}`}
-                  eventKey={`${keyPrefix}-${dayOffset}`}
+                  key={key}
+                  eventKey={key}
                   title={strftimeGer("%A", day)}
                   disabled={occurrences == 0}
                   filterValue={day}
