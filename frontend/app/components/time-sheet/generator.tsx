@@ -122,6 +122,7 @@ const TimeSheetGenerator = () => {
 
         {step == Steps.DATE_CHECK && (
           <CheckStep
+            targetDate={targetDate}
             dateList={dateList!}
             prevStep={() => {
               setStep(Steps.TIME_SHEET_DATA);

@@ -1,16 +1,22 @@
+import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { getMonday, isSameDay } from "../../../utils/dates";
 import MsgBox from "../../msg-box";
 import { NextButton, PrevButton } from "../../process-button";
 import DateCard from "../date-card";
+import { WeekFilter } from "../date-filter";
 import { DateEntry } from "../generator";
 
 type CheckProps = {
+  targetDate: Date;
   dateList: DateEntry[];
   prevStep: () => void;
   nextStep: () => void;
 };
 
 const CheckStep = (props: CheckProps) => {
+  const [dateFilter, setDateFilter] = useState<Date>();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     props.nextStep();
@@ -22,13 +28,27 @@ const CheckStep = (props: CheckProps) => {
       <p>
         Wenn alles so stimmt, klicke auf <q>Weiter</q>.
       </p>
+
+      <Row className="my-4">
+        <Col>
+          <WeekFilter
+            baseDate={getMonday(props.targetDate)}
+            dateList={props.dateList.map((entry) => entry.start_date)}
+            activeFilter={dateFilter}
+            setActiveFilter={setDateFilter}
+          />
+        </Col>
+      </Row>
+
       <Row className="my-4">
         {props.dateList.length ? (
-          props.dateList.map((entry: DateEntry, index: number) => (
-            <Col key={index} sm={12} md={6}>
-              <DateCard date={entry} />
-            </Col>
-          ))
+          props.dateList
+            .filter((date) => dateFilter == undefined || isSameDay(date.start_date, dateFilter))
+            .map((entry: DateEntry, index: number) => (
+              <Col key={index} sm={12} md={6}>
+                <DateCard date={entry} />
+              </Col>
+            ))
         ) : (
           <MsgBox type="info">
             <p className="mb-0">Nanu &ndash; hier sind ja gar keine Termine?!</p>
