@@ -7,8 +7,7 @@ from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
 from subprocess import CompletedProcess, run
-from tempfile import NamedTemporaryFile, TemporaryDirectory
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
 
@@ -49,7 +48,7 @@ class TimeSheet:
         return result.returncode == 0
 
     @abstractmethod
-    def generate_pdf(self, target_file: Path) -> bool:
+    def generate_pdf(self, tmp_dir: Path) -> Optional[Path]:
         """Generate a time sheet as a specific file."""
 
 

@@ -2,7 +2,7 @@
 
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from tempfile import NamedTemporaryFile, TemporaryDirectory
+from tempfile import TemporaryDirectory
 from typing import Any, Dict, List
 
 from flask import request, send_file
