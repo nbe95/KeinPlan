@@ -85,10 +85,8 @@ Alle Stundenangaben sind auf jeweils 15 Minuten gerundet.
 {%- if footer %}
   \fancyfoot[L]{\small
     Generiert {{ generation_time.strftime("am %d.%m.%Y um %-H:%M Uhr") }}
-    {%- if hyperlink -%}
-      von \href{{ "{" }}{{ hyperlink }}{{ "}" }}{KeinPlan}
-      {%- if version %} v{{ version }}{% endif -%}
-    {%- endif %}.
+    von {% if hyperlink %}\href{{"{"}}{{ hyperlink }}{{"}"}}{KeinPlan}{% else %}KeinPlan{% endif %}
+    {%- if version %} v{{ version }}{% endif %}.
   }
 {%- endif %}
 
