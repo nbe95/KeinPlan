@@ -5,7 +5,7 @@ let icsEmptyUrl = new URL(Cypress.config("baseUrl"));
 icsEmptyUrl.pathname = "test-kaplan-empty.ics";
 
 const regexpEscape = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
-const formatInput = (str, maxLen = undefined) => regexpEscape(str).substr(0, maxLen);
+const formatInput = (str, maxLen = undefined) => regexpEscape(str.substr(0, maxLen));
 const makeRegExp = (regexp) => new RegExp(regexp.replaceAll(/\s+/g, "\\s*?"));
 
 describe("check time sheet generation", () => {
@@ -58,17 +58,15 @@ describe("check time sheet generation", () => {
               const dateStart = new Date(Date.parse(date.start));
               const dateEnd = new Date(Date.parse(date.end));
 
-              var dateLine = formatInput(strftimeGer("%a. %d.%m.%Y", dateStart)) + " ";
+              var dateLine = `${formatInput(strftimeGer("%H:%M", dateStart))} \u0015 ${formatInput(strftimeGer("%H:%M", dateEnd))} `;
+              if (date.location) {
+                dateLine += formatInput(date.location, 50) + " ";
+              }
               dateLine += formatInput(date.title, 50) + " ";
               if (date.role) {
                 dateLine += `\\(${formatInput(date.role, 50)}\\) `;
               }
-              if (date.location) {
-                dateLine += formatInput(date.location, 50) + " ";
-              }
-              dateLine += `${formatInput(strftimeGer("%H:%M", dateStart))} – ${formatInput(strftimeGer("%H:%M", dateEnd))} `;
-              dateLine += "– ";
-              dateLine += "[\\d,]+";
+              dateLine += "[\\d,]+h";
 
               content.should("match", makeRegExp(dateLine, "s"));
             });
