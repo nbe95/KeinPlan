@@ -8,12 +8,12 @@
 \usepackage[table]{xcolor}
 \usepackage{tabularx, booktabs, array, calc}
 \usepackage{fancyhdr}
-\usepackage{hyperref}
+\usepackage[pdftex,
+            pdfauthor={{"{"}}{{ data.employee }}{{"}"}},
+            pdftitle={Arbeitszeit {{ data.employee }} - KW {{ data.week_no }}/{{ data.year }}{{"}"}},
+            pdfcreator={KeinPlan{% if version %} v{{ version }}{% endif %}}]{hyperref}
 \hypersetup{colorlinks,urlcolor=blue}
 \renewcommand\familydefault{\sfdefault}
-
-\title{Arbeitszeit {{ data.employee }} -- KW {{ data.week_no }}/{{ data.year }}{{"}"}}
-\author{KeinPlan{% if version %} v{{ version }}{% endif %}{{"}"}}
 
 {% macro trunc(text, len) -%}
 {{ text|truncate(len, True, "", 0) }}
