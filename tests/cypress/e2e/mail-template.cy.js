@@ -26,6 +26,7 @@ describe("check email template", () => {
     var strftimeGer = strftime.localizeByIdentifier("de_DE");
 
     cy.fixture("form-data.json").then((data) => {
+      const targetDate = new Date(Date.parse(data.targetDate));
       cy.get("#open-mail-template")
         .invoke("attr", "href")
         .then((href) => {
@@ -36,12 +37,12 @@ describe("check email template", () => {
             .should("exist")
             .should("include", data.firstName)
             .should("include", data.lastName)
-            .should("include", strftimeGer("%W/%Y"));
+            .should("include", strftimeGer("%W/%Y", targetDate));
           cy.wrap(url.searchParams.get("body"))
             .should("exist")
             .should("include", data.firstName)
             .should("include", data.lastName)
-            .should("include", strftimeGer("%W/%Y"));
+            .should("include", strftimeGer("%W/%Y", targetDate));
         });
     });
   });

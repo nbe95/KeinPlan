@@ -80,10 +80,8 @@ const DatesStep = (props: DatesProps) => {
           title: date.title ?? "",
           role: date.role ?? "",
           location: date.location_short ?? "",
-          time: {
-            begin: parseDateStr(date.begin),
-            end: parseDateStr(date.end),
-          },
+          start_date: parseDateStr(date.begin),
+          end_date: parseDateStr(date.end),
         };
       }),
     staleTime: 1000 * 60 * 10, // 10 minutes until stale

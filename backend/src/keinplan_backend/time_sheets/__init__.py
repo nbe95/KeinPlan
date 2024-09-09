@@ -1,8 +1,7 @@
 """Module for time sheet functionalities."""
 
 from .api import TimeSheetEndpoint
-from .entry import TimeEntry
-from .sheet import TimeSheet, WeeklyTimeSheet
-from .span import TimeSpan
+from .time_entry import TimeEntry
+from .time_sheet import TimeSheet, WeeklyTimeSheet
 
-__ALL__ = [TimeEntry, TimeSpan, TimeSheet, WeeklyTimeSheet, TimeSheetEndpoint]
+__ALL__ = [TimeEntry, TimeSheet, WeeklyTimeSheet, TimeSheetEndpoint]

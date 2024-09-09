@@ -7,6 +7,7 @@ import { ReactQueryClientProvider } from "./components/query-client-provider";
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Metadata } from "next";
 import { PublicEnvScript } from "next-runtime-env";
 import "react-toastify/dist/ReactToastify.css";
 import "../scss/stepper.scss";
@@ -14,13 +15,26 @@ import { CookieProvider } from "./components/cookie-provider";
 
 config.autoAddCss = false;
 
+export const metadata: Metadata = {
+  title: "KeinPlan",
+  description: "Erstelle Stundenlisten aus KaPlan, vollautomatisch in nur 1 Minute.",
+  keywords: [
+    "KaPlan",
+    "Arbeitszeit",
+    "Auflistung",
+    "Stundenliste",
+    "Stundenzettel",
+    "Generator",
+    "Pfarrbüro",
+  ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ReactQueryClientProvider>
       <CookieProvider>
         <html lang="de">
           <head>
-            <title>KeinPlan</title>
             {/* Special thanks to https://gauger.io/fonticon and https://realfavicongenerator.net */}
             <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
             <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

@@ -27,7 +27,7 @@ folgenden Endpunkte bereitstellt:
 > Alle Endpunkte erhalten das URL-Präfix `/api/v1`.
 
 Die eigentliche Generierung der Stundenlisten geschieht intern via Jinja2-Templates. Resultierende
-Markdown-Dateien werden mittels `pandoc` in PDFs umgewandelt.
+Markdown-Dateien werden mittels LaTeX in PDFs umgewandelt.
 
 Auf einem Produktivserver, der zwecks SSL/TLS als reverse Proxy konfiguriert sein sollte, müssen
 Anfragen an den `/api`-Pfad ans Backend geleitet werden (ohne die URL dabei zu ändern). Alle

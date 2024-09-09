@@ -33,8 +33,8 @@ export interface DateEntry {
   title: string;
   role: string;
   location: string;
-  time: { begin: Date; end: Date };
-  break?: { begin: Date; end: Date };
+  start_date: Date;
+  end_date: Date;
 }
 
 const TimeSheetGenerator = () => {
@@ -122,6 +122,7 @@ const TimeSheetGenerator = () => {
 
         {step == Steps.DATE_CHECK && (
           <CheckStep
+            targetDate={targetDate}
             dateList={dateList!}
             prevStep={() => {
               setStep(Steps.TIME_SHEET_DATA);
