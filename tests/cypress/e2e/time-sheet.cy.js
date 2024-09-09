@@ -39,7 +39,7 @@ describe("check time sheet generation", () => {
           cy.get("#download-pdf").click();
 
           const targetDate = new Date(Date.parse(data.targetDate));
-          cy.task("readPdf", `cypress/downloads/${fileName}`).then(pdf => {
+          cy.task("readPdf", `cypress/downloads/${fileName}`).then((pdf) => {
             cy.wrap(pdf.text)
               .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
               .should(
@@ -70,8 +70,8 @@ describe("check time sheet generation", () => {
                 dateLine += "[\\d,]+ h";
 
                 cy.wrap(pdf.text)
-                .should("match", makeRegExp(headLine))
-                .should("match", makeRegExp(dateLine));
+                  .should("match", makeRegExp(headLine))
+                  .should("match", makeRegExp(dateLine));
               });
 
               cy.wrap(pdf.text).should("match", makeRegExp(`Summe Dienste: ${dates.length}`));
@@ -97,21 +97,21 @@ describe("check time sheet generation", () => {
           cy.get("#download-pdf").click();
 
           const targetDate = new Date(Date.parse(data.targetDate));
-          cy.task("readPdf", `cypress/downloads/${fileName}`).then(pdf => {
+          cy.task("readPdf", `cypress/downloads/${fileName}`).then((pdf) => {
             cy.wrap(pdf.text)
-            .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
-            .should(
-              "match",
-              makeRegExp(
-                `Mitarbeiter: ${formatInput(data.lastName, 45)}, ${formatInput(data.firstName, 45)}`,
-              ),
-            )
-            .should(
-              "match",
-              makeRegExp(`Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))}`),
-            )
-            .should("match", makeRegExp(`Keine Dienste`))
-            .should("match", makeRegExp(`Summe Dienste: 0`));
+              .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
+              .should(
+                "match",
+                makeRegExp(
+                  `Mitarbeiter: ${formatInput(data.lastName, 45)}, ${formatInput(data.firstName, 45)}`,
+                ),
+              )
+              .should(
+                "match",
+                makeRegExp(`Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))}`),
+              )
+              .should("match", makeRegExp(`Keine Dienste`))
+              .should("match", makeRegExp(`Summe Dienste: 0`));
           });
         });
     });
@@ -133,12 +133,17 @@ describe("check time sheet generation", () => {
           cy.get("#download-pdf").click();
 
           const targetDate = new Date(Date.parse(data.targetDate));
-          cy.task("readPdf", `cypress/downloads/${fileName}`).then(pdf => {
-            cy.wrap(pdf.info).its("Author").should("equal", `${data.lastName}, ${data.firstName}`)
-            cy.wrap(pdf.info).its("Creator").should("include", "KeinPlan")
-            cy.wrap(pdf.info).its("Title").should("equal", `Arbeitszeit ${data.lastName}, ${data.firstName} - ${strftimeGer("KW %W/%Y", targetDate)}`)
+          cy.task("readPdf", `cypress/downloads/${fileName}`).then((pdf) => {
+            cy.wrap(pdf.info).its("Author").should("equal", `${data.lastName}, ${data.firstName}`);
+            cy.wrap(pdf.info).its("Creator").should("include", "KeinPlan");
+            cy.wrap(pdf.info)
+              .its("Title")
+              .should(
+                "equal",
+                `Arbeitszeit ${data.lastName}, ${data.firstName} - ${strftimeGer("KW %W/%Y", targetDate)}`,
+              );
+          });
         });
-      });
     });
   });
 });
