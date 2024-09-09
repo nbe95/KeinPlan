@@ -1,9 +1,6 @@
-describe("check KaPlan date handling", () => {
-  let icsDebugUrl = new URL(Cypress.config("baseUrl"));
-  icsDebugUrl.pathname = "test-kaplan-debug.ics";
-
-  let icsEmptyUrl = new URL(Cypress.config("baseUrl"));
-  icsEmptyUrl.pathname = "test-kaplan-empty.ics";
+describe("check handling of KaPlan dates", () => {
+  let icsUrl = new URL(Cypress.config("baseUrl"));
+  icsUrl.pathname = "test-kaplan-debug.ics";
 
   beforeEach(() => {
     cy.visit("/");
@@ -16,16 +13,15 @@ describe("check KaPlan date handling", () => {
       cy.get("#btn-next").click();
 
       cy.get('input[name="target_date"]').type(data.targetDate);
+      cy.get('input[name="kaplan_ics"]').type(icsUrl.toString());
+
+      cy.get("#btn-next").click();
     });
   });
 
   it("should display dates correctly", () => {
     var strftime = require("strftime");
     var strftimeGer = strftime.localizeByIdentifier("de_DE");
-
-    cy.get('input[name="kaplan_ics"]').type(icsDebugUrl.toString());
-
-    cy.get("#btn-next").click();
 
     cy.get('main div[role="alert"]').should("not.exist");
 
@@ -53,11 +49,80 @@ describe("check KaPlan date handling", () => {
     });
   });
 
-  it("should give note when no dates", () => {
-    cy.get('input[name="kaplan_ics"]').type(icsEmptyUrl.toString());
+  it("should be possible to filter dates", () => {
+    var strftime = require("strftime");
+    var strftimeGer = strftime.localizeByIdentifier("de_DE");
 
-    cy.get("#btn-next").click();
+    cy.fixture("dates.json").then((dates) => {
+      cy.get(`main div[data-uid*="KAPLAN-ID-TEST"]`).should("have.length", dates.length);
+      cy.get("main .nav-tabs .nav-item")
+        .contains("Alle" + dates.length.toString())
+        .should("not.have.class", "disabled")
+        .should("have.class", "active");
 
+      cy.fixture("form-data.json").then((data) => {
+        const baseDate = new Date(Date.parse(data.targetDate));
+        let day = new Date();
+        for (var offset = 0; offset < 7; offset++) {
+          day.setDate(baseDate.getDate() + offset);
+          const filtered = dates.filter((item) => {
+            const date = new Date(Date.parse(item.start));
+            return (
+              date.getDay() == day.getDay() &&
+              date.getMonth() == day.getMonth() &&
+              date.getFullYear() == day.getFullYear()
+            );
+          });
+
+          if (filtered.length > 0) {
+            cy.get("main .nav-tabs .nav-item")
+              .contains(strftimeGer("%A", day) + filtered.length.toString())
+              .should("not.have.class", "disabled")
+              .should("not.have.class", "active")
+              .click()
+              .should("have.class", "active");
+
+            cy.get(`main div[data-uid*="KAPLAN-ID-TEST"]`).should("have.length", filtered.length);
+          } else {
+            cy.get("main .nav-tabs .nav-item")
+              .contains(strftimeGer("%A", day))
+              .should("have.class", "disabled")
+              .should("not.have.class", "active");
+          }
+        }
+      });
+
+      cy.get("main .nav-tabs .nav-item:first-child a")
+        .should("not.have.class", "active")
+        .click()
+        .should("have.class", "active");
+      cy.get(`main div[data-uid*="KAPLAN-ID-TEST"]`).should("have.length", dates.length);
+    });
+  });
+});
+
+describe("check handling of no dates", () => {
+  let icsUrl = new URL(Cypress.config("baseUrl"));
+  icsUrl.pathname = "test-kaplan-empty.ics";
+
+  beforeEach(() => {
+    cy.visit("/");
+
+    cy.fixture("form-data.json").then((data) => {
+      cy.get('input[name="first_name"]').type(data.firstName);
+      cy.get('input[name="last_name"]').type(data.lastName);
+      cy.get('input[name="employer"]').type(data.employer);
+
+      cy.get("#btn-next").click();
+
+      cy.get('input[name="target_date"]').type(data.targetDate);
+      cy.get('input[name="kaplan_ics"]').type(icsUrl.toString());
+
+      cy.get("#btn-next").click();
+    });
+  });
+
+  it("should give note on no dates", () => {
     cy.get("main .date-card").should("not.exist");
     cy.get('main div[role="alert"]').should("exist").contains("keine Termine");
   });
