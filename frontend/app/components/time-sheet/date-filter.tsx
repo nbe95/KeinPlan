@@ -62,14 +62,25 @@ type WeekFilterProps = {
 };
 
 export const WeekFilter = (props: WeekFilterProps) => {
-  const keyPrefix: string = "week-filter";
+  const keyPrefix: string = "week-filter-";
   const strftimeGer = strftime.localizeByIdentifier("de_DE");
+
+  const forEachDay = (fn: (key: string, day: Date, occurrences: number) => any): any =>
+    Array(7)
+      .fill(0)
+      .map((_, dayOffset) => {
+        const key: string = `${keyPrefix}-${dayOffset}`;
+        const day: Date = addDaysToDate(props.baseDate, dayOffset);
+        const occurrences: number = props.dateList.filter((date) => isSameDay(date, day)).length;
+        return fn(key, day, occurrences);
+      });
+
   return (
-    <Nav variant="tabs" defaultActiveKey={`${keyPrefix}all`}>
+    <Nav variant="tabs" defaultActiveKey={keyPrefix + "all"} className="flex-nowrap">
       <Nav.Item>
         <FilterItem
           as={Nav.Link}
-          eventKey={`${keyPrefix}-all`}
+          eventKey={keyPrefix + "all"}
           title="Alle"
           disabled={false}
           badge={props.dateList.length}
@@ -78,30 +89,23 @@ export const WeekFilter = (props: WeekFilterProps) => {
         />
       </Nav.Item>
 
-      {Array(7)
-        .fill(0)
-        .map((_, dayOffset) => {
-          const key: string = `${keyPrefix}-${dayOffset}`;
-          const day: Date = addDaysToDate(props.baseDate, dayOffset);
-          const occurrences: number = props.dateList.filter((date) => isSameDay(date, day)).length;
-          return (
-            <Nav.Item key={key}>
-              <FilterItem
-                as={Nav.Link}
-                eventKey={key}
-                title={strftimeGer("%A", day)}
-                disabled={occurrences == 0}
-                filterValue={day}
-                badge={occurrences || undefined}
-                activeFilter={props.activeFilter}
-                setActiveFilter={() => props.setActiveFilter(day)}
-                className="d-none d-xl-block"
-              />
-            </Nav.Item>
-          );
-        })}
+      {forEachDay((key, day, occurrences) => (
+        <Nav.Item key={key}>
+          <FilterItem
+            as={Nav.Link}
+            eventKey={key}
+            title={strftimeGer("%A", day)}
+            disabled={occurrences == 0}
+            filterValue={day}
+            badge={occurrences || undefined}
+            activeFilter={props.activeFilter}
+            setActiveFilter={() => props.setActiveFilter(day)}
+            className="d-none d-lg-block"
+          />
+        </Nav.Item>
+      ))}
 
-      <Dropdown as={Nav.Item} className="d-block d-xl-none">
+      <Dropdown as={Nav.Item} className="d-block d-lg-none">
         <Dropdown.Toggle
           as={Nav.Link}
           active={props.activeFilter !== undefined}
@@ -111,28 +115,19 @@ export const WeekFilter = (props: WeekFilterProps) => {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          {Array(7)
-            .fill(0)
-            .map((_, dayOffset) => {
-              const key: string = `${keyPrefix}-${dayOffset}`;
-              const day: Date = addDaysToDate(props.baseDate, dayOffset);
-              const occurrences: number = props.dateList.filter((date) =>
-                isSameDay(date, day),
-              ).length;
-              return (
-                <FilterItem
-                  as={Dropdown.Item}
-                  key={key}
-                  eventKey={key}
-                  title={strftimeGer("%A", day)}
-                  disabled={occurrences == 0}
-                  filterValue={day}
-                  badge={occurrences || undefined}
-                  activeFilter={props.activeFilter}
-                  setActiveFilter={() => props.setActiveFilter(day)}
-                />
-              );
-            })}
+          {forEachDay((key, day, occurrences) => (
+            <FilterItem
+              as={Dropdown.Item}
+              key={key}
+              eventKey={key}
+              title={strftimeGer("%A", day)}
+              disabled={occurrences == 0}
+              filterValue={day}
+              badge={occurrences || undefined}
+              activeFilter={props.activeFilter}
+              setActiveFilter={() => props.setActiveFilter(day)}
+            />
+          ))}
         </Dropdown.Menu>
       </Dropdown>
     </Nav>
