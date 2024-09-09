@@ -6,7 +6,7 @@ const pdf = require("pdf-parse");
 const readPdf = async (pathToPdf) =>
   new Promise((resolve) => {
     const resolvedPath = path.resolve(pathToPdf);
-    pdf(fs.readFileSync(resolvedPath)).then(({ text }) => resolve(text.split("\n").join(" ")));
+    pdf(fs.readFileSync(resolvedPath)).then(({ text }) => resolve(text.replaceAll(/\s+/g, "")));
   });
 
 module.exports = defineConfig({

@@ -75,15 +75,15 @@ class TimeSheetEndpoint(Resource):
             end: datetime = datetime.fromisoformat(item["end_date"] or "")
             entry: TimeEntry = TimeEntry(
                 item.get("uid", ""),
-                item["title"],
-                item["role"],
-                item["location"],
+                item.get("title", ""),
+                item.get("role", ""),
+                item.get("location", ""),
                 start.date(),
                 start.time(),
                 end.time(),
             )
             if not entry.is_valid:
-                raise ValueError(f"Got an invalid time entry: {entry}")
+                raise ValueError(f"Invalid time entry: {entry}")
             return entry
-        except KeyError as e:
-            raise ValueError(f"Got an invalid time entry: {entry}") from e
+        except (KeyError, ValueError) as e:
+            raise ValueError(f"Invalid time entry: {item}") from e

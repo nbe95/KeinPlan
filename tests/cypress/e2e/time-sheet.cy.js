@@ -5,6 +5,8 @@ let icsEmptyUrl = new URL(Cypress.config("baseUrl"));
 icsEmptyUrl.pathname = "test-kaplan-empty.ics";
 
 const regexpEscape = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
+const formatInput = (str, maxLen = undefined) => regexpEscape(str).substr(0, maxLen);
+const makeRegExp = (regexp) => new RegExp(regexp.replaceAll(/\s+/g, "\\s*?"));
 
 describe("check time sheet generation", () => {
   beforeEach(() => {
@@ -39,21 +41,16 @@ describe("check time sheet generation", () => {
           const targetDate = new Date(Date.parse(data.targetDate));
           const content = cy.task("readPdf", `cypress/downloads/${fileName}`);
           content
+            .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
             .should(
               "match",
-              new RegExp(`Dienstgeber:\\s*?${regexpEscape(data.employer.substring(0, 100))}`),
-            )
-            .should(
-              "match",
-              new RegExp(
-                `Mitarbeiter:\\s*?${regexpEscape(data.lastName.substring(0, 45))}, ${regexpEscape(data.firstName.substring(0, 45))}`,
+              makeRegExp(
+                `Mitarbeiter: ${formatInput(data.lastName, 45)}, ${formatInput(data.firstName, 45)}`,
               ),
             )
             .should(
               "match",
-              new RegExp(
-                `Aufzeichnung für:\\s*?KW ${regexpEscape(strftimeGer("%W/%Y", targetDate))}`,
-              ),
+              makeRegExp(`Aufzeichnung für: KW ${formatInput(strftimeGer("%W/%Y", targetDate))}`),
             );
 
           cy.fixture("dates.json").then((dates) => {
@@ -61,22 +58,22 @@ describe("check time sheet generation", () => {
               const dateStart = new Date(Date.parse(date.start));
               const dateEnd = new Date(Date.parse(date.end));
 
-              var dateLine = regexpEscape(strftimeGer("%a. %d.%m.%Y", dateStart)) + "\\s*?";
-              dateLine += regexpEscape(date.title.substring(0, 50)) + "\\s*?";
+              var dateLine = formatInput(strftimeGer("%a. %d.%m.%Y", dateStart)) + " ";
+              dateLine += formatInput(date.title, 50) + " ";
               if (date.role) {
-                dateLine += `\\(${regexpEscape(date.role.substring(0, 50))}\\)\\s*?`;
+                dateLine += `\\(${formatInput(date.role, 50)}\\) `;
               }
               if (date.location) {
-                dateLine += regexpEscape(date.location.substring(0, 50)) + "\\s*?";
+                dateLine += formatInput(date.location, 50) + " ";
               }
-              dateLine += `${regexpEscape(strftimeGer("%H:%M", dateStart))}\\s*?–\\s*?${regexpEscape(strftimeGer("%H:%M", dateEnd))}\\s*?`;
-              dateLine += "–\\s*?";
+              dateLine += `${formatInput(strftimeGer("%H:%M", dateStart))} – ${formatInput(strftimeGer("%H:%M", dateEnd))} `;
+              dateLine += "– ";
               dateLine += "[\\d,]+";
 
-              content.should("match", new RegExp(dateLine, "s"));
+              content.should("match", makeRegExp(dateLine, "s"));
             });
 
-            content.should("match", new RegExp(`Summe Dienste:\\s*?${dates.length}`));
+            content.should("match", makeRegExp(`Summe Dienste: ${dates.length}`));
           });
         });
     });
@@ -100,24 +97,19 @@ describe("check time sheet generation", () => {
           const targetDate = new Date(Date.parse(data.targetDate));
           const content = cy.task("readPdf", `cypress/downloads/${fileName}`);
           content
+            .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
             .should(
               "match",
-              new RegExp(`Dienstgeber:\\s*?${regexpEscape(data.employer.substring(0, 100))}`),
-            )
-            .should(
-              "match",
-              new RegExp(
-                `Mitarbeiter:\\s*?${regexpEscape(data.lastName.substring(0, 45))}, ${regexpEscape(data.firstName.substring(0, 45))}`,
+              makeRegExp(
+                `Mitarbeiter: ${formatInput(data.lastName, 45)}, ${formatInput(data.firstName, 45)}`,
               ),
             )
             .should(
               "match",
-              new RegExp(
-                `Aufzeichnung für:\\s*?KW ${regexpEscape(strftimeGer("%W/%Y", targetDate))}`,
-              ),
+              makeRegExp(`Aufzeichnung für: KW ${formatInput(strftimeGer("%W/%Y", targetDate))}`),
             )
-            .should("match", new RegExp(`Keine Dienste`))
-            .should("match", new RegExp(`Summe Dienste:\\s*?0`));
+            .should("match", makeRegExp(`Keine Dienste`))
+            .should("match", makeRegExp(`Summe Dienste: 0`));
         });
     });
   });
@@ -137,6 +129,40 @@ describe("check time sheet API", () => {
     });
   });
 
+  it("should yield an error with invalid dates", () => {
+    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
+    cy.request({
+      method: "POST",
+      url: endpoint.toString(),
+      body: {
+        year: 2000,
+        week: 1,
+        dates: [{ start_date: "foo", end_date: "2000-01-01T09:00:00+0200" }],
+      },
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.eq(400);
+      expect(response.body).to.include("Invalid time entry");
+    });
+  });
+
+  it("should yield an error with incomplete dates", () => {
+    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
+    cy.request({
+      method: "POST",
+      url: endpoint.toString(),
+      body: {
+        year: 2000,
+        week: 1,
+        dates: [{ end_date: "2000-01-01T09:00:00+0200" }],
+      },
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.eq(400);
+      expect(response.body).to.include("Invalid time entry");
+    });
+  });
+
   it("should yield an error with implausible dates", () => {
     const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
     cy.request({
@@ -145,12 +171,12 @@ describe("check time sheet API", () => {
       body: {
         year: 2000,
         week: 1,
-        dates: [{ time: { begin: "2000-01-01T10:00:00+0200", end: "2000-01-01T09:00:00+0200" } }],
+        dates: [{ start_date: "2000-01-01T10:00:00+0200", end_date: "2000-01-01T09:00:00+0200" }],
       },
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(400);
-      expect(response.body).to.include("invalid time entry");
+      expect(response.body).to.include("Invalid time entry");
     });
   });
 
@@ -162,7 +188,7 @@ describe("check time sheet API", () => {
       body: {
         year: 2024,
         week: 1,
-        dates: [{ time: { begin: "1970-01-01T00:00:00+0200", end: "1970-01-01T01:00:00+0200" } }],
+        dates: [{ start_date: "1970-01-01T00:00:00+0200", end_date: "1970-01-01T01:00:00+0200" }],
       },
       failOnStatusCode: false,
     }).then((response) => {
