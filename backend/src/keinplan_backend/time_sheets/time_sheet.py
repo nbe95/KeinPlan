@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
-from subprocess import CompletedProcess, run
+from subprocess import DEVNULL, CompletedProcess, run
 from typing import List, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
@@ -44,7 +44,7 @@ class TimeSheet:
             str(pdf_file.stem),  # File name without extension
             str(tex_file.absolute()),
         )
-        result: CompletedProcess[str] = run(cmd, check=True, text=True)
+        result: CompletedProcess[bytes] = run(cmd, check=True, stdout=DEVNULL)
         return result.returncode == 0
 
     @abstractmethod
