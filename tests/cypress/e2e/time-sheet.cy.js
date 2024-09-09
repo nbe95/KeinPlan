@@ -39,6 +39,8 @@ describe("check time sheet generation", () => {
           cy.get("#download-pdf").click();
 
           const targetDate = new Date(Date.parse(data.targetDate));
+          let endDate = new Date();
+          endDate.setDate(targetDate.getDate() + 6);
           cy.task("readPdf", `cypress/downloads/${fileName}`).then((pdf) => {
             cy.wrap(pdf.text)
               .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
@@ -50,7 +52,9 @@ describe("check time sheet generation", () => {
               )
               .should(
                 "match",
-                makeRegExp(`Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))}`),
+                makeRegExp(
+                  `Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))} \\(${strftimeGer("%d.%m.%Y", targetDate)} \u0015 ${strftimeGer("%d.%m.%Y", endDate)}\\)`,
+                ),
               );
 
             cy.fixture("dates.json").then((dates) => {
@@ -97,6 +101,8 @@ describe("check time sheet generation", () => {
           cy.get("#download-pdf").click();
 
           const targetDate = new Date(Date.parse(data.targetDate));
+          let endDate = new Date();
+          endDate.setDate(targetDate.getDate() + 6);
           cy.task("readPdf", `cypress/downloads/${fileName}`).then((pdf) => {
             cy.wrap(pdf.text)
               .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
@@ -108,7 +114,9 @@ describe("check time sheet generation", () => {
               )
               .should(
                 "match",
-                makeRegExp(`Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))}`),
+                makeRegExp(
+                  `Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))} \\(${strftimeGer("%d.%m.%Y", targetDate)} \u0015 ${strftimeGer("%d.%m.%Y", endDate)}\\)`,
+                ),
               )
               .should("match", makeRegExp(`Keine Dienste`))
               .should("match", makeRegExp(`Summe Dienste: 0`));
