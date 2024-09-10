@@ -36,6 +36,7 @@ const FilterItem = (props: FilterProps) => {
       onClick: () => props.setActiveFilter(props.filterValue),
       disabled: props.disabled,
       className: className,
+      style: { whiteSpace: "nowrap" },
     },
     [
       <>
