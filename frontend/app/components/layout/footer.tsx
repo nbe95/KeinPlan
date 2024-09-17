@@ -28,11 +28,12 @@ const Footer = () => {
           >
             <Stack direction="horizontal" gap={4}>
               {ADMIN_MAIL && (
-                <Obfuscate email={ADMIN_MAIL} obfuscateChildren={false}>
-                  <span
-                    className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
-                    title="E-Mail an den Administrator"
-                  >
+                <Obfuscate
+                  email={ADMIN_MAIL}
+                  obfuscateChildren={false}
+                  style={{ textDecoration: "none" }}
+                >
+                  <span className="text-decoration-none" title="E-Mail an den Administrator">
                     <FontAwesomeIcon icon={faEnvelope} size="xs" className="me-2" />
                     Kontakt
                   </span>
@@ -41,9 +42,9 @@ const Footer = () => {
               {KAPLAN_LINK && (
                 <Link
                   href={KAPLAN_LINK}
-                  className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
-                  target={KAPLAN_WEB_LINK_TARGET}
+                  className="text-decoration-none"
                   title="KaPlan Web öffnen"
+                  target={KAPLAN_WEB_LINK_TARGET}
                 >
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" className="me-2" />
                   KaPlan&nbsp;Web
