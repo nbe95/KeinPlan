@@ -1,3 +1,5 @@
+"use client";
+
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faArrowUpRightFromSquare, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +15,7 @@ import {
 } from "../../utils/constants";
 import { createMailToLink } from "../../utils/mail";
 import Container from "./container";
+import Obfuscate from "react-obfuscate";
 
 const Footer = () => {
   return (
@@ -26,14 +29,15 @@ const Footer = () => {
           >
             <Stack direction="horizontal" gap={4}>
               {ADMIN_MAIL && (
-                <Link
-                  href={createMailToLink({ recipient: ADMIN_MAIL })}
-                  className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
-                  title="E-Mail an den Administrator"
-                >
-                  <FontAwesomeIcon icon={faEnvelope} size="xs" className="me-2" />
-                  Kontakt
-                </Link>
+                <Obfuscate email={ADMIN_MAIL} obfuscateChildren={false}>
+                  <span
+                    className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
+                    title="E-Mail an den Administrator"
+                  >
+                    <FontAwesomeIcon icon={faEnvelope} size="xs" className="me-2" />
+                    Kontakt
+                  </span>
+                </Obfuscate>
               )}
               {KAPLAN_LINK && (
                 <Link
