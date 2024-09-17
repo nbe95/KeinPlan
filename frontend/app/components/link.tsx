@@ -14,7 +14,6 @@ export const CondLink = (props: PropsWithChildren<LinkProps>) => {
   return <>{props.children}</>;
 };
 
-
 interface MailLinkProps {
   email?: string;
   headers?: Record<string, string>;
@@ -22,9 +21,11 @@ interface MailLinkProps {
 
 export const CondMailLink = (props: PropsWithChildren<MailLinkProps>) => {
   if (props.email) {
-    return <Obfuscate email={props.email} headers={props.headers} obfuscateChildren={false}>
-      {props.children}
-    </Obfuscate>
+    return (
+      <Obfuscate email={props.email} headers={props.headers} obfuscateChildren={false}>
+        {props.children}
+      </Obfuscate>
+    );
   }
   return <>{props.children}</>;
 };

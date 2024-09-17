@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
+import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
   API_ENDPOINT_TIME_SHEET,
@@ -11,15 +12,13 @@ import {
   TIME_SHEET_QUERY_KEY,
 } from "../../../utils/constants";
 import { dictConvertDatesToIsoString, getIsoWeek, getIsoWeekAndYear } from "../../../utils/dates";
-import { MailProps, createMailToLink } from "../../../utils/mail";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
-import { CondLink, CondMailLink } from "../../link";
+import { CondMailLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
 import { PrevButton } from "../../process-button";
 import { DateEntry, UserData } from "../generator";
-import Obfuscate from "react-obfuscate";
 
 type ResultProps = {
   userData: UserData;
@@ -143,13 +142,13 @@ const ResultStep = (props: ResultProps) => {
                 folgende Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
-              { TIME_SHEET_MAIL && (
-              <Obfuscate email={TIME_SHEET_MAIL} headers={mailHeaders} obfuscateChildren={false}>
-                <Button id="open-mail-template" type="button" variant="primary">
-                  <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
-                  Mail-Vorlage öffnen
-                </Button>
-              </Obfuscate>
+              {TIME_SHEET_MAIL && (
+                <Obfuscate email={TIME_SHEET_MAIL} headers={mailHeaders} obfuscateChildren={false}>
+                  <Button id="open-mail-template" type="button" variant="primary">
+                    <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+                    Mail-Vorlage öffnen
+                  </Button>
+                </Obfuscate>
               )}
             </Col>
           </Row>

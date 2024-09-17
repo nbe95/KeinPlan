@@ -5,6 +5,7 @@ import { faArrowUpRightFromSquare, faEnvelope } from "@fortawesome/free-solid-sv
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Col, Row, Stack } from "react-bootstrap";
+import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
   GITHUB_LINK,
@@ -13,9 +14,7 @@ import {
   VERSION_FRONTEND,
   VERSION_SHA_FRONTEND,
 } from "../../utils/constants";
-import { createMailToLink } from "../../utils/mail";
 import Container from "./container";
-import Obfuscate from "react-obfuscate";
 
 const Footer = () => {
   return (
