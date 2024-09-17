@@ -103,10 +103,21 @@ export const WeekFilter = (props: WeekFilterProps) => {
             setActiveFilter={() => props.setActiveFilter(day)}
             className="d-none d-lg-block"
           />
+          <FilterItem
+            as={Nav.Link}
+            eventKey={key}
+            title={strftimeGer("%a.", day)}
+            disabled={occurrences == 0}
+            filterValue={day}
+            badge={occurrences || undefined}
+            activeFilter={props.activeFilter}
+            setActiveFilter={() => props.setActiveFilter(day)}
+            className="d-none d-md-block d-lg-none d-xl-none"
+          />
         </Nav.Item>
       ))}
 
-      <Dropdown as={Nav.Item} className="d-block d-lg-none">
+      <Dropdown as={Nav.Item} className="d-block d-md-none">
         <Dropdown.Toggle
           as={Nav.Link}
           active={props.activeFilter !== undefined}
