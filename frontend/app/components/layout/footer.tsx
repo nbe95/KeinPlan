@@ -1,8 +1,11 @@
+"use client";
+
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faArrowUpRightFromSquare, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Col, Row, Stack } from "react-bootstrap";
+import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
   GITHUB_LINK,
@@ -11,7 +14,6 @@ import {
   VERSION_FRONTEND,
   VERSION_SHA_FRONTEND,
 } from "../../utils/constants";
-import { createMailToLink } from "../../utils/mail";
 import Container from "./container";
 
 const Footer = () => {
@@ -26,21 +28,23 @@ const Footer = () => {
           >
             <Stack direction="horizontal" gap={4}>
               {ADMIN_MAIL && (
-                <Link
-                  href={createMailToLink({ recipient: ADMIN_MAIL })}
-                  className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
-                  title="E-Mail an den Administrator"
+                <Obfuscate
+                  email={ADMIN_MAIL}
+                  obfuscateChildren={false}
+                  style={{ textDecoration: "none" }}
                 >
-                  <FontAwesomeIcon icon={faEnvelope} size="xs" className="me-2" />
-                  Kontakt
-                </Link>
+                  <span className="text-decoration-none" title="E-Mail an den Administrator">
+                    <FontAwesomeIcon icon={faEnvelope} size="xs" className="me-2" />
+                    Kontakt
+                  </span>
+                </Obfuscate>
               )}
               {KAPLAN_LINK && (
                 <Link
                   href={KAPLAN_LINK}
-                  className="link-underline link-underline-secondary link-underline-opacity-25 link-underline-opacity-75-hover"
-                  target={KAPLAN_WEB_LINK_TARGET}
+                  className="text-decoration-none"
                   title="KaPlan Web öffnen"
+                  target={KAPLAN_WEB_LINK_TARGET}
                 >
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" className="me-2" />
                   KaPlan&nbsp;Web

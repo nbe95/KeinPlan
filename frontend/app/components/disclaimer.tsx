@@ -5,9 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Accordion, Button, Col, Modal, Row } from "react-bootstrap";
 import { ADMIN_MAIL, GITHUB_LINK } from "../utils/constants";
-import { createMailToLink } from "../utils/mail";
 import Container from "./layout/container";
-import { CondLink } from "./link";
+import { CondLink, CondMailLink } from "./link";
 
 const Disclaimer = () => {
   const [showPrivacy, setShowPrivacy] = useState(false);
@@ -21,13 +20,7 @@ const Disclaimer = () => {
             <h2>Fragen? Unklarheiten?</h2>
             <p>
               Kommt vor. Melde dich einfach beim{" "}
-              <CondLink
-                condition={!!ADMIN_MAIL}
-                href={createMailToLink({ recipient: ADMIN_MAIL! })}
-              >
-                Admin deines Vertrauens
-              </CondLink>
-              .
+              <CondMailLink email={ADMIN_MAIL}>Admin deines Vertrauens</CondMailLink>.
             </p>
             <p>
               Solltest du einen Fehler auf dieser Seite oder einer Stunden&shy;liste

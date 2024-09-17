@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useMemo } from "react";
 import { Button, Col, Row } from "react-bootstrap";
+import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
   API_ENDPOINT_TIME_SHEET,
@@ -11,10 +12,9 @@ import {
   TIME_SHEET_QUERY_KEY,
 } from "../../../utils/constants";
 import { dictConvertDatesToIsoString, getIsoWeek, getIsoWeekAndYear } from "../../../utils/dates";
-import { MailProps, createMailToLink } from "../../../utils/mail";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
-import { CondLink } from "../../link";
+import { CondMailLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
 import { PrevButton } from "../../process-button";
@@ -84,12 +84,11 @@ const ResultStep = (props: ResultProps) => {
     refetchOnWindowFocus: false,
   });
 
-  const mailParams = useMemo((): MailProps => {
+  const mailHeaders = useMemo((): Record<string, string> => {
     const firstLastName: string = `${props.userData.firstName} ${props.userData.lastName}`;
     const lastFirstName: string = `${props.userData.lastName}, ${props.userData.firstName}`;
     const week: string = getIsoWeekAndYear(props.targetDate);
     return {
-      recipient: TIME_SHEET_MAIL ?? "",
       subject: `Arbeitszeit ${lastFirstName} - KW ${week}`,
       body: `Guten Tag,\n\nanbei übersende ich die wöchentliche Auflistung meiner Arbeitszeit für die Kalenderwoche ${week}.\n\nViele Grüße\n${firstLastName}`,
     };
@@ -105,14 +104,7 @@ const ResultStep = (props: ResultProps) => {
               😭
               <br />
               Probier&apos;s später nochmal. Falls das Problem weiterhin besteht, melde dich bitte
-              beim{" "}
-              <CondLink
-                condition={!!ADMIN_MAIL}
-                href={createMailToLink({ recipient: ADMIN_MAIL! })}
-              >
-                Admin
-              </CondLink>
-              .
+              beim <CondMailLink email={ADMIN_MAIL}>Admin</CondMailLink>.
             </MsgBox>
           </Col>
         </Row>
@@ -150,15 +142,14 @@ const ResultStep = (props: ResultProps) => {
                 folgende Vorlage.
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
-              <Button
-                id="open-mail-template"
-                type="button"
-                variant="primary"
-                href={createMailToLink(mailParams)}
-              >
-                <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
-                Mail-Vorlage öffnen
-              </Button>
+              {TIME_SHEET_MAIL && (
+                <Obfuscate email={TIME_SHEET_MAIL} headers={mailHeaders} obfuscateChildren={false}>
+                  <Button id="open-mail-template" type="button" variant="primary">
+                    <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+                    Mail-Vorlage öffnen
+                  </Button>
+                </Obfuscate>
+              )}
             </Col>
           </Row>
         </>
