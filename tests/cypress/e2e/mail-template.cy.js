@@ -28,6 +28,9 @@ describe("check email template", () => {
     cy.fixture("form-data.json").then((data) => {
       const targetDate = new Date(Date.parse(data.targetDate));
       cy.get("#open-mail-template")
+        .trigger("mouseover")
+        .wait(1000) //De-obfuscate mail link
+        .parent()
         .invoke("attr", "href")
         .then((href) => {
           const url = new URL(href);
