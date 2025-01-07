@@ -11,7 +11,12 @@ import {
   TIME_SHEET_MAIL,
   TIME_SHEET_QUERY_KEY,
 } from "../../../utils/constants";
-import { dictConvertDatesToIsoString, getIsoWeek, getIsoWeekAndYear } from "../../../utils/dates";
+import {
+  dictConvertDatesToIsoString,
+  getIsoWeek,
+  getIsoWeekAndYear,
+  getIsoYear,
+} from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
 import { CondMailLink } from "../../link";
@@ -37,7 +42,7 @@ const ResultStep = (props: ResultProps) => {
     (format: string): string => {
       const targetDate: Date = props.targetDate;
       const basename: string = "Arbeitszeit";
-      const timestamp: string = `${targetDate.getFullYear()}-${getIsoWeek(targetDate)}`;
+      const timestamp: string = `${getIsoYear(targetDate)}-${getIsoWeek(targetDate).toString().padStart(2, "0")}`;
       return `${basename}_${timestamp}.${format.toLowerCase()}`;
     },
     [props.targetDate],
@@ -57,7 +62,7 @@ const ResultStep = (props: ResultProps) => {
           {
             employer: props.userData.employer,
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
-            year: props.targetDate.getFullYear(),
+            year: getIsoYear(props.targetDate),
             week: getIsoWeek(props.targetDate),
             dates: props.dateList.map((date) => dictConvertDatesToIsoString(date)),
           },
@@ -125,7 +130,7 @@ const ResultStep = (props: ResultProps) => {
                       id="download-pdf"
                       fileName={pdf.fileName}
                       url={pdf.blobUrl}
-                      text={`KW ${getIsoWeek(props.targetDate)}/${props.targetDate.getFullYear()}`}
+                      text={`KW ${getIsoWeekAndYear(props.targetDate)}`}
                       size={pdf.size}
                       faIcon={faFilePdf}
                       isPrimary={true}

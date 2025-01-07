@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen
-ENV LC_ALL de_DE.utf8
+ENV LC_ALL=de_DE.utf8
 
 # Retrieve installed python packages from build stage
 COPY --from=builder $WORKDIR/.venv/ ./.venv
@@ -41,7 +41,7 @@ EXPOSE 8080
 
 ARG VERSION
 ARG VERSION_SHA
-ENV KEINPLAN_VERSION ${VERSION}
-ENV KEINPLAN_VERSION_SHA ${VERSION_SHA}
+ENV KEINPLAN_VERSION="${VERSION}"
+ENV KEINPLAN_VERSION_SHA="${VERSION_SHA}"
 
 CMD waitress-serve --port 8080 src.keinplan_backend.main:backend

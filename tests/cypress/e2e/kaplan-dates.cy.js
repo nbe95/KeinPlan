@@ -61,10 +61,9 @@ describe("check handling of KaPlan dates", () => {
         .should("have.class", "active");
 
       cy.fixture("form-data.json").then((data) => {
-        const baseDate = new Date(Date.parse(data.targetDate));
-        let day = new Date();
-        for (var offset = 0; offset < 7; offset++) {
-          day.setDate(baseDate.getDate() + offset);
+        let day = new Date(Date.parse(data.targetDate));
+        for (var i = 0; i < 7; i++) {
+          day.setDate(day.getDate() + 1);
           const filtered = dates.filter((item) => {
             const date = new Date(Date.parse(item.start));
             return (

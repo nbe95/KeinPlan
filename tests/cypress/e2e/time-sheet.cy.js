@@ -37,11 +37,11 @@ describe("check time sheet generation", () => {
         .invoke("attr", "download")
         .then((fileName) => {
           cy.get("#download-pdf").click();
-
-          const targetDate = new Date(Date.parse(data.targetDate));
-          let endDate = new Date();
-          endDate.setDate(targetDate.getDate() + 6);
           cy.task("readPdf", `cypress/downloads/${fileName}`).then((pdf) => {
+            const targetDate = new Date(Date.parse(data.targetDate));
+            let endDate = new Date(targetDate);
+            endDate.setDate(endDate.getDate() + 6);
+
             cy.wrap(pdf.text)
               .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
               .should(
@@ -99,11 +99,11 @@ describe("check time sheet generation", () => {
         .invoke("attr", "download")
         .then((fileName) => {
           cy.get("#download-pdf").click();
-
-          const targetDate = new Date(Date.parse(data.targetDate));
-          let endDate = new Date();
-          endDate.setDate(targetDate.getDate() + 6);
           cy.task("readPdf", `cypress/downloads/${fileName}`).then((pdf) => {
+            const targetDate = new Date(Date.parse(data.targetDate));
+            let endDate = new Date(targetDate);
+            endDate.setDate(endDate.getDate() + 6);
+
             cy.wrap(pdf.text)
               .should("match", makeRegExp(`Dienstgeber: ${formatInput(data.employer, 100)}`))
               .should(
