@@ -30,7 +30,6 @@ describe("check email template", () => {
       cy.get("#open-mail-template")
         .trigger("mouseover")
         .wait(1000) //De-obfuscate mail link
-        .parent()
         .invoke("attr", "href")
         .then((href) => {
           const url = new URL(href);
