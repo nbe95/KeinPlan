@@ -30,10 +30,18 @@ describe("check date selection", () => {
     // backward
     cy.get('input[name="target_date"]').type("2025-01-01").blur();
 
-    cy.get('input[name="target_date"]').next().contains("KW 1/2025").find("button:first-child").click();
+    cy.get('input[name="target_date"]')
+      .next()
+      .contains("KW 1/2025")
+      .find("button:first-child")
+      .click();
     cy.get('input[name="target_date"]').should("have.value", "2024-12-23");
 
-    cy.get('input[name="target_date"]').next().contains("KW 52/2024").find("button:first-child").click();
+    cy.get('input[name="target_date"]')
+      .next()
+      .contains("KW 52/2024")
+      .find("button:first-child")
+      .click();
     cy.get('input[name="target_date"]').should("have.value", "2024-12-16");
 
     cy.get('input[name="target_date"]').next().contains("KW 51/2024");
@@ -41,10 +49,18 @@ describe("check date selection", () => {
     // forward
     cy.get('input[name="target_date"]').type("2025-01-01").blur();
 
-    cy.get('input[name="target_date"]').next().contains("KW 1/2025").find("button:last-child").click();
+    cy.get('input[name="target_date"]')
+      .next()
+      .contains("KW 1/2025")
+      .find("button:last-child")
+      .click();
     cy.get('input[name="target_date"]').should("have.value", "2025-01-06");
 
-    cy.get('input[name="target_date"]').next().contains("KW 2/2025").find("button:last-child").click();
+    cy.get('input[name="target_date"]')
+      .next()
+      .contains("KW 2/2025")
+      .find("button:last-child")
+      .click();
     cy.get('input[name="target_date"]').should("have.value", "2025-01-13");
 
     cy.get('input[name="target_date"]').next().contains("KW 3/2025");
