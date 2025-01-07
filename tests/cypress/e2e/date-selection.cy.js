@@ -25,4 +25,28 @@ describe("check date selection", () => {
     cy.get('input[name="target_date"]').type("2025-01-01").blur().next().contains("KW 1/2025");
     cy.get('input[name="target_date"]').type("2025-01-02").blur().next().contains("KW 1/2025");
   });
+
+  it("should be able to move a week forward/backward", () => {
+    // backward
+    cy.get('input[name="target_date"]').type("2025-01-01").blur();
+
+    cy.get('input[name="target_date"]').next().contains("KW 1/2025").find("button:first-child").click();
+    cy.get('input[name="target_date"]').should("have.value", "2024-12-23");
+
+    cy.get('input[name="target_date"]').next().contains("KW 52/2024").find("button:first-child").click();
+    cy.get('input[name="target_date"]').should("have.value", "2024-12-16");
+
+    cy.get('input[name="target_date"]').next().contains("KW 51/2024");
+
+    // forward
+    cy.get('input[name="target_date"]').type("2025-01-01").blur();
+
+    cy.get('input[name="target_date"]').next().contains("KW 1/2025").find("button:last-child").click();
+    cy.get('input[name="target_date"]').should("have.value", "2025-01-06");
+
+    cy.get('input[name="target_date"]').next().contains("KW 2/2025").find("button:last-child").click();
+    cy.get('input[name="target_date"]').should("have.value", "2025-01-13");
+
+    cy.get('input[name="target_date"]').next().contains("KW 3/2025");
+  });
 });
