@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useMemo } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
@@ -148,11 +148,15 @@ const ResultStep = (props: ResultProps) => {
               </p>
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               {TIME_SHEET_MAIL && (
-                <Obfuscate email={TIME_SHEET_MAIL} headers={mailHeaders} obfuscateChildren={false}>
-                  <Button id="open-mail-template" type="button" variant="primary">
-                    <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
-                    Mail-Vorlage öffnen
-                  </Button>
+                <Obfuscate
+                  email={TIME_SHEET_MAIL}
+                  headers={mailHeaders}
+                  obfuscateChildren={false}
+                  id="open-mail-template"
+                  className="btn btn-primary"
+                >
+                  <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+                  Mail-Vorlage öffnen
                 </Obfuscate>
               )}
             </Col>
