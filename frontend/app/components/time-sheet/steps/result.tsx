@@ -149,12 +149,14 @@ const ResultStep = (props: ResultProps) => {
               <p>Überprüfe vorher nochmal alles auf Richtigkeit.</p>
               {TIME_SHEET_MAIL && (
                 <Obfuscate
-                  // @ts-expect-error
-                  id="open-mail-template"
-                  className="btn btn-primary"
                   email={TIME_SHEET_MAIL}
                   headers={mailHeaders}
                   obfuscateChildren={false}
+                  // Obfuscate allows passing arbitrary props, but does not define them in its
+                  // interface, which causes a type error on compiling
+                  // @ts-expect-error
+                  id="open-mail-template"
+                  className="btn btn-primary"
                 >
                   <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
                   Mail-Vorlage öffnen
