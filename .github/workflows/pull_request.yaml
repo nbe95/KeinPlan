@@ -164,6 +164,7 @@ jobs:
     name: Deploy to testing
     runs-on: ubuntu-latest
     needs:
+      - validate-release
       - docker-image-backend
       - docker-image-frontend
     environment:
@@ -177,7 +178,7 @@ jobs:
       - name: Wait for deployment to finish
         shell: bash
         run: |
-          timeout 600 bash -c 'while [[ "$(curl -s "${{ vars.DEPLOYMENT_URL }}/api/v1/version" | jq -r ".KeinPlan.backend.sha")" != "${{ needs.validate-release.outputs.sha }}" ]]; do echo "Trying..."; sleep 10; done' || false
+          timeout 900 bash -c 'while [[ "$(curl -s "${{ vars.DEPLOYMENT_URL }}/api/v1/version" | jq -r ".KeinPlan.backend.sha")" != "${{ needs.validate-release.outputs.sha }}" ]]; do echo "Trying..."; sleep 10; done' || false
 
   test-e2e:
     name: Perform e2e tests
