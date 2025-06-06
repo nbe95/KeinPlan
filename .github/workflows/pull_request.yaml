@@ -172,8 +172,8 @@ jobs:
       - name: Call webhook
         run: |
           curl -s -X POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
-      - name: Wait for deployment to succeed
-        run: sleep 30s
+      - name: Wait for deployment to finish
+        run: sleep 60s
         shell: bash
 
   test-e2e:
