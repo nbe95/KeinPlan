@@ -107,7 +107,7 @@ jobs:
     steps:
       - name: Call webhook
         run: |
-          curl -sIX POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.tag-version.outputs.version }}"
+          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.tag-version.outputs.version }}"
 
   deploy-prod:
     name: Deploy to production
@@ -122,4 +122,4 @@ jobs:
     steps:
       - name: Call webhook
         run: |
-          curl -sIX POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.tag-version.outputs.version }}"
+          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.tag-version.outputs.version }}"

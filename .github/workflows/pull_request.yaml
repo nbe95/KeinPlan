@@ -164,21 +164,14 @@ jobs:
     name: Deploy to testing
     runs-on: ubuntu-latest
     needs:
-      - validate-release
       - docker-image-backend
       - docker-image-frontend
     environment:
       name: testing
     steps:
-      - name: Setup jq
-        uses: dcarbone/install-jq-action@v3
       - name: Call webhook
         run: |
-          curl -sIX POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
-      - name: Wait for deployment to finish
-        shell: bash
-        run: |
-          timeout 900 bash -c 'while [[ "$(curl -s "${{ vars.DEPLOYMENT_URL }}/api/v1/version" | jq -r ".KeinPlan.backend.sha")" != "${{ needs.validate-release.outputs.sha }}" ]]; do echo "Trying..."; sleep 10; done' || false
+          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
 
   test-e2e:
     name: Perform e2e tests
