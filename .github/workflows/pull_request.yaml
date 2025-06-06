@@ -171,7 +171,7 @@ jobs:
     steps:
       - name: Call webhook
         run: |
-          curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
+          curl -s -X POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
 
   test-e2e:
     name: Perform e2e tests
