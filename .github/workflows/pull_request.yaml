@@ -173,7 +173,7 @@ jobs:
         uses: dcarbone/install-jq-action@v3
       - name: Call webhook
         run: |
-          curl -s -X POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
+          curl -sIX POST "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=testing"
       - name: Wait for deployment to finish
         shell: bash
         run: |
