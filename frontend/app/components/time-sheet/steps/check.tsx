@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { getMonday, isSameDay } from "../../../utils/dates";
 import MsgBox from "../../msg-box";
@@ -21,6 +21,11 @@ const CheckStep = (props: CheckProps) => {
     event.preventDefault();
     props.nextStep();
   };
+
+  // Directly focus next button upon first render
+  useEffect(() => {
+    document.getElementById("btn-next")?.focus({ preventScroll: true });
+  }, []);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>

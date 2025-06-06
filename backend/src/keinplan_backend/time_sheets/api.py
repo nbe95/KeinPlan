@@ -9,8 +9,8 @@ from flask import request, send_file
 from flask.typing import ResponseReturnValue
 from flask_restful import Resource
 
-from .time_entry import TimeEntry
-from .time_sheet import TimeSheet, WeeklyTimeSheet
+from .models.time_entry import TimeEntry
+from .models.time_sheet import TimeSheet, WeeklyTimeSheet
 
 
 class TimeSheetEndpoint(Resource):

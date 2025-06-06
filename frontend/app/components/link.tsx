@@ -7,8 +7,8 @@ interface LinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"
   condition: boolean;
 }
 
-export const CondLink = (props: PropsWithChildren<LinkProps>) => {
-  if (props.condition) {
+export const CondLink = ({ condition, ...props }: PropsWithChildren<LinkProps>) => {
+  if (condition) {
     return <Link {...props}>{props.children}</Link>;
   }
   return <>{props.children}</>;

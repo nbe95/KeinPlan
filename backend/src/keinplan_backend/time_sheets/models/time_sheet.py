@@ -6,15 +6,15 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
-from subprocess import DEVNULL, CompletedProcess, run
+from subprocess import CalledProcessError, run
 from typing import List, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
 
 from src.keinplan_backend.constants import LOG_LEVEL, VERSION_BACKEND
 
-from .constants import KEINPLAN_LINK, TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
-from .templates.jinja_filters import escape_latex
+from ..constants import KEINPLAN_LINK, TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
+from ..templates.jinja_filters import escape_latex
 from .time_entry import TimeEntry
 
 logging.basicConfig(level=logging.WARNING)
@@ -44,8 +44,18 @@ class TimeSheet:
             str(pdf_file.stem),  # File name without extension
             str(tex_file.absolute()),
         )
-        result: CompletedProcess[bytes] = run(cmd, check=True, stdout=DEVNULL)
-        return result.returncode == 0
+        try:
+            run(cmd, capture_output=True, text=True, check=True)
+        except CalledProcessError as e:
+            logger.error(
+                f"A LaTeX error occurred while generating {pdf_file}. "
+                "Dumping output as DEBUG message."
+            )
+            logger.debug(f"{'-' * 50} BEGIN LATEX DUMP {'-' * 50}")
+            logger.debug(e.stdout)
+            logger.debug(f"{'-' * 50} END LATEX DUMP {'-' * 50}")
+            return False
+        return True
 
     @abstractmethod
     def generate_pdf(self, tmp_dir: Path) -> Optional[Path]:
@@ -85,24 +95,20 @@ class WeeklyTimeSheet(TimeSheet):
 
         # Sort and organize entries by dates
         start_date: date = date.fromisocalendar(self.year, self.week_no, 1)
-        end_date: date = start_date + timedelta(days=6)
         entries_by_date: List[WeeklyTimeSheet.DayListing] = []
         self.entries.sort(key=lambda entry: datetime.combine(entry.date, entry.start_time))
-        for date_offset in range(7):
-            day: date = start_date + timedelta(days=date_offset)
+        for day_offset in range(7):
+            day: date = start_date + timedelta(days=day_offset)
             entries: List[TimeEntry] = list(filter(lambda entry: entry.date == day, self.entries))
-            if entries:
-                entries_by_date.append(
-                    WeeklyTimeSheet.DayListing(
-                        day, entries, sum(entry.get_hours() for entry in entries)
-                    )
+            entries_by_date.append(
+                WeeklyTimeSheet.DayListing(
+                    day, entries, sum(entry.get_hours() for entry in entries)
                 )
+            )
 
         template.stream(
             data=self,
             days=entries_by_date,
-            start_date=start_date,
-            end_date=end_date,
             total_hours=sum(entry.get_hours() for entry in self.entries),
             generation_time=datetime.now(),
             footer=footer,
