@@ -5,6 +5,9 @@
 \usepackage{setspace}
 \onehalfspacing
 \setlength\parindent{0pt}
+\usepackage[locale=DE]{siunitx}
+\sisetup{detect-all}
+\sisetup{round-mode=places,round-precision=2}
 \usepackage[table]{xcolor}
 \usepackage{tabularx, booktabs, array, calc}
 \usepackage{fancyhdr}
@@ -31,7 +34,6 @@
   Dienstgeber: & {\bf {{ data.employer }} } \\
   Mitarbeiter: & {\bf {{ data.employee }} } \\
   Aufzeichnung für: & {\bf KW {{ data.week_no }}/{{ data.year }} }
-  {\small ({{ start_date.strftime("%d.%m.%Y") }} -- {{ end_date.strftime("%d.%m.%Y") }})} \\
 \end{tabular}
 
 \vspace{1cm}
@@ -40,20 +42,23 @@
   {%- for listing in days %}
     \rowcolor{gray!30}
     \multicolumn{3}{l}{\bf {{ listing.day.strftime("%A, %d.%m.%Y") }} } &
-    \bf {{ "%.2f"|format_locale(listing.total_hours) }} h \\
+    \bf \qty{ {{ listing.total_hours }} }{h} \\
+
     {% for entry in listing.entries %}
       {{ entry.start_time.strftime("%H:%M") }} -- {{ entry.end_time.strftime("%H:%M") }} &
       {{ trunc(entry.location, 50)|escape_latex }} &
       {{ trunc(entry.title, 50)|escape_latex }}{% if entry.role %} {\small ({{ trunc(entry.role, 50)|escape_latex }})}{% endif %} &
-      {{ "%.2f"|format_locale(entry.get_hours()) }} h
+      \qty{ {{ entry.get_hours() }} }{h}
       {%- if loop.last -%}
         \vspace{0.5cm}  {#- extra space after each day's listing -#}
       {%- endif -%}
       \\
-    {% endfor -%}
-  {% else -%}
-    \rowcolor{gray!30}
-    \multicolumn{4}{p{\linewidth}}{\centering\small Keine Dienste im genannten Zeitraum.}
+    {%- else -%}
+      \makebox{\textcolor{lightgray}{--} } &
+      \makebox{\textcolor{lightgray}{--} } &
+      \makebox{\textcolor{lightgray}{--} } &
+      \makebox{\textcolor{lightgray}{--} }\vspace{0.5cm}\\
+    {%- endfor -%}
   {%- endfor %}
 \end{tabularx}
 
@@ -72,8 +77,8 @@ Alle Stundenangaben sind auf jeweils 15 Minuten gerundet.
 \mbox{
   \setlength{\tabcolsep}{10pt}
   \begin{tabular}{rr<{\hspace{-\tabcolsep}} }
-    Summe Dienste: & {\bf {{ data.entries|length }}{{"}"}} \\
-    Summe Stunden: & {\bf {{ "%.2f"|format_locale(total_hours) }} h} \\
+    {\bf Summe Stunden:} & {\bf \qty{ {{ total_hours }} }{h} } \\
+    {\bf Summe Dienste:} & {\bf {{ data.entries|length }} } \\
   \end{tabular}
 }
 

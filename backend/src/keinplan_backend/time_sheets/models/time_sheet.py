@@ -92,24 +92,20 @@ class WeeklyTimeSheet(TimeSheet):
 
         # Sort and organize entries by dates
         start_date: date = date.fromisocalendar(self.year, self.week_no, 1)
-        end_date: date = start_date + timedelta(days=6)
         entries_by_date: List[WeeklyTimeSheet.DayListing] = []
         self.entries.sort(key=lambda entry: datetime.combine(entry.date, entry.start_time))
-        for date_offset in range(7):
-            day: date = start_date + timedelta(days=date_offset)
+        for day_offset in range(7):
+            day: date = start_date + timedelta(days=day_offset)
             entries: List[TimeEntry] = list(filter(lambda entry: entry.date == day, self.entries))
-            if entries:
-                entries_by_date.append(
-                    WeeklyTimeSheet.DayListing(
-                        day, entries, sum(entry.get_hours() for entry in entries)
-                    )
+            entries_by_date.append(
+                WeeklyTimeSheet.DayListing(
+                    day, entries, sum(entry.get_hours() for entry in entries)
                 )
+            )
 
         template.stream(
             data=self,
             days=entries_by_date,
-            start_date=start_date,
-            end_date=end_date,
             total_hours=sum(entry.get_hours() for entry in self.entries),
             generation_time=datetime.now(),
             footer=footer,
