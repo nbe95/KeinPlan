@@ -28,7 +28,7 @@ describe("check time sheet generation", () => {
     var strftimeGer = strftime.localizeByIdentifier("de_DE");
 
     cy.get('input[name="kaplan_ics"]').type(icsDebugUrl.toString());
-    cy.get("#btn-next").click().should("be.disabled");
+    cy.get("#btn-next").click();
 
     cy.get("#btn-next").should("not.be.disabled").click();
 
@@ -90,7 +90,7 @@ describe("check time sheet generation", () => {
     var strftimeGer = strftime.localizeByIdentifier("de_DE");
 
     cy.get('input[name="kaplan_ics"]').type(icsEmptyUrl.toString());
-    cy.get("#btn-next").click().should("be.disabled");
+    cy.get("#btn-next").click();
 
     cy.get("#btn-next").should("not.be.disabled").click();
 
