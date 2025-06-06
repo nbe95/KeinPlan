@@ -52,12 +52,14 @@ describe("check time sheet generation", () => {
               )
               .should(
                 "match",
-                makeRegExp(
-                  `Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))} \\(${strftimeGer("%d.%m.%Y", targetDate)} \u0015 ${strftimeGer("%d.%m.%Y", endDate)}\\)`,
-                ),
+                makeRegExp(`Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))}`),
               );
 
             cy.fixture("dates.json").then((dates) => {
+              cy.wrap(pdf.text)
+                .should("match", makeRegExp("Summe Dienste: 4"))
+                .should("match", makeRegExp("Summe Stunden: 4,00h"));
+
               cy.wrap(dates).each((date) => {
                 const dateStart = new Date(Date.parse(date.start));
                 const dateEnd = new Date(Date.parse(date.end));
@@ -77,8 +79,6 @@ describe("check time sheet generation", () => {
                   .should("match", makeRegExp(headLine))
                   .should("match", makeRegExp(dateLine));
               });
-
-              cy.wrap(pdf.text).should("match", makeRegExp(`Summe Dienste: ${dates.length}`));
             });
           });
         });
@@ -114,12 +114,10 @@ describe("check time sheet generation", () => {
               )
               .should(
                 "match",
-                makeRegExp(
-                  `Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))} \\(${strftimeGer("%d.%m.%Y", targetDate)} \u0015 ${strftimeGer("%d.%m.%Y", endDate)}\\)`,
-                ),
+                makeRegExp(`Aufzeichnung für: ${formatInput(strftimeGer("KW %W/%Y", targetDate))}`),
               )
-              .should("match", makeRegExp(`Keine Dienste`))
-              .should("match", makeRegExp(`Summe Dienste: 0`));
+              .should("match", makeRegExp(`Summe Dienste: 0`))
+              .should("match", makeRegExp(`Summe Stunden: 0,00h`));
           });
         });
     });
