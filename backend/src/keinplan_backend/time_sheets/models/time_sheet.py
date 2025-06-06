@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
-from subprocess import DEVNULL, CompletedProcess, run
+from subprocess import CalledProcessError, CompletedProcess, run
 from typing import List, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
@@ -44,8 +44,15 @@ class TimeSheet:
             str(pdf_file.stem),  # File name without extension
             str(tex_file.absolute()),
         )
-        result: CompletedProcess[bytes] = run(cmd, check=True, stdout=DEVNULL)
-        return result.returncode == 0
+        try:
+            result: CompletedProcess[bytes] = run(cmd, capture_output=True, text=True, check=True)
+        except CalledProcessError as e:
+            logger.error(f"A LaTeX error occurred while generating {pdf_file}. Dumping output as DEBUG message.")
+            logger.debug(f"{'-' * 50} BEGIN LATEX DUMP {'-' * 50}")
+            logger.debug(e.stdout)
+            logger.debug(f"{'-' * 50} END LATEX DUMP {'-' * 50}")
+            return False
+        return True
 
     @abstractmethod
     def generate_pdf(self, tmp_dir: Path) -> Optional[Path]:
