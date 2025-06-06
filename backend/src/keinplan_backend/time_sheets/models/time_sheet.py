@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
-from subprocess import CalledProcessError, CompletedProcess, run
+from subprocess import CalledProcessError, run
 from typing import List, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
@@ -45,9 +45,12 @@ class TimeSheet:
             str(tex_file.absolute()),
         )
         try:
-            result: CompletedProcess[bytes] = run(cmd, capture_output=True, text=True, check=True)
+            run(cmd, capture_output=True, text=True, check=True)
         except CalledProcessError as e:
-            logger.error(f"A LaTeX error occurred while generating {pdf_file}. Dumping output as DEBUG message.")
+            logger.error(
+                f"A LaTeX error occurred while generating {pdf_file}. "
+                "Dumping output as DEBUG message."
+            )
             logger.debug(f"{'-' * 50} BEGIN LATEX DUMP {'-' * 50}")
             logger.debug(e.stdout)
             logger.debug(f"{'-' * 50} END LATEX DUMP {'-' * 50}")
