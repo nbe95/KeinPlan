@@ -1,10 +1,9 @@
-import { faCircleInfo, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
 import { useCookies } from "react-cookie";
+import { FaCircleInfo, FaCircleMinus, FaCirclePlus } from "react-icons/fa6";
 import { Id, toast } from "react-toastify";
 import strftime from "strftime";
 import { b64_encode } from "../../../utils/base64";
@@ -189,7 +188,7 @@ const DatesStep = (props: DatesProps) => {
                   disabled={isFetching}
                   tabIndex={-1}
                 >
-                  <FontAwesomeIcon icon={faMinusCircle} size="lg" />
+                  <FaCircleMinus size="1.2em" />
                 </Button>
                 {getCalWeekLabel()}
                 <Button
@@ -200,7 +199,7 @@ const DatesStep = (props: DatesProps) => {
                   disabled={isFetching}
                   tabIndex={-1}
                 >
-                  <FontAwesomeIcon icon={faPlusCircle} size="lg" />
+                  <FaCirclePlus size="1.2em" />
                 </Button>
               </InputGroup.Text>
             </InputGroup>
@@ -223,7 +222,7 @@ const DatesStep = (props: DatesProps) => {
             />
             <Form.Text>
               <Stack direction="horizontal" gap={1} className="mb-3">
-                <FontAwesomeIcon icon={faCircleInfo} size="lg" className="me-1" />
+                <FaCircleInfo size="1.3em" className="me-1" />
                 <span>
                   Du findest deinen Abonnement-String in{" "}
                   <CondLink

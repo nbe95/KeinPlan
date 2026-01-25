@@ -1,10 +1,8 @@
 "use client";
 
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faArrowUpRightFromSquare, faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Col, Row, Stack } from "react-bootstrap";
+import { FaArrowUpRightFromSquare, FaEnvelope, FaGithub } from "react-icons/fa6";
 import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
@@ -34,7 +32,7 @@ const Footer = () => {
                   style={{ textDecoration: "none" }}
                 >
                   <span className="text-decoration-none" title="E-Mail an den Administrator">
-                    <FontAwesomeIcon icon={faEnvelope} size="xs" className="me-2" />
+                    <FaEnvelope size="1.5em" className="me-2" />
                     Kontakt
                   </span>
                 </Obfuscate>
@@ -46,7 +44,7 @@ const Footer = () => {
                   title="KaPlan Web öffnen"
                   target={KAPLAN_WEB_LINK_TARGET}
                 >
-                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" className="me-2" />
+                  <FaArrowUpRightFromSquare size="1.5em" className="me-2" />
                   KaPlan&nbsp;Web
                 </Link>
               )}
@@ -59,7 +57,7 @@ const Footer = () => {
           >
             {GITHUB_LINK && (
               <Link href={GITHUB_LINK} className="text-muted me-2" title="KeinPlan auf Github">
-                <FontAwesomeIcon icon={faGithub} size="xl" />
+                <FaGithub size="1.5em" />
               </Link>
             )}
             <span

@@ -1,9 +1,7 @@
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faCookie, faHardDrive } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useState } from "react";
 import { Accordion, Button, Col, Modal, Row } from "react-bootstrap";
+import { FaCookie, FaGithub, FaHardDrive } from "react-icons/fa6";
 import { ADMIN_MAIL, GITHUB_LINK } from "../utils/constants";
 import Container from "./layout/container";
 import { CondLink, CondMailLink } from "./link";
@@ -94,7 +92,7 @@ const Disclaimer = () => {
             <Accordion>
               <Accordion.Item eventKey="server-side-caching">
                 <Accordion.Header>
-                  <FontAwesomeIcon icon={faHardDrive} className="me-2" /> Serverseitiges Caching
+                  <FaHardDrive className="me-2" /> Serverseitiges Caching
                 </Accordion.Header>
                 <Accordion.Body>
                   <p>
@@ -117,7 +115,7 @@ const Disclaimer = () => {
 
               <Accordion.Item eventKey="cookies">
                 <Accordion.Header>
-                  <FontAwesomeIcon icon={faCookie} className="me-2" />
+                  <FaCookie className="me-2" />
                   Cookies
                 </Accordion.Header>
                 <Accordion.Body>
@@ -136,7 +134,7 @@ const Disclaimer = () => {
 
               <Accordion.Item eventKey="open-source">
                 <Accordion.Header>
-                  <FontAwesomeIcon icon={faGithub} className="me-2" /> Open Source Software
+                  <FaGithub className="me-2" /> Open Source Software
                 </Accordion.Header>
                 <Accordion.Body>
                   <p>

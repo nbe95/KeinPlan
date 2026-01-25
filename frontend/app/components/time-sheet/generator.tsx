@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  faCalendarDay,
-  faEnvelopeCircleCheck,
-  faMagnifyingGlass,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
+import { FaCalendarDay, FaEnvelopeCircleCheck, FaMagnifyingGlass, FaUser } from "react-icons/fa6";
 import { USER_COOKIE_NAME } from "../../utils/constants";
 import { addDaysToDate, getMonday } from "../../utils/dates";
 import { scrollToElement } from "../../utils/viewport";
@@ -31,10 +26,10 @@ export interface CookieData extends UserData {
 export interface DateEntry {
   uid: string;
   title: string;
-  role: string;
-  location: string;
   start_date: Date;
   end_date: Date;
+  role?: string;
+  location?: string;
 }
 
 const TimeSheetGenerator = () => {
@@ -45,6 +40,11 @@ const TimeSheetGenerator = () => {
   const [kaPlanIcs, setKaPlanIcs] = useState<string>();
 
   const [dateList, setDateList] = useState<DateEntry[]>();
+  const updateDate = (changedEntry: DateEntry) => {
+    setDateList((date) =>
+      dateList?.map((date) => (date.uid === changedEntry.uid ? changedEntry : date)),
+    );
+  };
 
   enum Steps {
     USER_DATA,
@@ -82,10 +82,10 @@ const TimeSheetGenerator = () => {
       <Container className="bg-light" id="stepper">
         <Stepper
           steps={[
-            { key: Steps.USER_DATA, name: "Allgemeines", icon: faUser },
-            { key: Steps.TIME_SHEET_DATA, name: "Termine", icon: faCalendarDay },
-            { key: Steps.DATE_CHECK, name: "Prüfen", icon: faMagnifyingGlass },
-            { key: Steps.RESULT_VIEW, name: "Verschicken", icon: faEnvelopeCircleCheck },
+            { key: Steps.USER_DATA, name: "Allgemeines", icon: FaUser },
+            { key: Steps.TIME_SHEET_DATA, name: "Termine", icon: FaCalendarDay },
+            { key: Steps.DATE_CHECK, name: "Prüfen", icon: FaMagnifyingGlass },
+            { key: Steps.RESULT_VIEW, name: "Verschicken", icon: FaEnvelopeCircleCheck },
           ]}
           active={step}
         />
@@ -124,6 +124,7 @@ const TimeSheetGenerator = () => {
           <CheckStep
             targetDate={targetDate}
             dateList={dateList!}
+            updateDate={updateDate}
             prevStep={() => {
               setStep(Steps.TIME_SHEET_DATA);
             }}

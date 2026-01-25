@@ -10,6 +10,7 @@ import { DateEntry } from "../generator";
 type CheckProps = {
   targetDate: Date;
   dateList: DateEntry[];
+  updateDate: (updatedDate: DateEntry) => void;
   prevStep: () => void;
   nextStep: () => void;
 };
@@ -51,16 +52,18 @@ const CheckStep = (props: CheckProps) => {
             .filter((date) => dateFilter == undefined || isSameDay(date.start_date, dateFilter))
             .map((entry: DateEntry, index: number) => (
               <Col key={index} sm={12} md={6}>
-                <DateCard date={entry} />
+                <DateCard date={entry} onUpdate={props.updateDate} />
               </Col>
             ))
         ) : (
-          <MsgBox type="info">
-            <p className="mb-0">Nanu &ndash; hier sind ja gar keine Termine?!</p>
-            <p className="mb-0">
-              Macht nichts. Du kannst auch pro forma eine leere Stundenliste erstellen.
-            </p>
-          </MsgBox>
+          <div>
+            <MsgBox type="info">
+              <p className="mb-0">Nanu &ndash; hier sind ja gar keine Termine?!</p>
+              <p className="mb-0">
+                Macht nichts. Du kannst auch pro forma eine leere Stundenliste erstellen.
+              </p>
+            </MsgBox>
+          </div>
         )}
       </Row>
       <Row>

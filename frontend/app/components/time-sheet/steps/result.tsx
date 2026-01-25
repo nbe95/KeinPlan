@@ -1,9 +1,8 @@
-import { faEnvelopeOpenText, faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
+import { FaEnvelopeOpenText, FaFilePdf } from "react-icons/fa6";
 import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
@@ -132,7 +131,7 @@ const ResultStep = (props: ResultProps) => {
                       url={pdf.blobUrl}
                       text={`KW ${getIsoWeekAndYear(props.targetDate)}`}
                       size={pdf.size}
-                      faIcon={faFilePdf}
+                      faIcon={FaFilePdf}
                       isPrimary={true}
                     />
                   </>
@@ -158,7 +157,7 @@ const ResultStep = (props: ResultProps) => {
                   id="open-mail-template"
                   className="btn btn-primary"
                 >
-                  <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+                  <FaEnvelopeOpenText className="me-2" />
                   Mail-Vorlage öffnen
                 </Obfuscate>
               )}
