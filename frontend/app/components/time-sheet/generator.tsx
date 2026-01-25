@@ -41,6 +41,7 @@ const TimeSheetGenerator = () => {
 
   const [dateList, setDateList] = useState<DateEntry[]>();
   const updateDate = (changedEntry: DateEntry) => {
+    // TODO(Niklas): Wie neuen Termin hinzufügen?
     setDateList((date) =>
       dateList?.map((date) => (date.uid === changedEntry.uid ? changedEntry : date)),
     );

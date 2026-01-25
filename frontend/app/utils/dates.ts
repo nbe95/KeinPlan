@@ -75,3 +75,19 @@ export const isSameDay = (date1: Date, date2: Date) => {
     date1.getDate() === date2.getDate()
   );
 };
+
+export const formatDateForInput = (date: Date): string => {
+  if (isNaN(date.getTime())) {
+    return "";
+  }
+  return date.toISOString().split("T")[0];
+};
+
+export const formatTimeForInput = (date: Date): string => {
+  if (isNaN(date.getTime())) {
+    return "";
+  }
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};

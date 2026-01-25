@@ -18,11 +18,11 @@ import {
 } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
+import { IconButtonPrev } from "../../icon-button";
 import { CondMailLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
 import { DateEntry, UserData } from "../generator";
-import { IconButtonPrev } from "../../icon-button";
 
 type ResultProps = {
   userData: UserData;

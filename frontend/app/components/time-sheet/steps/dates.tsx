@@ -160,7 +160,7 @@ const DatesStep = (props: DatesProps) => {
       <p className="lead">Als nächstes rufen wir deine Termine vom KaPlan-Server ab.</p>
       <Row>
         <Col className="mb-4">
-          <Form.Group>
+          <Form.Group controlId="cal-week">
             <Form.Label>
               Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
             </Form.Label>
@@ -209,7 +209,7 @@ const DatesStep = (props: DatesProps) => {
           </Form.Group>
         </Col>
         <Col md={12} className="mb-4">
-          <Form.Group>
+          <Form.Group controlId="kaplan">
             <Form.Label>Dein persönlicher KaPlan-Abonnement-String</Form.Label>
             <Form.Control
               type="text"

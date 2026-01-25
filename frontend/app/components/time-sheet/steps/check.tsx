@@ -17,6 +17,9 @@ type CheckProps = {
 
 const CheckStep = (props: CheckProps) => {
   const [dateFilter, setDateFilter] = useState<Date>();
+  const filteredDates = props.dateList.filter(
+    (date) => dateFilter == undefined || isSameDay(date.start_date, dateFilter),
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -30,9 +33,10 @@ const CheckStep = (props: CheckProps) => {
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>
-      <p className="lead">Fast fertig! Überprüfe bitte kurz deine Termine.</p>
+      <p className="lead">Fast fertig! Überprüfe kurz deine Termine.</p>
       <p>
-        Wenn alles so stimmt, klicke auf <q>Weiter</q>.
+        Ändere bei Bedarf ein paar Details oder füge neue Termine hinzu. Wenn alles passt, klicke
+        auf <q>Weiter</q>.
       </p>
 
       <Row className="my-4">
@@ -48,13 +52,18 @@ const CheckStep = (props: CheckProps) => {
 
       <Row className="my-4">
         {props.dateList.length ? (
-          props.dateList
-            .filter((date) => dateFilter == undefined || isSameDay(date.start_date, dateFilter))
-            .map((entry: DateEntry, index: number) => (
+          <>
+            {filteredDates.map((entry: DateEntry, index: number) => (
               <Col key={index} sm={12} md={6}>
                 <DateCard date={entry} onUpdate={props.updateDate} />
               </Col>
-            ))
+            ))}
+            {filteredDates.length < props.dateList.length && (
+              <div className="mt-2 small text-muted">
+                (+{props.dateList.length - filteredDates.length} ausgeblendete)
+              </div>
+            )}
+          </>
         ) : (
           <div>
             <MsgBox type="info">

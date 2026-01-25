@@ -64,7 +64,7 @@ const UserDataStep = (props: UserDataProps) => {
       <p className="lead">First things first &ndash; zuerst die Basics.</p>
       <Row>
         <Col lg={6} md={12} className="mb-4">
-          <Form.Group>
+          <Form.Group controlId="name">
             <Form.Label>Wie heißt du?</Form.Label>
             <InputGroup>
               <Form.Control
@@ -90,7 +90,7 @@ const UserDataStep = (props: UserDataProps) => {
           </Form.Group>
         </Col>
         <Col lg={6} md={12} className="mb-4">
-          <Form.Group>
+          <Form.Group controlId="employer">
             <Form.Label>Für welche Gemeinde arbeitest du?</Form.Label>
             <Form.Control
               type="text"
@@ -110,10 +110,9 @@ const UserDataStep = (props: UserDataProps) => {
 
       <Row>
         <Col className="mb-4">
-          <Form.Group>
+          <Form.Group controlId="cookie-usage">
             <Form.Check
               type="switch"
-              id="cookie-checkbox"
               name="use_cookie"
               label="Alle Eingaben als Cookie speichern"
               onClick={(event) => setResetCookie(event.currentTarget.checked)}
