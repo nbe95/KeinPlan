@@ -21,8 +21,8 @@ import DownloadButton from "../../download-button";
 import { CondMailLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
-import { PrevButton } from "../../process-button";
 import { DateEntry, UserData } from "../generator";
+import { IconButtonPrev } from "../../icon-button";
 
 type ResultProps = {
   userData: UserData;
@@ -167,7 +167,7 @@ const ResultStep = (props: ResultProps) => {
       )}
       <Row>
         <Col className="d-flex justify-content-start order-1">
-          <PrevButton id="btn-prev" callback={props.prevStep} />
+          <IconButtonPrev id="btn-prev" onClick={props.prevStep} />
         </Col>
       </Row>
     </>

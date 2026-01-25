@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import { Id, toast } from "react-toastify";
 import { USER_COOKIE_NAME } from "../../../utils/constants";
 import { scrollToElement } from "../../../utils/viewport";
-import { NextButton } from "../../process-button";
+import { IconButtonNext } from "../../icon-button";
 import { UserData } from "../generator";
 
 type UserDataProps = {
@@ -129,7 +129,7 @@ const UserDataStep = (props: UserDataProps) => {
 
       <Row>
         <Col className="d-flex justify-content-end order-1">
-          <NextButton submit id="btn-next" />
+          <IconButtonNext type="submit" id="btn-next" />
         </Col>
       </Row>
     </form>

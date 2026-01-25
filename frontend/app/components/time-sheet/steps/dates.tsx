@@ -17,8 +17,8 @@ import {
 } from "../../../utils/constants";
 import { addDaysToDate, getIsoWeekAndYear, getMonday, parseDateStr } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
+import { IconButtonNext, IconButtonPrev } from "../../icon-button";
 import { CondLink } from "../../link";
-import { NextButton, PrevButton } from "../../process-button";
 import { DateEntry, UserData } from "../generator";
 
 interface KaPlanData {
@@ -249,10 +249,10 @@ const DatesStep = (props: DatesProps) => {
 
       <Row>
         <Col className="d-flex justify-content-end order-2">
-          <NextButton submit id="btn-next" disabled={isFetching} />
+          <IconButtonNext id="btn-next" type="submit" disabled={isFetching} />
         </Col>
         <Col className="d-flex justify-content-start order-1">
-          <PrevButton id="btn-prev" callback={props.prevStep} disabled={isFetching} />
+          <IconButtonPrev id="btn-prev" onClick={props.prevStep} disabled={isFetching} />
         </Col>
       </Row>
     </form>

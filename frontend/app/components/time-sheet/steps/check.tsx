@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { getMonday, isSameDay } from "../../../utils/dates";
+import { IconButtonNext, IconButtonPrev } from "../../icon-button";
 import MsgBox from "../../msg-box";
-import { NextButton, PrevButton } from "../../process-button";
 import DateCard from "../date-card";
 import { WeekFilter } from "../date-filter";
 import { DateEntry } from "../generator";
@@ -68,10 +68,10 @@ const CheckStep = (props: CheckProps) => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-end order-2">
-          <NextButton submit id="btn-next" />
+          <IconButtonNext id="btn-next" type="submit" />
         </Col>
         <Col className="d-flex justify-content-start order-1">
-          <PrevButton id="btn-prev" callback={props.prevStep} />
+          <IconButtonPrev id="btn-prev" onClick={props.prevStep} />
         </Col>
       </Row>
     </form>
