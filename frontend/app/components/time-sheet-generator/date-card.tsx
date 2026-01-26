@@ -4,11 +4,11 @@ import { FaClock, FaLocationDot, FaPen, FaTrash, FaUser } from "react-icons/fa6"
 import strftime from "strftime";
 import { isSameDay } from "../../utils/dates";
 import DateEditorModal from "./date-editor-modal";
-import { DateEntry } from "./generator";
+import { Event } from "./generator";
 
 interface DateCardProps {
-  date: DateEntry;
-  onUpdate: (updatedDate: DateEntry) => void;
+  date: Event;
+  onUpdate: (updatedDate: Event) => void;
 }
 
 const DateCard = (props: DateCardProps) => {
@@ -16,11 +16,11 @@ const DateCard = (props: DateCardProps) => {
 
   const [isHovered, setIsHovered] = useState(false);
 
-  const [currentDate, setCurrentDate] = useState<DateEntry>(props.date);
-  const [originalDate, setOriginalDate] = useState<DateEntry>(props.date);
+  const [currentDate, setCurrentDate] = useState<Event>(props.date);
+  const [originalDate, setOriginalDate] = useState<Event>(props.date);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
-  const saveEditedEvent = (editedDate: DateEntry) => {
+  const saveEditedEvent = (editedDate: Event) => {
     setCurrentDate(editedDate);
     props.onUpdate(editedDate);
   };

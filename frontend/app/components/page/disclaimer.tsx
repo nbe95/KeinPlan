@@ -1,10 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { Accordion, Button, Col, Modal, Row } from "react-bootstrap";
 import { FaCookie, FaGithub, FaHardDrive } from "react-icons/fa6";
-import { ADMIN_MAIL, GITHUB_LINK } from "../utils/constants";
-import Container from "./layout/container";
-import { CondLink, CondMailLink } from "./link";
+import { ADMIN_MAIL, GITHUB_LINK } from "../../utils/constants";
+import { CondLink, CondMailLink } from "../link";
+import Container from "./container";
 
 const Disclaimer = () => {
   const [showPrivacy, setShowPrivacy] = useState(false);

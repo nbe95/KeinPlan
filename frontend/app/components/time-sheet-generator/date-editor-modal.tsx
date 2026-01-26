@@ -14,18 +14,18 @@ import {
 
 import { formatDateForInput, formatTimeForInput } from "../../utils/dates";
 import { IconButton } from "../icon-button";
-import { DateEntry } from "./generator";
+import { Event } from "./generator";
 
 interface DateEditorModalProps {
   show: boolean;
-  event: DateEntry;
-  originalEvent: DateEntry;
-  onSave: (editedEvent: DateEntry) => void;
+  event: Event;
+  originalEvent: Event;
+  onSave: (editedEvent: Event) => void;
   onClose: () => void;
 }
 
 const DateEditorModal = (props: DateEditorModalProps) => {
-  const [editedEvent, setEditedEvent] = useState<DateEntry>(props.event);
+  const [editedEvent, setEditedEvent] = useState<Event>(props.event);
 
   // TODO(Niklas): Zurücksetzen-Logik -> Komponenten-Hierarchie?
   // TODO(Niklas): Form Validierung

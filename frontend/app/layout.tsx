@@ -1,8 +1,8 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Slide, ToastContainer } from "react-toastify";
-import Footer from "./components/layout/footer";
-import Header from "./components/layout/header";
-import { ReactQueryClientProvider } from "./components/query-client-provider";
+import Footer from "./components/page/footer";
+import Header from "./components/page/header";
+import { ReactQueryClientProvider } from "./components/providers/query-client-provider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Metadata } from "next";
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactQueryClientProvider>
       <CookieProvider>
@@ -62,4 +62,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </CookieProvider>
     </ReactQueryClientProvider>
   );
-}
+};
+
+export default RootLayout;

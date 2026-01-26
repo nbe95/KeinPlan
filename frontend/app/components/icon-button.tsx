@@ -11,8 +11,9 @@ interface IconButtonProps extends BootstrapButtonProps {
 export const IconButton = (props: PropsWithChildren<IconButtonProps>) => {
   const combinedClassName =
     `px-4 d-flex align-items-center justify-content-center ${props.className || ""}`.trim();
+  const { icon, iconPos, ...buttonProps } = props;
   return (
-    <Button {...props} className={combinedClassName}>
+    <Button {...buttonProps} className={combinedClassName}>
       {props.iconPos != "right" && <props.icon size="1em" className="me-2" />}
       {props.children}
       {props.iconPos == "right" && <props.icon size="1em" className="ms-2" />}

@@ -7,14 +7,14 @@ import { scrollToElement } from "../../../utils/viewport";
 import { IconButtonNext } from "../../icon-button";
 import { UserData } from "../generator";
 
-type UserDataProps = {
+type UserFormProps = {
   userData?: UserData;
   setUserData: (data: UserData) => void;
   setKaPlanIcs: (ics: string | undefined) => void;
   nextStep: () => void;
 };
 
-const UserDataStep = (props: UserDataProps) => {
+const UserForm = (props: UserFormProps) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -135,4 +135,4 @@ const UserDataStep = (props: UserDataProps) => {
   );
 };
 
-export default UserDataStep;
+export default UserForm;

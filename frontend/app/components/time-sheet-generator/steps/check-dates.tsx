@@ -5,17 +5,17 @@ import { IconButtonNext, IconButtonPrev } from "../../icon-button";
 import MsgBox from "../../msg-box";
 import DateCard from "../date-card";
 import { WeekFilter } from "../date-filter";
-import { DateEntry } from "../generator";
+import { Event } from "../generator";
 
-type CheckProps = {
+type CheckDatesProps = {
   targetDate: Date;
-  dateList: DateEntry[];
-  updateDate: (updatedDate: DateEntry) => void;
+  dateList: Event[];
+  updateDate: (updatedDate: Event) => void;
   prevStep: () => void;
   nextStep: () => void;
 };
 
-const CheckStep = (props: CheckProps) => {
+const CheckDates = (props: CheckDatesProps) => {
   const [dateFilter, setDateFilter] = useState<Date>();
   const filteredDates = props.dateList.filter(
     (date) => dateFilter == undefined || isSameDay(date.start_date, dateFilter),
@@ -53,7 +53,7 @@ const CheckStep = (props: CheckProps) => {
       <Row className="my-4">
         {props.dateList.length ? (
           <>
-            {filteredDates.map((entry: DateEntry, index: number) => (
+            {filteredDates.map((entry: Event, index: number) => (
               <Col key={index} sm={12} md={6}>
                 <DateCard date={entry} onUpdate={props.updateDate} />
               </Col>
@@ -87,4 +87,4 @@ const CheckStep = (props: CheckProps) => {
   );
 };
 
-export default CheckStep;
+export default CheckDates;

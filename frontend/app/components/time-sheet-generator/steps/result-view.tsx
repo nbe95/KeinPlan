@@ -22,16 +22,16 @@ import { IconButtonPrev } from "../../icon-button";
 import { CondMailLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
-import { DateEntry, UserData } from "../generator";
+import { Event, UserData } from "../generator";
 
-type ResultProps = {
+type ResultViewProps = {
   userData: UserData;
   targetDate: Date;
-  dateList: DateEntry[];
+  dateList: Event[];
   prevStep: () => void;
 };
 
-const ResultStep = (props: ResultProps) => {
+const ResultView = (props: ResultViewProps) => {
   const getEndpointUrl = (format: string): string => {
     const type: string = "weekly";
     return new URL(`${API_ENDPOINT_TIME_SHEET}/${type}/${format}`, window.location.href).toString();
@@ -174,4 +174,4 @@ const ResultStep = (props: ResultProps) => {
   );
 };
 
-export default ResultStep;
+export default ResultView;

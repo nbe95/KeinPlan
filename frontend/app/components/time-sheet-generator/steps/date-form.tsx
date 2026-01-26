@@ -16,40 +16,45 @@ import {
   USER_COOKIE_NAME,
 } from "../../../utils/constants";
 import { addDaysToDate, getIsoWeekAndYear, getMonday, parseDateStr } from "../../../utils/dates";
+import { useKeyboardShortcut } from "../../../utils/keyboard-shortcut";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { IconButtonNext, IconButtonPrev } from "../../icon-button";
 import { CondLink } from "../../link";
-import { DateEntry, UserData } from "../generator";
+import { Event, UserData } from "../generator";
 
 interface KaPlanData {
   icsString: string;
   targetDate: Date;
 }
 
-type DatesProps = {
+type DateFormProps = {
   userData: UserData;
   targetDate: Date;
   setTargetDate: (date: Date) => void;
   kaPlanIcs?: string;
   setKaPlanIcs: (ics: string) => void;
-  setDateList: (data: DateEntry[]) => void;
+  setDateList: (data: Event[]) => void;
   prevStep: () => void;
   nextStep: () => void;
 };
 
-const DatesStep = (props: DatesProps) => {
+const DateForm = (props: DateFormProps) => {
   // Date related stuff
   const getCalWeekLabel = useCallback(
     (): string => `KW ${getIsoWeekAndYear(props.targetDate)}`,
     [props.targetDate],
   );
-  const prevWeek = () => {
+  const prevWeek = useCallback(() => {
     props.setTargetDate(addDaysToDate(getMonday(props.targetDate), -7));
-  };
-  const nextWeek = () => {
+  }, [props.setTargetDate, props.targetDate]);
+  const nextWeek = useCallback(() => {
     props.setTargetDate(addDaysToDate(getMonday(props.targetDate), 7));
-  };
+  }, [props.setTargetDate, props.targetDate]);
   const getDateStr = (date: Date): string => strftime("%Y-%m-%d", date);
+
+  // Keyboard navigation for calendar weeks
+  useKeyboardShortcut({ key: "ArrowLeft", onKeyPressed: prevWeek });
+  useKeyboardShortcut({ key: "ArrowRight", onKeyPressed: nextWeek });
 
   // Query for KaPlan dates
   const [kaPlanQuery, setKaPlanQuery] = useState<KaPlanData>();
@@ -72,8 +77,8 @@ const DatesStep = (props: DatesProps) => {
         .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
-    select: (data: any): DateEntry[] =>
-      data.dates?.map((date: any): DateEntry => {
+    select: (data: any): Event[] =>
+      data.dates?.map((date: any): Event => {
         return {
           uid: date.uid ?? "",
           title: date.title ?? "",
@@ -204,7 +209,8 @@ const DatesStep = (props: DatesProps) => {
               </InputGroup.Text>
             </InputGroup>
             <Form.Text>
-              Wähle ein beliebiges Datum aus, das innerhalb in der gewünschten Kalenderwoche liegt.
+              Wähle ein beliebiges Datum aus <i>(Pro-Tipp: Pfeiltasten)</i>, das innerhalb in der
+              gewünschten Kalenderwoche liegt.
             </Form.Text>
           </Form.Group>
         </Col>
@@ -259,4 +265,4 @@ const DatesStep = (props: DatesProps) => {
   );
 };
 
-export default DatesStep;
+export default DateForm;
