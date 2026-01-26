@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Col, Row, Stack } from "react-bootstrap";
 import { FaArrowUpRightFromSquare, FaEnvelope, FaGithub } from "react-icons/fa6";

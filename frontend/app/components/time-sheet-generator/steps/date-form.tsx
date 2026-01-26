@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { FaCircleInfo, FaCircleMinus, FaCirclePlus } from "react-icons/fa6";
@@ -96,8 +96,15 @@ const DateForm = (props: DateFormProps) => {
 
   // Form logic
   const [cookies, setCookie] = useCookies([USER_COOKIE_NAME]);
-  const handleSubmit = (event) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Validation
+    const form = event.target as HTMLFormElement;
+    form.classList.add("was-validated");
+    if (!form.checkValidity()) {
+      return;
+    }
 
     props.setKaPlanIcs(event.target.kaplan_ics.value);
     setKaPlanQuery({ icsString: event.target.kaplan_ics.value, targetDate: props.targetDate });
@@ -161,107 +168,116 @@ const DateForm = (props: DateFormProps) => {
   }, []);
 
   return (
-    <form onSubmit={(event) => handleSubmit(event)}>
+    <>
       <p className="lead">Als nächstes rufen wir deine Termine vom KaPlan-Server ab.</p>
-      <Row>
-        <Col className="mb-4">
-          <Form.Group controlId="cal-week">
-            <Form.Label>
-              Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
-            </Form.Label>
-            <InputGroup className="px-auto">
+      <Form onSubmit={onSubmit} noValidate>
+        <Row>
+          <Col className="mb-4">
+            <Form.Group controlId="cal-week">
+              <Form.Label>
+                Für welche Kalenderwoche möchtest du eine Stundenliste erstellen?
+              </Form.Label>
+              <InputGroup className="px-auto has-validation">
+                <Form.Control
+                  type="date"
+                  name="target_date"
+                  placeholder="Datum"
+                  value={getDateStr(props.targetDate)}
+                  onChange={(event) => {
+                    const date = (event.target as HTMLInputElement).valueAsDate;
+                    if (date) {
+                      props.setTargetDate(date);
+                    }
+                  }}
+                  disabled={isFetching}
+                  required
+                />
+                <InputGroup.Text>
+                  <Button
+                    type="button"
+                    variant="none"
+                    className="py-0 border-0"
+                    onClick={prevWeek}
+                    disabled={isFetching}
+                    tabIndex={-1}
+                  >
+                    <FaCircleMinus size="1.2em" />
+                  </Button>
+                  {getCalWeekLabel()}
+                  <Button
+                    type="button"
+                    variant="none"
+                    className="py-0 border-0"
+                    onClick={nextWeek}
+                    disabled={isFetching}
+                    tabIndex={-1}
+                  >
+                    <FaCirclePlus size="1.2em" />
+                  </Button>
+                </InputGroup.Text>
+                <Form.Control.Feedback type="invalid">
+                  Bitte gib ein gültiges Datum an.
+                </Form.Control.Feedback>
+              </InputGroup>
+              <Form.Text>
+                Wähle ein beliebiges Datum aus <i>(Pro-Tipp: Pfeiltasten)</i>, das innerhalb in der
+                gewünschten Kalenderwoche liegt.
+              </Form.Text>
+            </Form.Group>
+          </Col>
+          <Col md={12} className="mb-4">
+            <Form.Group controlId="kaplan">
+              <Form.Label>Dein persönlicher KaPlan-Abonnement-String</Form.Label>
               <Form.Control
-                type="date"
-                name="target_date"
-                placeholder="Datum"
-                value={getDateStr(props.targetDate)}
-                onChange={(event) => {
-                  const date = (event.target as HTMLInputElement).valueAsDate;
-                  if (date) {
-                    props.setTargetDate(date);
-                  }
-                }}
+                type="text"
+                name="kaplan_ics"
+                placeholder="https://…"
+                defaultValue={props.kaPlanIcs}
+                maxLength={2048}
+                minLength={10}
                 disabled={isFetching}
                 required
               />
-              <InputGroup.Text>
-                <Button
-                  type="button"
-                  variant="none"
-                  className="py-0 border-0"
-                  onClick={prevWeek}
-                  disabled={isFetching}
-                  tabIndex={-1}
-                >
-                  <FaCircleMinus size="1.2em" />
-                </Button>
-                {getCalWeekLabel()}
-                <Button
-                  type="button"
-                  variant="none"
-                  className="py-0 border-0"
-                  onClick={nextWeek}
-                  disabled={isFetching}
-                  tabIndex={-1}
-                >
-                  <FaCirclePlus size="1.2em" />
-                </Button>
-              </InputGroup.Text>
-            </InputGroup>
-            <Form.Text>
-              Wähle ein beliebiges Datum aus <i>(Pro-Tipp: Pfeiltasten)</i>, das innerhalb in der
-              gewünschten Kalenderwoche liegt.
-            </Form.Text>
-          </Form.Group>
-        </Col>
-        <Col md={12} className="mb-4">
-          <Form.Group controlId="kaplan">
-            <Form.Label>Dein persönlicher KaPlan-Abonnement-String</Form.Label>
-            <Form.Control
-              type="text"
-              name="kaplan_ics"
-              placeholder="https://…"
-              defaultValue={props.kaPlanIcs}
-              maxLength={2048}
-              disabled={isFetching}
-              required
-            />
-            <Form.Text>
-              <Stack direction="horizontal" gap={1} className="mb-3">
-                <FaCircleInfo size="1.3em" className="me-1" />
-                <span>
-                  Du findest deinen Abonnement-String in{" "}
-                  <CondLink
-                    condition={!!KAPLAN_LINK}
-                    href={`${KAPLAN_LINK}/hilfe.asp#kalenderintegration`}
-                    target={KAPLAN_WEB_LINK_TARGET}
-                    title="KaPlan Web öffnen"
-                  >
-                    KaPlan&nbsp;Web
-                  </CondLink>{" "}
-                  unter <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
-                </span>
-              </Stack>
-            </Form.Text>
-          </Form.Group>
-          <p className="mt-4 mb-1">
-            Für die Abfrage vom KaPlan-Server ist dein persönlicher Abonnement-String erforderlich.
-            Er ermöglicht Lesezugriff auf deine Termine und ändert sich, wenn du z.&nbsp;B. dein
-            Passwort änderst. Wie weiter unten beschrieben, wird er nicht gespeichert, sondern nur
-            einmalig zur Erstellung deiner Stundenliste verwendet.
-          </p>
-        </Col>
-      </Row>
+              <Form.Control.Feedback type="invalid">
+                Sorry, das ist kein gültiger Abonnement-String.
+              </Form.Control.Feedback>
+              <Form.Text>
+                <Stack direction="horizontal" gap={1} className="mb-3">
+                  <FaCircleInfo size="1.3em" className="me-1" />
+                  <span>
+                    Du findest deinen Abonnement-String in{" "}
+                    <CondLink
+                      condition={!!KAPLAN_LINK}
+                      href={`${KAPLAN_LINK}/hilfe.asp#kalenderintegration`}
+                      target={KAPLAN_WEB_LINK_TARGET}
+                      title="KaPlan Web öffnen"
+                    >
+                      KaPlan&nbsp;Web
+                    </CondLink>{" "}
+                    unter <b>Hilfe/Info/Ein&shy;stellungen &rarr; Kalender&shy;integration</b>.
+                  </span>
+                </Stack>
+              </Form.Text>
+            </Form.Group>
+            <p className="mt-4 mb-1">
+              Für die Abfrage vom KaPlan-Server ist dein persönlicher Abonnement-String
+              erforderlich. Er ermöglicht Lesezugriff auf deine Termine und ändert sich, wenn du
+              z.&nbsp;B. dein Passwort änderst. Wie weiter unten beschrieben, wird er nicht
+              gespeichert, sondern nur einmalig zur Erstellung deiner Stundenliste verwendet.
+            </p>
+          </Col>
+        </Row>
 
-      <Row>
-        <Col className="d-flex justify-content-end order-2">
-          <IconButtonNext id="btn-next" type="submit" disabled={isFetching} />
-        </Col>
-        <Col className="d-flex justify-content-start order-1">
-          <IconButtonPrev id="btn-prev" onClick={props.prevStep} disabled={isFetching} />
-        </Col>
-      </Row>
-    </form>
+        <Row>
+          <Col className="d-flex justify-content-end order-2">
+            <IconButtonNext id="btn-next" type="submit" disabled={isFetching} />
+          </Col>
+          <Col className="d-flex justify-content-start order-1">
+            <IconButtonPrev id="btn-prev" onClick={props.prevStep} disabled={isFetching} />
+          </Col>
+        </Row>
+      </Form>
+    </>
   );
 };
 

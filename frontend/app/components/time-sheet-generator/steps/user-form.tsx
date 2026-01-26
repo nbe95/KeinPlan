@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { Id, toast } from "react-toastify";
@@ -15,8 +15,16 @@ type UserFormProps = {
 };
 
 const UserForm = (props: UserFormProps) => {
-  const handleSubmit = (event) => {
+  const mainFormRef = useRef<HTMLFormElement>(null);
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Validation
+    const form = event.target as HTMLFormElement;
+    form.classList.add("was-validated");
+    if (!form.checkValidity()) {
+      return;
+    }
 
     const userData: UserData = {
       firstName: event.target.first_name.value,
@@ -60,78 +68,89 @@ const UserForm = (props: UserFormProps) => {
   };
 
   return (
-    <form onSubmit={(event) => handleSubmit(event)}>
+    <>
       <p className="lead">First things first &ndash; zuerst die Basics.</p>
-      <Row>
-        <Col lg={6} md={12} className="mb-4">
-          <Form.Group controlId="name">
-            <Form.Label>Wie heißt du?</Form.Label>
-            <InputGroup>
+      <Form ref={mainFormRef} onSubmit={onSubmit} noValidate>
+        <Row>
+          <Col lg={6} md={12} className="mb-4">
+            <Form.Group controlId="name">
+              <Form.Label>Wie heißt du?</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  name="first_name"
+                  placeholder="Vorname"
+                  defaultValue={props.userData?.firstName}
+                  maxLength={45}
+                  required
+                />
+                <Form.Control
+                  type="text"
+                  name="last_name"
+                  placeholder="Nachname"
+                  className="rounded-end"
+                  defaultValue={props.userData?.lastName}
+                  maxLength={45}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">Das kriegst du hin!</Form.Control.Feedback>
+              </InputGroup>
+              <Form.Text>
+                Trage deinen Namen ein, der als Dienstnehmer auf der Stundenliste stehen wird.
+              </Form.Text>
+            </Form.Group>
+          </Col>
+          <Col lg={6} md={12} className="mb-4">
+            <Form.Group controlId="employer">
+              <Form.Label>Für welche Gemeinde arbeitest du?</Form.Label>
               <Form.Control
                 type="text"
-                name="first_name"
-                placeholder="Vorname"
-                defaultValue={props.userData?.firstName}
-                maxLength={45}
+                name="employer"
+                placeholder="Dienstgeber"
+                defaultValue={props.userData?.employer}
+                maxLength={100}
+                minLength={5}
                 required
               />
-              <Form.Control
-                type="text"
-                name="last_name"
-                placeholder="Nachname"
-                defaultValue={props.userData?.lastName}
-                maxLength={45}
-                required
+              <Form.Control.Feedback type="invalid">
+                Sorry, darf nicht leer sein.
+              </Form.Control.Feedback>
+              <Form.Text>
+                Trage den Namen der Pfarrgemeinde ein, der als Dienstgeber auf der Stundenliste
+                auftauchen wird.
+              </Form.Text>
+            </Form.Group>
+          </Col>
+        </Row>
+      </Form>
+
+      {/* Use an own form to exclude checkbox from validation */}
+      <Form>
+        <Row>
+          <Col className="mb-4">
+            <Form.Group controlId="cookie-usage">
+              <Form.Check
+                type="switch"
+                name="use_cookie"
+                label="Alle Eingaben als Cookie speichern"
+                onChange={(event) => setResetCookie(event.currentTarget.checked)}
+                checked={enableCookie}
               />
-            </InputGroup>
-            <Form.Text>
-              Trage deinen Namen ein, der als Dienstnehmer auf der Stundenliste stehen wird.
-            </Form.Text>
-          </Form.Group>
-        </Col>
-        <Col lg={6} md={12} className="mb-4">
-          <Form.Group controlId="employer">
-            <Form.Label>Für welche Gemeinde arbeitest du?</Form.Label>
-            <Form.Control
-              type="text"
-              name="employer"
-              placeholder="Dienstgeber"
-              defaultValue={props.userData?.employer}
-              maxLength={100}
-              required
-            />
-            <Form.Text>
-              Trage den Namen der Pfarrgemeinde ein, der als Dienstgeber auf der Stundenliste
-              auftauchen wird.
-            </Form.Text>
-          </Form.Group>
-        </Col>
-      </Row>
+              <Form.Text>
+                Damit geht&apos;s beim nächsten Mal deutlich schneller und du musst nicht alles
+                nochmal eintippen. Deine Daten sind sicher und bleiben auf diesem Gerät.
+              </Form.Text>
+            </Form.Group>
+          </Col>
+        </Row>
 
-      <Row>
-        <Col className="mb-4">
-          <Form.Group controlId="cookie-usage">
-            <Form.Check
-              type="switch"
-              name="use_cookie"
-              label="Alle Eingaben als Cookie speichern"
-              onClick={(event) => setResetCookie(event.currentTarget.checked)}
-              checked={enableCookie}
-            />
-            <Form.Text>
-              Damit geht&apos;s beim nächsten Mal deutlich schneller und du musst nicht alles
-              nochmal eintippen. Deine Daten sind sicher und bleiben auf diesem Gerät.
-            </Form.Text>
-          </Form.Group>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col className="d-flex justify-content-end order-1">
-          <IconButtonNext type="submit" id="btn-next" />
-        </Col>
-      </Row>
-    </form>
+        <Row>
+          <Col className="d-flex justify-content-end order-1">
+            <IconButtonNext id="btn-next" onClick={() => mainFormRef.current?.requestSubmit()} />
+          </Col>
+        </Row>
+      </Form>
+    </>
   );
 };
 

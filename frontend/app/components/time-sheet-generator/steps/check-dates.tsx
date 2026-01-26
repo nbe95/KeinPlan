@@ -21,18 +21,13 @@ const CheckDates = (props: CheckDatesProps) => {
     (date) => dateFilter == undefined || isSameDay(date.start_date, dateFilter),
   );
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    props.nextStep();
-  };
-
   // Directly focus next button upon first render
   useEffect(() => {
     document.getElementById("btn-next")?.focus({ preventScroll: true });
   }, []);
 
   return (
-    <form onSubmit={(event) => handleSubmit(event)}>
+    <>
       <p className="lead">Fast fertig! Überprüfe kurz deine Termine.</p>
       <p>
         Ändere bei Bedarf ein paar Details oder füge neue Termine hinzu. Wenn alles passt, klicke
@@ -77,13 +72,13 @@ const CheckDates = (props: CheckDatesProps) => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-end order-2">
-          <IconButtonNext id="btn-next" type="submit" />
+          <IconButtonNext id="btn-next" onClick={props.nextStep} />
         </Col>
         <Col className="d-flex justify-content-start order-1">
           <IconButtonPrev id="btn-prev" onClick={props.prevStep} />
         </Col>
       </Row>
-    </form>
+    </>
   );
 };
 

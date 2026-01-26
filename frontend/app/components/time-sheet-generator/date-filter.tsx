@@ -38,20 +38,16 @@ const FilterItem = (props: FilterProps) => {
       className: className,
       style: { whiteSpace: "nowrap" },
     },
-    [
-      <>
-        {props.title}
-        {!isDisabled && (
-          <Badge
-            bg={isActive && props.as == Nav.Link ? "primary" : "secondary"}
-            pill
-            className="ms-2 small"
-          >
-            {props.badge}
-          </Badge>
-        )}
-      </>,
-    ],
+    props.title,
+    !isDisabled && (
+      <Badge
+        bg={isActive && props.as == Nav.Link ? "primary" : "secondary"}
+        pill
+        className="ms-2 small"
+      >
+        {props.badge}
+      </Badge>
+    ),
   );
 };
 
@@ -63,7 +59,7 @@ type WeekFilterProps = {
 };
 
 export const WeekFilter = (props: WeekFilterProps) => {
-  const keyPrefix: string = "week-filter-";
+  const keyPrefix: string = "week-filter";
   const strftimeGer = strftime.localizeByIdentifier("de_DE");
 
   const forEachDay = (fn: (key: string, day: Date, occurrences: number) => any): any =>
@@ -77,11 +73,11 @@ export const WeekFilter = (props: WeekFilterProps) => {
       });
 
   return (
-    <Nav variant="tabs" defaultActiveKey={keyPrefix + "all"} className="flex-nowrap">
-      <Nav.Item>
+    <Nav variant="tabs" defaultActiveKey={`${keyPrefix}all-tabs`} className="flex-nowrap">
+      <Nav.Item key="all-tabs">
         <FilterItem
           as={Nav.Link}
-          eventKey={keyPrefix + "all"}
+          eventKey={`${keyPrefix}-all-tabs`}
           title="Alle"
           disabled={false}
           badge={props.dateList.length}
@@ -91,7 +87,7 @@ export const WeekFilter = (props: WeekFilterProps) => {
       </Nav.Item>
 
       {forEachDay((key, day, occurrences) => (
-        <Nav.Item key={key}>
+        <Nav.Item key={`${key}-tabs`}>
           <FilterItem
             as={Nav.Link}
             eventKey={key}
@@ -130,7 +126,7 @@ export const WeekFilter = (props: WeekFilterProps) => {
           {forEachDay((key, day, occurrences) => (
             <FilterItem
               as={Dropdown.Item}
-              key={key}
+              key={`${key}-dropdown`}
               eventKey={key}
               title={strftimeGer("%A", day)}
               disabled={occurrences == 0}

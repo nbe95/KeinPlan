@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Col, Form, Modal, Row } from "react-bootstrap";
 
 import {
@@ -28,25 +28,30 @@ const DateEditorModal = (props: DateEditorModalProps) => {
   const [editedEvent, setEditedEvent] = useState<Event>(props.event);
 
   // TODO(Niklas): Zurücksetzen-Logik -> Komponenten-Hierarchie?
-  // TODO(Niklas): Form Validierung
-  // TODO(Niklas): Form Validierung
 
-  const handleSave = () => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // Validation
+    const form = event.target as HTMLFormElement;
+    form.classList.add("was-validated");
+    if (!form.checkValidity()) {
+      return;
+    }
+
     props.onSave(editedEvent);
     props.onClose();
   };
 
-  const handleReset = () => {
+  const onReset = () => {
     setEditedEvent(props.originalEvent);
   };
 
-  // Hilfsfunktion zur Überprüfung, ob das editedEvent vom originalEvent abweicht
   const hasChanges = (): boolean => {
     if (editedEvent.title !== props.originalEvent.title) return true;
     if (editedEvent.role !== props.originalEvent.role) return true;
     if (editedEvent.location !== props.originalEvent.location) return true;
 
-    // Vergleich der Date-Objekte über deren getTime() Wert
     if (editedEvent.start_date.getTime() !== props.originalEvent.start_date.getTime()) return true;
     if (editedEvent.end_date.getTime() !== props.originalEvent.end_date.getTime()) return true;
 
@@ -62,25 +67,28 @@ const DateEditorModal = (props: DateEditorModalProps) => {
       fullscreen="sm-down"
       backdrop="static"
     >
-      <Modal.Header closeButton>
-        <Modal.Title>Termin bearbeiten</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form noValidate>
+      <Form onSubmit={onSubmit} noValidate>
+        <Modal.Header closeButton>
+          <Modal.Title>Termin bearbeiten</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <Row>
             <Form.Group className="mb-3" controlId="title">
               <Form.Label className="d-flex align-items-center">
                 <FaTag className="me-2" />
-                Titel <span className="text-danger">*</span>
+                Titel
               </Form.Label>
               <Form.Control
                 type="text"
                 name="title"
-                placeholder="Titel des Ereignisses"
-                value={editedEvent.title}
+                placeholder="Was ist passiert?"
+                defaultValue={editedEvent.title}
+                maxLength={50}
+                minLength={3}
+                required
               />
               <Form.Control.Feedback type="invalid">
-                Bitte gib einen gültigen Titel ein.
+                Was wäre ein Termin ohne einen guten Titel?
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -89,46 +97,45 @@ const DateEditorModal = (props: DateEditorModalProps) => {
             <Form.Group as={Col} xs={12} lg={4} className="mb-3" controlId="date">
               <Form.Label className="d-flex align-items-center">
                 <FaCalendarDays className="me-2" />
-                Datum <span className="text-danger">*</span>
+                Datum
               </Form.Label>
               <Form.Control
                 type="date"
                 name="start_date"
-                value={formatDateForInput(editedEvent.start_date)}
+                defaultValue={formatDateForInput(editedEvent.start_date)}
+                required
               />
               <Form.Control.Feedback type="invalid">
-                Bitte wähle ein gültiges Datum aus.
+                Wähle ein gültiges Datum aus.
               </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Col} xs={6} lg={4} className="mb-3" controlId="startTime">
               <Form.Label className="d-flex align-items-center">
                 <FaClock className="me-2" />
-                Startzeit <span className="text-danger">*</span>
+                Startzeit
               </Form.Label>
               <Form.Control
                 type="time"
                 name="start_time"
-                value={formatTimeForInput(editedEvent.start_date)}
+                defaultValue={formatTimeForInput(editedEvent.start_date)}
+                required
               />
-              <Form.Control.Feedback type="invalid">
-                Bitte gibt eine gültige Startzeit ein.
-              </Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">Ungültige Eingabe.</Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Col} xs={6} lg={4} className="mb-3" controlId="endTime">
               <Form.Label className="d-flex align-items-center">
                 <FaClock className="me-2" />
-                Endzeit <span className="text-danger">*</span>
+                Endzeit
               </Form.Label>
               <Form.Control
                 type="time"
                 name="end_time"
-                value={formatTimeForInput(editedEvent.end_date)}
+                defaultValue={formatTimeForInput(editedEvent.end_date)}
+                required
               />
-              <Form.Control.Feedback type="invalid">
-                Bitte gib eine gültige Endzeit ein.
-              </Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">Ungültige Eingabe.</Form.Control.Feedback>
             </Form.Group>
           </Row>
 
@@ -141,8 +148,9 @@ const DateEditorModal = (props: DateEditorModalProps) => {
               <Form.Control
                 type="text"
                 name="location"
-                placeholder="Ort des Termins"
-                value={editedEvent.location ?? ""}
+                placeholder="Wo war das?"
+                defaultValue={editedEvent.location ?? ""}
+                maxLength={50}
               />
             </Form.Group>
 
@@ -153,31 +161,32 @@ const DateEditorModal = (props: DateEditorModalProps) => {
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Deine Rolle oder Funktion"
+                placeholder="Was hast du da gemacht?"
                 name="role"
-                value={editedEvent.role ?? ""}
+                defaultValue={editedEvent.role ?? ""}
+                maxLength={50}
               />
             </Form.Group>
           </Row>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <IconButton
-          icon={FaArrowRotateRight}
-          variant="danger"
-          onClick={handleReset}
-          className="me-auto"
-          disabled={!hasChanges()}
-        >
-          Zurücksetzen
-        </IconButton>
-        <IconButton icon={FaX} variant="secondary" onClick={props.onClose}>
-          Abbrechen
-        </IconButton>
-        <IconButton icon={FaFloppyDisk} variant="primary" onClick={handleSave}>
-          Speichern
-        </IconButton>
-      </Modal.Footer>
+        </Modal.Body>
+        <Modal.Footer>
+          <IconButton
+            icon={FaArrowRotateRight}
+            variant="danger"
+            onClick={onReset}
+            className="me-auto"
+            disabled={!hasChanges()}
+          >
+            Zurücksetzen
+          </IconButton>
+          <IconButton icon={FaX} variant="secondary" onClick={props.onClose}>
+            Abbrechen
+          </IconButton>
+          <IconButton icon={FaFloppyDisk} type="submit" variant="primary">
+            Speichern
+          </IconButton>
+        </Modal.Footer>
+      </Form>
     </Modal>
   );
 };
