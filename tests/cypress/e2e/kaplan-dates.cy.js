@@ -41,7 +41,7 @@ describe("check handling of KaPlan dates", () => {
           const dateEnd = new Date(Date.parse(date.end));
           card.should(
             "contain.text",
-            `${strftimeGer("%H:%M", dateStart)} – ${strftimeGer("%H:%M", dateEnd)}`,
+            `${strftimeGer("%H:%M", dateStart)} \u2013 ${strftimeGer("%H:%M", dateEnd)}`,
           );
           card.should("contain.text", `${strftimeGer("%a%d%b", dateStart)}`);
         }

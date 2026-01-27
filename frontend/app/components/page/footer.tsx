@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Col, Row, Stack } from "react-bootstrap";
 import { FaArrowUpRightFromSquare, FaEnvelope, FaGithub } from "react-icons/fa6";
@@ -8,8 +10,8 @@ import {
   KAPLAN_LINK,
   KAPLAN_WEB_LINK_TARGET,
   VERSION_FRONTEND,
-  VERSION_SHA_FRONTEND,
 } from "../../utils/constants";
+import { CondLink } from "../link";
 import Container from "./container";
 import VersionCheck from "./version-check";
 
@@ -32,20 +34,17 @@ const Footer = () => {
                     obfuscateChildren={false}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="text-decoration-none" title="E-Mail an den Administrator">
-                      <FaEnvelope size="1.5em" className="me-2" />
-                      Kontakt
-                    </span>
+                    <FaEnvelope size="1em" className="me-1" />
+                    Kontakt
                   </Obfuscate>
                 )}
                 {KAPLAN_LINK && (
                   <Link
                     href={KAPLAN_LINK}
                     className="text-decoration-none"
-                    title="KaPlan Web öffnen"
                     target={KAPLAN_WEB_LINK_TARGET}
                   >
-                    <FaArrowUpRightFromSquare size="1.5em" className="me-2" />
+                    <FaArrowUpRightFromSquare size="1em" className="me-1" />
                     KaPlan&nbsp;Web
                   </Link>
                 )}
@@ -56,18 +55,15 @@ const Footer = () => {
               sm={6}
               className="d-flex order-sm-0 justify-content-center justify-content-sm-start my-1"
             >
-              {GITHUB_LINK && (
-                <Link href={GITHUB_LINK} className="text-muted me-2" title="KeinPlan auf Github">
-                  <FaGithub size="1.5em" />
-                </Link>
-              )}
-              <span
-                id="version"
-                className="text-center"
-                title={VERSION_SHA_FRONTEND ? `Commit ${VERSION_SHA_FRONTEND}` : ""}
+              <CondLink
+                condition={!!GITHUB_LINK}
+                href={GITHUB_LINK!}
+                className="text-muted text-decoration-none me-2"
+                title="KeinPlan auf GitHub"
               >
-                KeinPlan {VERSION_FRONTEND ? `v${VERSION_FRONTEND}` : "(unbekannte Version)"}
-              </span>
+                <FaGithub size="1.5em" className="me-1" /> KeinPlan{" "}
+                {VERSION_FRONTEND ? `v${VERSION_FRONTEND}` : <small>(unbekannte Version)</small>}
+              </CondLink>
             </Col>
           </Row>
         </footer>

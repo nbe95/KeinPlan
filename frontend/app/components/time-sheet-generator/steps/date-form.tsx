@@ -20,7 +20,6 @@ import { useKeyboardShortcut } from "../../../utils/keyboard-shortcut";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import { IconButtonNext, IconButtonPrev } from "../../icon-button";
 import { CondLink } from "../../link";
-import { Event, UserData } from "../generator";
 
 interface KaPlanData {
   icsString: string;
@@ -98,6 +97,7 @@ const DateForm = (props: DateFormProps) => {
   const [cookies, setCookie] = useCookies([USER_COOKIE_NAME]);
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    event.stopPropagation();
 
     // Validation
     const form = event.target as HTMLFormElement;
@@ -229,12 +229,11 @@ const DateForm = (props: DateFormProps) => {
             <Form.Group controlId="kaplan">
               <Form.Label>Dein persönlicher KaPlan-Abonnement-String</Form.Label>
               <Form.Control
-                type="text"
+                type="url"
                 name="kaplan_ics"
                 placeholder="https://…"
                 defaultValue={props.kaPlanIcs}
                 maxLength={2048}
-                minLength={10}
                 disabled={isFetching}
                 required
               />
@@ -250,7 +249,7 @@ const DateForm = (props: DateFormProps) => {
                       condition={!!KAPLAN_LINK}
                       href={`${KAPLAN_LINK}/hilfe.asp#kalenderintegration`}
                       target={KAPLAN_WEB_LINK_TARGET}
-                      title="KaPlan Web öffnen"
+                      title="KaPlan Web extern öffnen"
                     >
                       KaPlan&nbsp;Web
                     </CondLink>{" "}

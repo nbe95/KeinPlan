@@ -7,12 +7,20 @@ interface UseKeyboardShortcutProps {
 
 export const useKeyboardShortcut = (props: UseKeyboardShortcutProps) => {
   useEffect(() => {
-    function keyDownHandler(e: globalThis.KeyboardEvent) {
+    const keyDownHandler = (e: globalThis.KeyboardEvent) => {
+      // Don't fire if user has focussed a form element
+      const activeElement = document.activeElement;
+      const isInputFocussed =
+        activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement;
+      if (isInputFocussed) {
+        return;
+      }
+
       if (e.key === props.key) {
         e.preventDefault();
         props.onKeyPressed();
       }
-    }
+    };
     document.addEventListener("keydown", keyDownHandler);
     return () => {
       document.removeEventListener("keydown", keyDownHandler);
