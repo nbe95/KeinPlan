@@ -1,12 +1,8 @@
-import {
-  IconDefinition,
-  faCircleExclamation,
-  faCircleInfo,
-  faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PropsWithChildren } from "react";
 import { Alert, Stack } from "react-bootstrap";
+import { IconType } from "react-icons";
+import { FaCircleExclamation, FaCircleInfo, FaTriangleExclamation } from "react-icons/fa6";
+import { match } from "ts-pattern";
 
 type MsgBoxType = "error" | "warning" | "info";
 
@@ -16,16 +12,22 @@ type MsgBoxProps = {
 };
 
 const MsgBox = (props: PropsWithChildren<MsgBoxProps>) => {
-  const styling: Record<MsgBoxType, { bsVariant: string; faIcon: IconDefinition }> = {
-    error: { bsVariant: "danger", faIcon: faTriangleExclamation },
-    warning: { bsVariant: "warning", faIcon: faCircleExclamation },
-    info: { bsVariant: "info", faIcon: faCircleInfo },
-  };
+  const bsVariant: string = match(props.type)
+    .with("error", () => "danger")
+    .with("warning", () => "warning")
+    .with("info", () => "info")
+    .exhaustive();
+
+  const Icon: IconType = match(props.type)
+    .with("error", () => FaTriangleExclamation)
+    .with("warning", () => FaCircleExclamation)
+    .with("info", () => FaCircleInfo)
+    .exhaustive();
 
   return (
-    <Alert variant={styling[props.type].bsVariant} className="my-2">
+    <Alert variant={bsVariant} className="my-2">
       <Stack direction="horizontal" gap={3}>
-        <FontAwesomeIcon icon={styling[props.type].faIcon} size="2x" />
+        <Icon size="2.5em" />
         <div>
           {props.children}
           {props.trace && (

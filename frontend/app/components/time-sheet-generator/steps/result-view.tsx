@@ -1,9 +1,8 @@
-import { faEnvelopeOpenText, faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
+import { FaEnvelopeOpenText, FaFilePdf } from "react-icons/fa6";
 import Obfuscate from "react-obfuscate";
 import {
   ADMIN_MAIL,
@@ -19,20 +18,20 @@ import {
 } from "../../../utils/dates";
 import { catchQueryError, retryUnlessClientError } from "../../../utils/network";
 import DownloadButton from "../../download-button";
+import { IconButtonPrev } from "../../icon-button";
 import { CondMailLink } from "../../link";
 import LoadingSpinner from "../../loading";
 import MsgBox from "../../msg-box";
-import { PrevButton } from "../../process-button";
-import { DateEntry, UserData } from "../generator";
+import { Event, UserData } from "../generator";
 
-type ResultProps = {
+type ResultViewProps = {
   userData: UserData;
   targetDate: Date;
-  dateList: DateEntry[];
+  dateList: Event[];
   prevStep: () => void;
 };
 
-const ResultStep = (props: ResultProps) => {
+const ResultView = (props: ResultViewProps) => {
   const getEndpointUrl = (format: string): string => {
     const type: string = "weekly";
     return new URL(`${API_ENDPOINT_TIME_SHEET}/${type}/${format}`, window.location.href).toString();
@@ -132,7 +131,7 @@ const ResultStep = (props: ResultProps) => {
                       url={pdf.blobUrl}
                       text={`KW ${getIsoWeekAndYear(props.targetDate)}`}
                       size={pdf.size}
-                      faIcon={faFilePdf}
+                      faIcon={FaFilePdf}
                       isPrimary={true}
                     />
                   </>
@@ -158,7 +157,7 @@ const ResultStep = (props: ResultProps) => {
                   id="open-mail-template"
                   className="btn btn-primary"
                 >
-                  <FontAwesomeIcon icon={faEnvelopeOpenText} className="me-2" />
+                  <FaEnvelopeOpenText className="me-2" />
                   Mail-Vorlage öffnen
                 </Obfuscate>
               )}
@@ -168,11 +167,11 @@ const ResultStep = (props: ResultProps) => {
       )}
       <Row>
         <Col className="d-flex justify-content-start order-1">
-          <PrevButton id="btn-prev" callback={props.prevStep} />
+          <IconButtonPrev id="btn-prev" onClick={props.prevStep} />
         </Col>
       </Row>
     </>
   );
 };
 
-export default ResultStep;
+export default ResultView;

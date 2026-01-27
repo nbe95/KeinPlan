@@ -1,10 +1,9 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconType } from "react-icons";
 
 type Step = {
   key: number;
   name: string;
-  icon?: IconProp;
+  icon?: IconType;
 };
 type StepperProps = {
   steps: Array<Step>;
@@ -24,9 +23,9 @@ export const Stepper = (props: StepperProps) => {
         <div className="fw-bold fs-6">
           <div
             className={`rounded-circle border p-1 ${isActive ? "bg-primary border-primary text-white" : isPassed ? "bg-white border-primary text-primary" : "bg-white text-muted"}`}
-            style={{ width: "2.2rem", height: "2.2rem" }}
+            style={{ width: "2.3rem", height: "2.3rem" }}
           >
-            {step.icon ? <FontAwesomeIcon icon={step.icon} size="1x" /> : <>{index + 1}</>}
+            {step.icon ? <step.icon size="1rem" /> : <>{index + 1}</>}
           </div>
         </div>
         <span

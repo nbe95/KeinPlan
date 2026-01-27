@@ -1,8 +1,7 @@
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { filesize } from "filesize";
 import { PropsWithChildren, useRef } from "react";
 import { Button, Stack } from "react-bootstrap";
+import { IconType } from "react-icons";
 
 type DownloadButtonProps = {
   id?: string;
@@ -10,7 +9,7 @@ type DownloadButtonProps = {
   url: string;
   text: string;
   size: number;
-  faIcon: IconDefinition;
+  faIcon: IconType;
   isPrimary: boolean;
 };
 
@@ -26,8 +25,8 @@ const DownloadButton = (props: PropsWithChildren<DownloadButtonProps>) => {
         ref.current?.click();
       }}
     >
-      <Stack direction="vertical" className="mx-3">
-        <FontAwesomeIcon icon={props.faIcon} size="4x" className="m-2" />
+      <Stack direction="vertical" className="mx-3 d-flex align-items-center justify-content-center">
+        <props.faIcon size="4em" className="m-2" />
         <span className="fw-bold">{props.text}</span>
         {props.size && <span className="small">{filesize(props.size, { locale: "de" })}</span>}
       </Stack>
