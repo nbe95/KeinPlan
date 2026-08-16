@@ -55,6 +55,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: Extract version tags
+        id: version-tags
+        run: |
+          VERSION="${{ needs.tag-version.outputs.version }}"
+          FULL_VERSION=$VERSION
+          MAJOR_MINOR=$(echo $VERSION | cut -d. -f1-2)
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          echo "full_version=$FULL_VERSION" >> $GITHUB_OUTPUT
+          echo "major_minor=$MAJOR_MINOR" >> $GITHUB_OUTPUT
+          echo "major=$MAJOR" >> $GITHUB_OUTPUT
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
@@ -65,8 +75,9 @@ jobs:
             VERSION_SHA=${{ needs.tag-version.outputs.sha }}
           push: true
           tags: |
-            ${{ env.BACKEND_IMAGE_NAME }}:${{ needs.tag-version.outputs.version }}
-            ${{ env.BACKEND_IMAGE_NAME }}:latest
+            ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.full_version }}
+            ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major_minor }}
+            ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major }}
 
   docker-image-frontend:
     name: Build frontend Docker image
@@ -82,6 +93,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: Extract version tags
+        id: version-tags
+        run: |
+          VERSION="${{ needs.tag-version.outputs.version }}"
+          FULL_VERSION=$VERSION
+          MAJOR_MINOR=$(echo $VERSION | cut -d. -f1-2)
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          echo "full_version=$FULL_VERSION" >> $GITHUB_OUTPUT
+          echo "major_minor=$MAJOR_MINOR" >> $GITHUB_OUTPUT
+          echo "major=$MAJOR" >> $GITHUB_OUTPUT
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
@@ -92,8 +113,9 @@ jobs:
             VERSION_SHA=${{ needs.tag-version.outputs.sha }}
           push: true
           tags: |
-            ${{ env.FRONTEND_IMAGE_NAME }}:${{ needs.tag-version.outputs.version }}
-            ${{ env.FRONTEND_IMAGE_NAME }}:latest
+            ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.full_version }}
+            ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major_minor }}
+            ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major }}
 
   deploy-testing:
     name: Deploy to testing environment
@@ -107,7 +129,7 @@ jobs:
     steps:
       - name: Call webhook
         run: |
-          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.tag-version.outputs.version }}"
+          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ steps.version-tags.outputs.full_version }}"
 
   deploy-prod:
     name: Deploy to production
@@ -122,4 +144,4 @@ jobs:
     steps:
       - name: Call webhook
         run: |
-          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ needs.tag-version.outputs.version }}"
+          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ steps.version-tags.outputs.full_version }}"
