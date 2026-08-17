@@ -51,16 +51,16 @@ export const getIsoWeekAndYear = (date: Date, separator: string = "/"): string =
   `${getIsoWeek(date)}${separator}${getIsoYear(date)}`;
 
 // Recursively convert all Date objects in a dictionary to ISO strings while keeping their timezone
-export const dictConvertDatesToIsoString = (dict: {
-  [key: string]: any;
-}): { [key: string]: any } => {
-  let result: { [key: string]: any } = {}; // Create a mutable clone not manipulating the original object
+export const dictConvertDatesToIsoString = (
+  dict: Record<string, unknown>,
+): Record<string, unknown> => {
+  let result: Record<string, unknown> = {}; // Create a mutable clone not manipulating the original object
   Object.assign(result, dict);
   Object.keys(result).forEach((key) => {
     const value = result[key];
-    if (value.constructor == Object) {
+    if (value && typeof value === "object" && value.constructor === Object) {
       // check for sub-dictionaries
-      result[key] = dictConvertDatesToIsoString(value);
+      result[key] = dictConvertDatesToIsoString(value as Record<string, unknown>);
     } else if (value instanceof Date) {
       result[key] = strftime("%Y-%m-%dT%H:%M:%S%z", value);
     }

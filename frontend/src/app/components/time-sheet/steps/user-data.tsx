@@ -9,8 +9,8 @@ import { UserData } from "../generator";
 
 type UserDataProps = {
   userData?: UserData;
-  setUserData: (data: UserData) => void;
-  setKaPlanIcs: (ics: string | undefined) => void;
+  setUserData: (_data: UserData) => void;
+  setKaPlanIcs: (_ics: string | undefined) => void;
   nextStep: () => void;
 };
 

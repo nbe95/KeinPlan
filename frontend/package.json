@@ -1,9 +1,10 @@
 {
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx && npx prettier . --check",
+    "lint": "eslint . && npx prettier . --check",
     "format": "npx prettier . --write"
   },
   "dependencies": {

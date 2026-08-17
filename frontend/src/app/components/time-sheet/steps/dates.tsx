@@ -30,10 +30,10 @@ interface KaPlanData {
 type DatesProps = {
   userData: UserData;
   targetDate: Date;
-  setTargetDate: (date: Date) => void;
+  setTargetDate: (_date: Date) => void;
   kaPlanIcs?: string;
-  setKaPlanIcs: (ics: string) => void;
-  setDateList: (data: DateEntry[]) => void;
+  setKaPlanIcs: (_ics: string) => void;
+  setDateList: (_data: DateEntry[]) => void;
   prevStep: () => void;
   nextStep: () => void;
 };
@@ -73,15 +73,15 @@ const DatesStep = (props: DatesProps) => {
         .catch((error) => catchQueryError(error));
     },
     retry: (count, error) => retryUnlessClientError(error, count, 5),
-    select: (data: any): DateEntry[] =>
-      data.dates?.map((date: any): DateEntry => {
+    select: (data: Record<string, unknown>): DateEntry[] =>
+      (data.dates as Array<Record<string, unknown>>)?.map((dateItem): DateEntry => {
         return {
-          uid: date.uid ?? "",
-          title: date.title ?? "",
-          role: date.role ?? "",
-          location: date.location_short ?? "",
-          start_date: parseDateStr(date.begin),
-          end_date: parseDateStr(date.end),
+          uid: String(dateItem.uid ?? ""),
+          title: String(dateItem.title ?? ""),
+          role: String(dateItem.role ?? ""),
+          location: String(dateItem.location_short ?? ""),
+          start_date: parseDateStr(String(dateItem.begin)),
+          end_date: parseDateStr(String(dateItem.end)),
         };
       }),
     staleTime: 1000 * 60 * 10, // 10 minutes until stale
@@ -119,8 +119,7 @@ const DatesStep = (props: DatesProps) => {
   }, [isFetching]);
 
   useEffect(() => {
-    if (isError) {
-      setKaPlanQuery(undefined);
+    if (isError && error?.message) {
       toast.dismiss(kaPlanToast.current);
       kaPlanToast.current = toast.error(
         () => (
@@ -138,23 +137,23 @@ const DatesStep = (props: DatesProps) => {
         },
       );
     }
-  }, [isError]);
+  }, [isError, error?.message]);
 
   // Proceed to next step as soon as KaPlan data is fetched
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data) {
       toast.dismiss(kaPlanToast.current);
       props.setDateList(data);
       props.nextStep();
     }
-  }, [isSuccess]);
+  }, [isSuccess, data, props]);
 
   // Directly focus next button if input data is already present (here upon first render)
   useEffect(() => {
     if (props.targetDate && props.kaPlanIcs) {
       document.getElementById("btn-next")?.focus({ preventScroll: true });
     }
-  }, []);
+  }, [props.targetDate, props.kaPlanIcs]);
 
   return (
     <form onSubmit={(event) => handleSubmit(event)}>

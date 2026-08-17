@@ -37,41 +37,42 @@ export interface DateEntry {
   end_date: Date;
 }
 
-const TimeSheetGenerator = () => {
-  const [userData, setUserData] = useState<UserData>();
+enum Steps {
+  USER_DATA = 0,
+  TIME_SHEET_DATA = 1,
+  DATE_CHECK = 2,
+  RESULT_VIEW = 3,
+}
 
+const TimeSheetGenerator = () => {
   const fiveDaysAgo = addDaysToDate(new Date(), -5);
   const [targetDate, setTargetDate] = useState<Date>(getMonday(fiveDaysAgo));
-  const [kaPlanIcs, setKaPlanIcs] = useState<string>();
 
   const [dateList, setDateList] = useState<DateEntry[]>();
 
-  enum Steps {
-    USER_DATA,
-    TIME_SHEET_DATA,
-    DATE_CHECK,
-    RESULT_VIEW,
-  }
   const [step, setStep] = useState<Steps>(Steps.USER_DATA);
 
   // Take user data from cookie upon first render, if available
   const [cookies] = useCookies([USER_COOKIE_NAME]);
-  const userCookie: CookieData = cookies[USER_COOKIE_NAME];
-  useEffect(() => {
-    if (userCookie) {
-      setUserData({
+  const userCookie: CookieData | undefined = cookies[USER_COOKIE_NAME];
+
+  const initialUserData = userCookie
+    ? {
         firstName: userCookie.firstName,
         lastName: userCookie.lastName,
         employer: userCookie.employer,
-      });
-      setKaPlanIcs(userCookie.kaPlanIcs);
-    }
-  }, []);
+      }
+    : undefined;
+
+  const initialKaPlanIcs = userCookie?.kaPlanIcs;
+
+  const [userData, setUserData] = useState<UserData | undefined>(initialUserData);
+  const [kaPlanIcs, setKaPlanIcs] = useState<string | undefined>(initialKaPlanIcs);
 
   // Focus on time sheet generator upon each active step change (mobile devices only)
   const enableFocusOnEachStep = useRef(false);
   useEffect(() => {
-    enableFocusOnEachStep.current ||= step != Steps.USER_DATA;
+    enableFocusOnEachStep.current ||= step !== Steps.USER_DATA;
     if (enableFocusOnEachStep.current) {
       scrollToElement("stepper", true);
     }
