@@ -175,6 +175,8 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_SECRET }}" \
           -d '{"pull": true, "forceRecreate": true}' \
           "${{ secrets.DEPLOYMENT_WEBHOOK }}"
+      - name: Wait for deployment
+        run: sleep 300
 
   test-e2e:
     name: Perform e2e tests
