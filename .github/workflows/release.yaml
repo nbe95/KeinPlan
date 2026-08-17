@@ -78,6 +78,7 @@ jobs:
             ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.full_version }}
             ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major_minor }}
             ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major }}
+            ${{ env.BACKEND_IMAGE_NAME }}:latest
 
   docker-image-frontend:
     name: Build frontend Docker image
@@ -116,6 +117,7 @@ jobs:
             ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.full_version }}
             ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major_minor }}
             ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.version-tags.outputs.major }}
+            ${{ env.FRONTEND_IMAGE_NAME }}:latest
 
   deploy-testing:
     name: Deploy to testing environment
