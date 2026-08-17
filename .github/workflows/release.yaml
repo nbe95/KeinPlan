@@ -127,9 +127,12 @@ jobs:
     environment:
       name: testing
     steps:
-      - name: Call webhook
+      - name: Call deployment webhook
         run: |
-          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ steps.version-tags.outputs.full_version }}"
+          curl -sX POST \
+          -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_SECRET }}" \
+          -d '{"pull": true, "forceRecreate": true}' \
+          "${{ secrets.DEPLOYMENT_WEBHOOK }}"
 
   deploy-prod:
     name: Deploy to production
@@ -142,6 +145,9 @@ jobs:
       name: production
       url: ${{ vars.DEPLOYMENT_URL }}
     steps:
-      - name: Call webhook
+      - name: Call deployment webhook
         run: |
-          curl -sIX POST --max-time 900 "${{ secrets.DEPLOYMENT_WEBHOOK }}?DEPLOY_TAG=${{ steps.version-tags.outputs.full_version }}"
+          curl -sX POST \
+          -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_SECRET }}" \
+          -d '{"pull": true, "forceRecreate": true}' \
+          "${{ secrets.DEPLOYMENT_WEBHOOK }}"
