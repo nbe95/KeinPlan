@@ -2,4 +2,4 @@
 
 from .__main__ import backend
 
-__ALL__ = ["backend"]
+__ALL__ = [backend]
