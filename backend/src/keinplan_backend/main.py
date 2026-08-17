@@ -5,13 +5,9 @@ import logging
 from flask import Flask
 from flask_cors import CORS
 
-from src.keinplan_backend.kaplan.constants import (
-    KAPLAN_ALLOWED_SERVERS,
-    KAPLAN_ALLOWED_WORKGROUPS,
-)
-
 from .api import api_blueprint
 from .constants import LOG_LEVEL, VERSION_BACKEND
+from .kaplan.constants import KAPLAN_ALLOWED_SERVERS, KAPLAN_ALLOWED_WORKGROUPS
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)

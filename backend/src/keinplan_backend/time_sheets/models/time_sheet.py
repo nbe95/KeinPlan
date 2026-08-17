@@ -10,8 +10,7 @@ from subprocess import CalledProcessError, run
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from keinplan_backend.constants import LOG_LEVEL, VERSION_BACKEND
-
+from ...constants import LOG_LEVEL, VERSION_BACKEND
 from ..constants import KEINPLAN_LINK, TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from ..templates.jinja_filters import escape_latex
 from .time_entry import TimeEntry
