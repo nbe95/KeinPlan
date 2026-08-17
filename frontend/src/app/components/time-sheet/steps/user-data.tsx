@@ -117,7 +117,7 @@ const UserDataStep = (props: UserDataProps) => {
               name="use_cookie"
               label="Alle Eingaben als Cookie speichern"
               onClick={(event) => setResetCookie(event.currentTarget.checked)}
-              checked={enableCookie}
+              defaultChecked={enableCookie}
             />
             <Form.Text>
               Damit geht&apos;s beim nächsten Mal deutlich schneller und du musst nicht alles

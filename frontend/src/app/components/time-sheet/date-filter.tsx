@@ -1,4 +1,4 @@
-import { ComponentType, createElement } from "react";
+import { ComponentType, createElement, Fragment } from "react";
 import { Badge, Dropdown, Nav } from "react-bootstrap";
 import strftime from "strftime";
 import { addDaysToDate, isSameDay } from "../../utils/dates";
@@ -39,7 +39,7 @@ const FilterItem = (props: FilterProps) => {
       style: { whiteSpace: "nowrap" },
     },
     [
-      <>
+      <Fragment key="content">
         {props.title}
         {!isDisabled && (
           <Badge
@@ -50,7 +50,7 @@ const FilterItem = (props: FilterProps) => {
             {props.badge}
           </Badge>
         )}
-      </>,
+      </Fragment>,
     ],
   );
 };
