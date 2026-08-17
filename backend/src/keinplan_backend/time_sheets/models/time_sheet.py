@@ -7,11 +7,10 @@ from datetime import date, datetime, timedelta
 from locale import LC_ALL, format_string, setlocale
 from pathlib import Path
 from subprocess import CalledProcessError, run
-from typing import List, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
 
-from src.keinplan_backend.constants import LOG_LEVEL, VERSION_BACKEND
+from keinplan_backend.constants import LOG_LEVEL, VERSION_BACKEND
 
 from ..constants import KEINPLAN_LINK, TIME_SHEETS_LOCALE, TIME_SHEETS_TEMPLATE_DIR
 from ..templates.jinja_filters import escape_latex
@@ -30,11 +29,11 @@ class TimeSheet:
     def __init__(self, employer: str, employee: str) -> None:
         self.employer: str = employer
         self.employee: str = employee
-        self.entries: List[TimeEntry] = []
+        self.entries: list[TimeEntry] = []
 
     def _run_latex(self, tex_file: Path, pdf_file: Path) -> bool:
         """Convert preprocessed input to a document using pdflatex."""
-        cmd: Tuple[str, ...] = (
+        cmd: tuple[str, ...] = (
             "pdflatex",
             "--interaction",
             "nonstopmode",
@@ -58,7 +57,7 @@ class TimeSheet:
         return True
 
     @abstractmethod
-    def generate_pdf(self, tmp_dir: Path) -> Optional[Path]:
+    def generate_pdf(self, tmp_dir: Path) -> Path | None:
         """Generate a time sheet as a specific file."""
 
 
@@ -70,7 +69,7 @@ class WeeklyTimeSheet(TimeSheet):
         """Container for a day listing."""
 
         day: date
-        entries: List[TimeEntry]
+        entries: list[TimeEntry]
         total_hours: float
 
     def __init__(self, employer: str, employee: str, year: int, week_no: int) -> None:
@@ -78,7 +77,7 @@ class WeeklyTimeSheet(TimeSheet):
         self.year = year
         self.week_no = week_no
 
-    def generate_pdf(self, tmp_dir: Path, footer: bool = True) -> Optional[Path]:
+    def generate_pdf(self, tmp_dir: Path, footer: bool = True) -> Path | None:
         """Generate a PDF time sheet from the given data."""
         rendered_file: Path = tmp_dir / "rendered.tex"
         pdf_file = tmp_dir / "out.pdf"
@@ -95,11 +94,11 @@ class WeeklyTimeSheet(TimeSheet):
 
         # Sort and organize entries by dates
         start_date: date = date.fromisocalendar(self.year, self.week_no, 1)
-        entries_by_date: List[WeeklyTimeSheet.DayListing] = []
+        entries_by_date: list[WeeklyTimeSheet.DayListing] = []
         self.entries.sort(key=lambda entry: datetime.combine(entry.date, entry.start_time))
         for day_offset in range(7):
             day: date = start_date + timedelta(days=day_offset)
-            entries: List[TimeEntry] = list(filter(lambda entry: entry.date == day, self.entries))
+            entries: list[TimeEntry] = list(filter(lambda entry: entry.date == day, self.entries))
             entries_by_date.append(
                 WeeklyTimeSheet.DayListing(
                     day, entries, sum(entry.get_hours() for entry in entries)
@@ -110,7 +109,7 @@ class WeeklyTimeSheet(TimeSheet):
             data=self,
             days=entries_by_date,
             total_hours=sum(entry.get_hours() for entry in self.entries),
-            generation_time=datetime.now(),
+            generation_time=datetime.now().astimezone(),
             footer=footer,
             hyperlink=KEINPLAN_LINK,
             version=VERSION_BACKEND,

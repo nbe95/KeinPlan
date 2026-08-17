@@ -1,13 +1,15 @@
 """KaPlan ICS interface module."""
 
 import logging
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
+from datetime import datetime as dt
 from hashlib import sha256
 from os import uname
 from re import Match, fullmatch
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from urllib.parse import ParseResult, parse_qs, urlparse
 
+import arrow
 from ics import Calendar, Event
 from requests import Response, get
 
@@ -47,7 +49,7 @@ class KaPlanIcs:
             cls.own_server_url = url.netloc
             logger.info('This server\'s public URL appears to be "%s".', cls.own_server_url)
 
-    def get_events(self, url: str, date_from: date, date_to: date) -> Dict[str, Any]:
+    def get_events(self, url: str, date_from: date, date_to: date) -> dict[str, Any]:
         """Call the KaPlan endpoint and return all available dates."""
         if not self._validate_url(url):
             raise KaPlanInterfaceError(
@@ -56,14 +58,14 @@ class KaPlanIcs:
             )
 
         ics: str
-        fetch_date: datetime
+        fetch_date: dt
         ics, fetch_date = self.fetch_ics_data(url)
         try:
             cal: Calendar = Calendar(ics)
         except Exception as e:
             raise KaPlanInterfaceError("Could not parse KaPlan ICS data.") from e
 
-        dates: List[Dict[str, Any]] = [
+        dates: list[dict[str, Any]] = [
             self._parse_event(event)
             for event in sorted(cal.events, key=lambda e: e.begin)
             if event.begin.date() >= date_from and event.end.date() <= date_to
@@ -77,13 +79,13 @@ class KaPlanIcs:
         )
         return {"dates": dates, "fetched": fetch_date.isoformat()}
 
-    def fetch_ics_data(self, url: str) -> Tuple[str, datetime]:
+    def fetch_ics_data(self, url: str) -> tuple[str, dt]:
         """Actual method to call the KaPlan endpoint.
 
         Returns the ICS payload and a fetch date.
         """
         logger.info("Fetching data from KaPlan with user-agent '%s'.", self.user_agent)
-        headers: Dict[str, str] = {"User-Agent": self.user_agent}
+        headers: dict[str, str] = {"User-Agent": self.user_agent}
         response: Response = get(url, timeout=self.timeout_s, headers=headers)
         if not response.ok:
             logger.error("Server returned status %d: %s", response.status_code, response.reason)
@@ -96,27 +98,27 @@ class KaPlanIcs:
             raise KaPlanInterfaceError("Got VCAL API parameter error from KaPlan server.")
 
         logger.info("Fetched %d bytes in %fs.", len(content), response.elapsed.total_seconds())
-        return content, datetime.now()
+        return content, dt.now().astimezone()
 
     @staticmethod
-    def _parse_event(event: Event) -> Dict[str, Any]:
+    def _parse_event(event: Event) -> dict[str, Any]:
         """Parse a single date object to meet our format requirements."""
         # Split optional fields from textual representation
         # A typical description field looks like this:
         # "[{role}] {title} Leitung: {host} Interne Info: {internal}"
 
-        role: Optional[str] = None
-        host: Optional[str] = None
-        internal: Optional[str] = None
-        matcher: Optional[Match[str]] = fullmatch(
+        role: str | None = None
+        host: str | None = None
+        internal: str | None = None
+        matcher: Match[str] | None = fullmatch(
             r"(?:\[(.+)\] )?(.*?)(?: Leitung: (.*?))?(?: Interne Info: (.*?))?",
             event.description or "",
         )
         if matcher:
             role, _, host, internal = matcher.groups()
 
-        location_matcher: Optional[Match[str]] = fullmatch(r"(.+), \d+ .+", event.location or "")
-        short_location: Optional[str] = (
+        location_matcher: Match[str] | None = fullmatch(r"(.+), \d+ .+", event.location or "")
+        short_location: str | None = (
             event.location if not location_matcher else location_matcher.group(1)
         )
 
@@ -130,14 +132,14 @@ class KaPlanIcs:
             "location_short": short_location,
             "begin": event.begin.for_json(),
             "end": event.end.for_json(),
-            "modified": event.last_modified.for_json() if event.last_modified else None,
+            "modified": arrow.get(event.last_modified).for_json() if event.last_modified else None,
         }
 
     @classmethod
     def _validate_url(cls, url_str: str) -> bool:
         """Check if the specified URL meets the configured requirements."""
         url: ParseResult = urlparse(url_str)
-        query: Dict[str, List[str]] = parse_qs(url.query)
+        query: dict[str, list[str]] = parse_qs(url.query)
 
         # Allow own server URL for e2e testing
         if url.netloc == cls.own_server_url:
@@ -145,7 +147,7 @@ class KaPlanIcs:
 
         # Extract host and workgroup from URL
         host: str = url.netloc
-        workgroup: Optional[str] = next(iter(query.get("Arbeitsgruppe", [])), None)
+        workgroup: str | None = next(iter(query.get("Arbeitsgruppe", [])), None)
 
         if all(x is None for x in (host, workgroup)):
             logger.warning("Invalid URL without host or workgroup provided.")
@@ -168,13 +170,13 @@ class KaPlanIcsCached(KaPlanIcs):
     ttl: timedelta = timedelta(seconds=KAPLAN_CACHE_TTL)
 
     def __init__(self) -> None:
-        self.cache: Dict[bytes, Tuple[str, datetime]] = {}
+        self.cache: dict[bytes, tuple[str, dt]] = {}
 
-    def fetch_ics_data(self, url: str) -> Tuple[str, datetime]:
+    def fetch_ics_data(self, url: str) -> tuple[str, dt]:
         """Lookup the cache first before performing the request."""
         url_hash: bytes = self._get_hash(url)
-        cached: Optional[Tuple[str, datetime]] = self.cache.get(url_hash)
-        if cached and cached[1] + self.ttl >= datetime.now():
+        cached: tuple[str, dt] | None = self.cache.get(url_hash)
+        if cached and cached[1] + self.ttl >= dt.now().astimezone():
             logger.info("Using cached query %s from %s.", url_hash.hex(), cached[1])
         else:
             self.cache[url_hash] = super().fetch_ics_data(url)
@@ -184,7 +186,7 @@ class KaPlanIcsCached(KaPlanIcs):
     def _get_hash(url_str: str) -> bytes:
         """Hash the characteristic parts of a KaPlan URL for identification."""
         url: ParseResult = urlparse(url_str)
-        query: Dict[str, List[str]] = parse_qs(url.query)
+        query: dict[str, list[str]] = parse_qs(url.query)
         hash_str: str = "|".join(
             (
                 url.netloc,

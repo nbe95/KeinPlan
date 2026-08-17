@@ -2,7 +2,7 @@
 
 from base64 import b64decode
 from datetime import date, datetime
-from typing import Any, Optional
+from typing import Any
 
 from flask import request
 from flask.typing import ResponseReturnValue
@@ -25,7 +25,7 @@ class KaPlanEndpoint(Resource):
         self.kaplan_interface.set_own_url(request.base_url)
 
         try:
-            ics_url_b64: Optional[str] = request.headers.get(KAPLAN_ICS_HEADER)
+            ics_url_b64: str | None = request.headers.get(KAPLAN_ICS_HEADER)
             if not ics_url_b64:
                 raise ValueError("No URL provided.")
 
@@ -46,12 +46,16 @@ class KaPlanEndpoint(Resource):
             return "Could not process the provided URL.", 400
 
         try:
-            date_from: date = datetime.strptime(
-                request.args.get("from", date.min.isoformat()), "%Y-%m-%d"
-            ).date()
-            date_to: date = datetime.strptime(
-                request.args.get("to", date.max.isoformat()), "%Y-%m-%d"
-            ).date()
+            date_from: date = (
+                datetime.strptime(request.args.get("from", date.min.isoformat()), "%Y-%m-%d")
+                .astimezone()
+                .date()
+            )
+            date_to: date = (
+                datetime.strptime(request.args.get("to", date.max.isoformat()), "%Y-%m-%d")
+                .astimezone()
+                .date()
+            )
             return self.kaplan_interface.get_events(normalized_url, date_from, date_to)
 
         except RequestsConnectionError:

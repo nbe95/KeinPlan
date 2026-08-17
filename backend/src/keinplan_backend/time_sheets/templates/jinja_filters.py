@@ -1,11 +1,9 @@
 """Module for custom Jinja filters."""
 
-from typing import Dict
-
 
 def escape_latex(inputStr: str) -> str:
     """Sanitize input for use in LaTeX templates by escaping special chars."""
-    specialCharMap: Dict[str, str] = {
+    specialCharMap: dict[str, str] = {
         "'": r"\textquotesingle{}",
         '"': r"\textquotedbl{}",
         "`": r"\textasciigrave{}",

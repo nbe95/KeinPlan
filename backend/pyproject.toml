@@ -5,6 +5,9 @@ description = "Backend for KeinPlan server."
 authors = [
     {name = "Niklas Bettgen", email = "niklas@bettgen.de"},
 ]
+requires-python = ">=3.12"
+license = {text = "MIT"}
+
 dependencies = [
     "hyperlink>=21.0.0",
     "ics>=0.7.2",
@@ -17,62 +20,47 @@ dependencies = [
     "flask-restful>=0.3.10",
     "validators>=0.33.0",
 ]
-requires-python = ">=3.12.*"
-license = {text = "MIT"}
 
+[dependency-groups]
+dev = [
+    "ruff>=0.16.1",
+    "isort>=8.0.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pyright>=1.1.411",
+    "pytest-asyncio>=1.4.0",
+]
 
 [tool.pdm]
 distribution = false
 
 [tool.pdm.scripts]
-dev = "waitress-serve --port 8080 src.keinplan_backend.main:backend"
-lint = "tox run -e lint"
-format = "tox run -e format"
+dev = "waitress-serve --port 8080 src.keinplan_backend:backend"
+lint = "ruff check src/"
+check = { composite = ["lint", "pyright"] }
+format = { composite = ["ruff format src/", "ruff check --fix src/"] }
 
-[tool.pdm.dev-dependencies]
-dev = [
-    "tox-pdm>=0.7.2",
-    "flake8>=7.1.1",
-    "pylint>=3.2.6",
-    "mypy>=1.11.2",
-    "pydocstyle>=6.3.0",
-    "isort>=5.13.2",
-    "black>=24.8.0",
-    "flake8-pyproject>=1.2.3",
-    "types-flask-cors>=4.0.0.20240825",
-    "types-requests>=2.32.0.20240712",
-]
-
-[tool.black]
+[tool.ruff]
 line-length = 100
+target-version = "py312"
+src = ["src"]
+
+[tool.ruff.lint.isort]
+known-third-party = []
 
 [tool.isort]
 profile = "black"
+line_length = 100
+src_paths = ["src"]
 
-[tool.pylint.DESIGN]
-max-args = 10
-max-attributes = 10
-
-[tool.pylint.'MESSAGES CONTROL']
-disable = [
-    "too-few-public-methods",
-    "too-many-return-statements",
-    "cell-var-from-loop",
-    "broad-exception-caught"
-]
-
-[tool.flake8]
-max-line-length = 100
-ignore = [
-    "W503"  # line break before binary operator
-]
-
-[tool.mypy]
-ignore_missing_imports = true
-
-[tool.pydocstyle]
-ignore = [
-    "D107", # Missing docstring in __init__
-    "D203", # 1 blank line required before class docstring
-    "D213"  # Multi-line docstring summary should start at the second line
-]
+[tool.pyright]
+include = ["src"]
+exclude = ["**/node_modules", "**/__pycache__", ".venv"]
+typeCheckingMode = "standard"
+pythonVersion = "3.12"
+reportGeneralTypeIssues = true
+reportOptionalMemberAccess = true
+reportOptionalSubscript = true
+reportPrivateImportUsage = false
+reportConstantRedefinition = true
+reportMissingTypeStubs = false

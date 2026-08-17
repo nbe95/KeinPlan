@@ -3,7 +3,7 @@
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, Dict, List
+from typing import Any
 
 from flask import request, send_file
 from flask.typing import ResponseReturnValue
@@ -19,40 +19,37 @@ class TimeSheetEndpoint(Resource):
     def post(self, ts_type: str, file_format: str) -> ResponseReturnValue:
         """Handle POST requests."""
         # Generate time sheet
-        data: Dict[str, Any] = request.json or {}
+        data: dict[str, Any] = request.json or {}
         sheet: TimeSheet
         file_name: str = "Arbeitszeit"
 
         if ts_type.lower() == "weekly":
-            try:
-                # Fetch general data
-                start_date: date = date.fromisocalendar(
-                    int(data.get("year", 0)), int(data.get("week", 0)), 1
-                )
-                year, week, _ = start_date.isocalendar()
-                sheet = WeeklyTimeSheet(
-                    data.get("employer", ""), data.get("employee", ""), year, week
-                )
-                file_name += f"_{sheet.year}-{sheet.week_no}"
+            # Fetch general data
+            start_date: date = date.fromisocalendar(
+                int(data.get("year", 0)), int(data.get("week", 0)), 1
+            )
+            year, week, _ = start_date.isocalendar()
+            sheet = WeeklyTimeSheet(data.get("employer", ""), data.get("employee", ""), year, week)
+            file_name += f"_{sheet.year}-{sheet.week_no}"
 
-                # Collect and sort all entries
-                sheet.entries = [self._parse_date(d) for d in data.get("dates", [])]
-                sheet.entries.sort(key=lambda entry: datetime.combine(entry.date, entry.start_time))
+            # Collect and sort all entries
+            sheet.entries = [self._parse_date(d) for d in data.get("dates", [])]
+            sheet.entries.sort(key=lambda entry: datetime.combine(entry.date, entry.start_time))
 
-                # Check each date
-                outside_range: List[TimeEntry] = [
-                    entry
-                    for entry in sheet.entries
-                    if entry.date < start_date or entry.date - start_date >= timedelta(days=7)
-                ]
-                if outside_range:
-                    return (
+            # Check each date
+            outside_range: list[TimeEntry] = [
+                entry
+                for entry in sheet.entries
+                if entry.date < start_date or entry.date - start_date >= timedelta(days=7)
+            ]
+            if outside_range:
+                return (
+                    (
                         f"{len(outside_range)} of {len(sheet.entries)} time entries are outside "
-                        f"the calendar week's range: {outside_range}",
-                        400,
-                    )
-            except Exception as e:
-                return f"Error while parsing of time sheet data: {str(e)}", 400
+                        f"the calendar week's range: {outside_range}"
+                    ),
+                    400,
+                )
 
         else:
             return f'Invalid time sheet type "{ts_type}"', 400
@@ -69,7 +66,7 @@ class TimeSheetEndpoint(Resource):
         else:
             return f'Invalid file format "{file_format}"', 400
 
-    def _parse_date(self, item: Dict[str, Any]) -> TimeEntry:
+    def _parse_date(self, item: dict[str, Any]) -> TimeEntry:
         try:
             start: datetime = datetime.fromisoformat(item["start_date"] or "")
             end: datetime = datetime.fromisoformat(item["end_date"] or "")
