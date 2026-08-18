@@ -30,7 +30,9 @@ class TimeSheetEndpoint(Resource):
                     int(data.get("year", 0)), int(data.get("week", 0)), 1
                 )
                 year, week, _ = start_date.isocalendar()
-                sheet = WeeklyTimeSheet(data.get("employer", ""), data.get("employee", ""), year, week)
+                sheet = WeeklyTimeSheet(
+                    data.get("employer", ""), data.get("employee", ""), year, week
+                )
                 file_name += f"_{sheet.year}-{sheet.week_no}"
 
                 # Collect and sort all entries
@@ -53,7 +55,7 @@ class TimeSheetEndpoint(Resource):
                     )
 
             except ValueError as e:
-                return f"Error while parsing time sheet data: {str(e)}", 400
+                return f"Error while parsing time sheet data: {e!s}", 400
 
         else:
             return f'Invalid time sheet type "{ts_type}"', 400
