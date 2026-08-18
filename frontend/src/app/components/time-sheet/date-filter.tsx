@@ -1,10 +1,10 @@
-import { ComponentType, createElement } from "react";
+import { ComponentType, createElement, Fragment } from "react";
 import { Badge, Dropdown, Nav } from "react-bootstrap";
 import strftime from "strftime";
 import { addDaysToDate, isSameDay } from "../../utils/dates";
 
 type FilterProps = {
-  as: ComponentType<any>;
+  as: ComponentType<Record<string, unknown>>;
   eventKey: string;
   title: string;
   disabled: boolean;
@@ -12,19 +12,19 @@ type FilterProps = {
   badge?: number;
   className?: string;
   activeFilter?: Date;
-  setActiveFilter: (date?: Date) => void;
+  setActiveFilter: (_date?: Date) => void;
 };
 
 const FilterItem = (props: FilterProps) => {
   const isActive =
-    props.activeFilter == props.filterValue ||
+    props.activeFilter === props.filterValue ||
     (props.activeFilter !== undefined &&
       props.filterValue !== undefined &&
       isSameDay(props.activeFilter, props.filterValue));
   const isDisabled = props.badge === undefined;
 
   let className = props.className;
-  if (props.as == Nav.Link) {
+  if (props.as === Nav.Link) {
     className += ` ${isActive ? "text-primary" : isDisabled ? "text-muted" : "text-dark"}`;
   }
 
@@ -39,18 +39,18 @@ const FilterItem = (props: FilterProps) => {
       style: { whiteSpace: "nowrap" },
     },
     [
-      <>
+      <Fragment key="content">
         {props.title}
         {!isDisabled && (
           <Badge
-            bg={isActive && props.as == Nav.Link ? "primary" : "secondary"}
+            bg={isActive && props.as === Nav.Link ? "primary" : "secondary"}
             pill
             className="ms-2 small"
           >
             {props.badge}
           </Badge>
         )}
-      </>,
+      </Fragment>,
     ],
   );
 };
@@ -59,20 +59,24 @@ type WeekFilterProps = {
   baseDate: Date;
   dateList: Date[];
   activeFilter?: Date;
-  setActiveFilter: (date?: Date) => void;
+  setActiveFilter: (_date?: Date) => void;
 };
 
 export const WeekFilter = (props: WeekFilterProps) => {
   const keyPrefix: string = "week-filter-";
   const strftimeGer = strftime.localizeByIdentifier("de_DE");
 
-  const forEachDay = (fn: (key: string, day: Date, occurrences: number) => any): any =>
+  const forEachDay = (
+    fn: (_key: string, _day: Date, _occurrences: number) => React.ReactNode,
+  ): React.ReactNode[] =>
     Array(7)
       .fill(0)
       .map((_, dayOffset) => {
         const key: string = `${keyPrefix}-${dayOffset}`;
         const day: Date = addDaysToDate(props.baseDate, dayOffset);
-        const occurrences: number = props.dateList.filter((date) => isSameDay(date, day)).length;
+        const occurrences: number = props.dateList.filter((_dateItem) =>
+          isSameDay(_dateItem, day),
+        ).length;
         return fn(key, day, occurrences);
       });
 

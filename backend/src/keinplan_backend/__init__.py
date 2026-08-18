@@ -1,5 +1,5 @@
 """Main KeinPlan module."""
 
-from .__main__ import backend
+from .main import backend
 
 __ALL__ = [backend]

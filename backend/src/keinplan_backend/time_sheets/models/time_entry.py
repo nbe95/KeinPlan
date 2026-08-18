@@ -2,14 +2,13 @@
 
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
-from typing import Optional
 
 
 @dataclass(frozen=True)
 class TimeEntry:
     """Class for each individual time entry."""
 
-    uid: Optional[str]
+    uid: str | None
     title: str
     role: str
     location: str

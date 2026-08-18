@@ -22,7 +22,7 @@ const StepButton = (props: PropsWithChildren<ButtonPropsInt>) => {
       disabled={props.disabled}
       id={props.id}
       onClick={() => {
-        props.callback && props.callback();
+        props.callback?.();
       }}
       className="px-4"
     >

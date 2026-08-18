@@ -1,6 +1,6 @@
 describe("check version", () => {
-  const version = Cypress.env("TEST_VERSION");
-  const sha = Cypress.env("TEST_SHA");
+  const version = Cypress.expose("TEST_VERSION");
+  const sha = Cypress.expose("TEST_SHA");
 
   it("check frontend version", () => {
     cy.visit("/");
@@ -13,7 +13,7 @@ describe("check version", () => {
   });
 
   it("check backend version", () => {
-    let versionUrl = new URL(Cypress.env("BACKEND_URL"));
+    let versionUrl = new URL(Cypress.expose("BACKEND_URL"));
     versionUrl.pathname = "api/v1/version";
     cy.request(versionUrl.toString())
       .its("body")

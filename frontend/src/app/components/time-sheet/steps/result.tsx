@@ -64,7 +64,9 @@ const ResultStep = (props: ResultProps) => {
             employee: `${props.userData.lastName}, ${props.userData.firstName}`,
             year: getIsoYear(props.targetDate),
             week: getIsoWeek(props.targetDate),
-            dates: props.dateList.map((date) => dictConvertDatesToIsoString(date)),
+            dates: props.dateList.map((date) =>
+              dictConvertDatesToIsoString(date as unknown as Record<string, unknown>),
+            ),
           },
           {
             headers: {
@@ -154,7 +156,7 @@ const ResultStep = (props: ResultProps) => {
                   obfuscateChildren={false}
                   // Obfuscate allows passing arbitrary props, but does not define them in its
                   // interface, which causes a type error on compiling
-                  // @ts-expect-error
+                  // @ts-expect-error Obfuscate allows passing arbitrary props not defined in interface
                   id="open-mail-template"
                   className="btn btn-primary"
                 >
