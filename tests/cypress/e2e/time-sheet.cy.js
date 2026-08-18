@@ -156,7 +156,7 @@ describe("check time sheet generation", () => {
 
 describe("check time sheet API", () => {
   it("should yield an error without proper week and year", () => {
-    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
+    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.expose("BACKEND_URL"));
     cy.request({
       method: "POST",
       url: endpoint.toString(),
@@ -169,7 +169,7 @@ describe("check time sheet API", () => {
   });
 
   it("should yield an error with invalid dates", () => {
-    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
+    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.expose("BACKEND_URL"));
     cy.request({
       method: "POST",
       url: endpoint.toString(),
@@ -186,7 +186,7 @@ describe("check time sheet API", () => {
   });
 
   it("should yield an error with incomplete dates", () => {
-    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
+    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.expose("BACKEND_URL"));
     cy.request({
       method: "POST",
       url: endpoint.toString(),
@@ -203,7 +203,7 @@ describe("check time sheet API", () => {
   });
 
   it("should yield an error with implausible dates", () => {
-    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
+    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.expose("BACKEND_URL"));
     cy.request({
       method: "POST",
       url: endpoint.toString(),
@@ -220,7 +220,7 @@ describe("check time sheet API", () => {
   });
 
   it("should yield an error with dates outside specified range", () => {
-    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.env("BACKEND_URL"));
+    const endpoint = new URL("/api/v1/time-sheet/weekly/pdf", Cypress.expose("BACKEND_URL"));
     cy.request({
       method: "POST",
       url: endpoint.toString(),

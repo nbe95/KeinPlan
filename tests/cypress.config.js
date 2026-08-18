@@ -19,8 +19,9 @@ module.exports = defineConfig({
       });
     },
     baseUrl: "http://localhost:3000/",
-    env: {
+    expose: {
       BACKEND_URL: "http://localhost:8080/",
     },
+    allowCypressEnv: false,
   },
 });
