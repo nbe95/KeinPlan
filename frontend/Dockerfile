@@ -67,7 +67,7 @@ ENV HOSTNAME="0.0.0.0"
 # Uncomment the following line in case you want to disable telemetry during the run time.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-# COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/public ./public
 
 RUN mkdir .next
 RUN chown node:node .next
