@@ -22,6 +22,8 @@ module.exports = defineConfig({
     allowCypressEnv: false,
     expose: {
       BACKEND_URL: process.env.CYPRESS_BACKEND_URL || "http://localhost:8080/",
+      TEST_VERSION: process.env.CYPRESS_TEST_VERSION,
+      TEST_SHA: process.env.CYPRESS_TEST_SHA,
     },
   },
 });
