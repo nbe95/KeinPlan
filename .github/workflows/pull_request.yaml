@@ -179,7 +179,8 @@ jobs:
       - name: Wait for deployment
         run: |
           for i in {1..60}; do
-            sha=$(curl -s --max-time 10 "${{ vars.DEPLOYMENT_URL }}/api/v1/version" 2>/dev/null | grep -oP '"sha":\s*"\K[^"]+')
+            sha=$(curl -s --max-time 10 "${{ vars.DEPLOYMENT_URL }}/api/v1/version" 2>/dev/null | sed -n 's/.*"sha":"\([^"]*\)".*/\1/p')
+            echo "Attempt $i: expected=${{ needs.validate-release.outputs.sha }}, actual=$sha"
             [ "$sha" = "${{ needs.validate-release.outputs.sha }}" ] && exit 0
             sleep 5
           done
