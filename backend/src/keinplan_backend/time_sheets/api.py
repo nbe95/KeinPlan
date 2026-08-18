@@ -24,32 +24,36 @@ class TimeSheetEndpoint(Resource):
         file_name: str = "Arbeitszeit"
 
         if ts_type.lower() == "weekly":
-            # Fetch general data
-            start_date: date = date.fromisocalendar(
-                int(data.get("year", 0)), int(data.get("week", 0)), 1
-            )
-            year, week, _ = start_date.isocalendar()
-            sheet = WeeklyTimeSheet(data.get("employer", ""), data.get("employee", ""), year, week)
-            file_name += f"_{sheet.year}-{sheet.week_no}"
-
-            # Collect and sort all entries
-            sheet.entries = [self._parse_date(d) for d in data.get("dates", [])]
-            sheet.entries.sort(key=lambda entry: datetime.combine(entry.date, entry.start_time))
-
-            # Check each date
-            outside_range: list[TimeEntry] = [
-                entry
-                for entry in sheet.entries
-                if entry.date < start_date or entry.date - start_date >= timedelta(days=7)
-            ]
-            if outside_range:
-                return (
-                    (
-                        f"{len(outside_range)} of {len(sheet.entries)} time entries are outside "
-                        f"the calendar week's range: {outside_range}"
-                    ),
-                    400,
+            try:
+                # Fetch general data
+                start_date: date = date.fromisocalendar(
+                    int(data.get("year", 0)), int(data.get("week", 0)), 1
                 )
+                year, week, _ = start_date.isocalendar()
+                sheet = WeeklyTimeSheet(data.get("employer", ""), data.get("employee", ""), year, week)
+                file_name += f"_{sheet.year}-{sheet.week_no}"
+
+                # Collect and sort all entries
+                sheet.entries = [self._parse_date(d) for d in data.get("dates", [])]
+                sheet.entries.sort(key=lambda entry: datetime.combine(entry.date, entry.start_time))
+
+                # Check each date
+                outside_range: list[TimeEntry] = [
+                    entry
+                    for entry in sheet.entries
+                    if entry.date < start_date or entry.date - start_date >= timedelta(days=7)
+                ]
+                if outside_range:
+                    return (
+                        (
+                            f"{len(outside_range)} of {len(sheet.entries)} time entries are outside "
+                            f"the calendar week's range: {outside_range}"
+                        ),
+                        400,
+                    )
+
+            except ValueError as e:
+                return f"Error while parsing time sheet data: {str(e)}", 400
 
         else:
             return f'Invalid time sheet type "{ts_type}"', 400
