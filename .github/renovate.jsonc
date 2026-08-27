@@ -9,16 +9,21 @@
   "labels": ["patch"],
   "packageRules": [
     {
-      // Only patch updates for Python Docker images
-      "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["python"],
-      "matchUpdateTypes": ["patch"]
-    },
-    {
       // Auto-merge non-breaking changes
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
       "automergeType": "pr"
+    },
+    {
+      // Update Python Docker images manually
+      "matchDatasources": ["docker"],
+      "matchPackagePatterns": ["python"],
+      "enabled": false
+    },
+    {
+      // Update typescript/nextjs manually
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<=6"
     }
   ]
 }

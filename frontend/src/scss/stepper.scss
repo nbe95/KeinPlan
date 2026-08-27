@@ -17,14 +17,14 @@
     &::after {
       content: "";
       flex: 1;
-      height: 2px;
+      height: 1px;
       background-color: #e0e0e0;
-      margin-inline-end: 0.5rem;
+      margin-inline: 0.5rem 1rem;
     }
 
     &:has(~ .active) {
       &::after {
-        background-color: var(--bs-blue);
+        background-color: var(--bs-primary);
       }
     }
   }
