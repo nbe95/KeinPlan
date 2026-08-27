@@ -9,6 +9,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Metadata } from "next";
 import { PublicEnvScript } from "next-runtime-env";
+import { ReactNode } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import "../scss/stepper.scss";
 import { CookieProvider } from "./components/cookie-provider";
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ReactQueryClientProvider>
       <CookieProvider>

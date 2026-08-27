@@ -1,4 +1,4 @@
-import { ComponentType, createElement, Fragment } from "react";
+import { ComponentType, createElement, Fragment, ReactNode } from "react";
 import { Badge, Dropdown, Nav } from "react-bootstrap";
 import strftime from "strftime";
 import { addDaysToDate, isSameDay } from "../../utils/dates";
@@ -67,8 +67,8 @@ export const WeekFilter = (props: WeekFilterProps) => {
   const strftimeGer = strftime.localizeByIdentifier("de_DE");
 
   const forEachDay = (
-    fn: (_key: string, _day: Date, _occurrences: number) => React.ReactNode,
-  ): React.ReactNode[] =>
+    fn: (_key: string, _day: Date, _occurrences: number) => ReactNode,
+  ): ReactNode[] =>
     Array(7)
       .fill(0)
       .map((_, dayOffset) => {
