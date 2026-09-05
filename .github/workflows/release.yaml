@@ -21,13 +21,13 @@ jobs:
       version: ${{ steps.semver.outputs.version }}
       sha: ${{ steps.commit.outputs.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Get commit data
         id: commit
         run: |
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      - uses: jefflinse/pr-semver-bump@v1.7.0
+      - uses: jefflinse/pr-semver-bump@v1.7.4
         name: Bump and tag new version
         id: semver
         with:
@@ -47,14 +47,14 @@ jobs:
     needs:
       - tag-version
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Extract version tags
         id: version-tags
         run: |
@@ -66,7 +66,7 @@ jobs:
           echo "major_minor=$MAJOR_MINOR" >> $GITHUB_OUTPUT
           echo "major=$MAJOR" >> $GITHUB_OUTPUT
       - name: Build and push image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           file: ./backend/Dockerfile
           context: ./backend/
@@ -86,14 +86,14 @@ jobs:
     needs:
       - tag-version
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Extract version tags
         id: version-tags
         run: |
@@ -105,7 +105,7 @@ jobs:
           echo "major_minor=$MAJOR_MINOR" >> $GITHUB_OUTPUT
           echo "major=$MAJOR" >> $GITHUB_OUTPUT
       - name: Build and push image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           file: ./frontend/Dockerfile
           context: ./frontend/
